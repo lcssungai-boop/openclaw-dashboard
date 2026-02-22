@@ -1,185 +1,34 @@
 {
-  "tasks": [
-    {
-      "id": "25fba9b0",
-      "title": "每日Token使用記錄",
-      "status": "已完成",
-      "category": "系統"
-    },
-    {
-      "id": "c8de1afb",
-      "title": "記憶體優化提醒",
-      "status": "已完成",
-      "category": "系統"
-    },
-    {
-      "id": "50a33b22",
-      "title": "AI記憶與配置自動備份",
-      "status": "已完成",
-      "category": "系統"
-    },
-    {
-      "id": "870be614",
-      "title": "兆鯨資料每日同步與索引",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "21b859bf",
-      "title": "iCloud整理檢測_0310",
-      "status": "已完成",
-      "category": "系統"
-    },
-    {
-      "id": "8643ae46",
-      "title": "iCloud安全整理_0330",
-      "status": "已完成",
-      "category": "系統"
-    },
-    {
-      "id": "8bdb4c54",
-      "title": "daily_dashboard_update",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "2bdf58dc",
-      "title": "自我檢測",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "341379a4",
-      "title": "每日美股台股匯報",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "72b50ed6",
-      "title": "Google試算表任務儀表板_每日更新",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "ca40bf5d",
-      "title": "工作流每日檢查_0810",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "18f980d7",
-      "title": "工作流週一檢查_0840",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "2264f7b4",
-      "title": "才多多週會重點確認提醒",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "5d552d04",
-      "title": "三年免招募費專案追蹤提醒",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "065cd424",
-      "title": "OpenClaw 每週版本檢查",
-      "status": "已完成",
-      "category": "系統"
-    },
-    {
-      "id": "ff31d864",
-      "title": "郵件分類檢查-早上",
-      "status": "已完成",
-      "category": "系統"
-    },
-    {
-      "id": "ae7b7ebb",
-      "title": "台積電J值追蹤提醒",
-      "status": "已完成",
-      "category": "系統"
-    },
-    {
-      "id": "90641031",
-      "title": "0050 J值買點提醒",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "9e747d74",
-      "title": "郵件附件監看",
-      "status": "已完成",
-      "category": "系統"
-    },
-    {
-      "id": "e29d3372",
-      "title": "週一台積電零股掛單提醒",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "434fb126",
-      "title": "郵件分類檢查-下午",
-      "status": "已完成",
-      "category": "系統"
-    },
-    {
-      "id": "ade3c23e",
-      "title": "確認明晚行程",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "1bf25818",
-      "title": "BNI簡報與key單準備提醒",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "767e3b70",
-      "title": "散熱族群股價追蹤(早)",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "274a22e4",
-      "title": "週五過濾材提醒-動態",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "ec8289dc",
-      "title": "散熱族群股價追蹤",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "90c43dd3",
-      "title": "記憶檔案每月歸檔",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "45c91f7e",
-      "title": "每月定期定額規劃",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "055a8522",
-      "title": "才多多財務分析月報更新",
-      "status": "待處理",
-      "category": "系統"
-    },
-    {
-      "id": "c1619d0b",
-      "title": "農曆三月劫財月-台積電買點提醒",
-      "status": "待處理",
-      "category": "系統"
-    }
-  ],
-  "updated": "2026-02-22 21:16:56"
+  "updated_at": "2026-02-22T05:30:00Z",
+  "categories": ["才多多","顧問","開發","理財","系統"],
+  "items": [
+    {"category":"系統","title":"每日Token使用記錄","status":"已完成","next_action":"","role":"","block_reason":""},
+    {"category":"系統","title":"記憶體優化提醒","status":"已完成","next_action":"","role":"","block_reason":""},
+    {"category":"系統","title":"AI記憶與配置自動備份","status":"已完成","next_action":"","role":"","block_reason":""},
+    {"category":"系統","title":"兆鯨資料每日同步與索引","status":"阻塞","next_action":"確認API權限","role":"開發","block_reason":"API尚未授權"},
+    {"category":"系統","title":"iCloud整理檢測_0310","status":"已完成","next_action":"","role":"","block_reason":""},
+    {"category":"系統","title":"iCloud安全整理_0330","status":"已完成","next_action":"","role":"","block_reason":""},
+    {"category":"系統","title":"daily_dashboard_update","status":"待處理","next_action":"設定自動排程","role":"開發","block_reason":""},
+    {"category":"系統","title":"自我檢測","status":"待處理","next_action":"每天 07:00 執行","role":"開發","block_reason":""},
+    {"category":"系統","title":"每日美股台股匯報","status":"阻塞","next_action":"串接行情API","role":"理財","block_reason":"行情資料來源未確認"},
+    {"category":"系統","title":"Google試算表任務儀表板_每日更新","status":"待處理","next_action":"串接Sheets API","role":"開發","block_reason":""},
+    {"category":"系統","title":"工作流每日檢查_0810","status":"待處理","next_action":"確認自動化觸發","role":"開發","block_reason":""},
+    {"category":"系統","title":"工作流週一檢查_0840","status":"待處理","next_action":"確認cron設定","role":"開發","block_reason":""},
+    {"category":"系統","title":"才多多週會重點確認提醒","status":"待處理","next_action":"建立提醒規則","role":"才多多","block_reason":""},
+    {"category":"系統","title":"三年免招募費專案追蹤提醒","status":"待處理","next_action":"建立專案追蹤表","role":"才多多","block_reason":""},
+    {"category":"系統","title":"OpenClaw 每週版本檢查","status":"已完成","next_action":"","role":"","block_reason":""},
+    {"category":"系統","title":"郵件分類檢查-早上","status":"已完成","next_action":"","role":"","block_reason":""},
+    {"category":"系統","title":"台積電J值追蹤提醒","status":"已完成","next_action":"","role":"","block_reason":""},
+    {"category":"系統","title":"0050 J值買點提醒","status":"待處理","next_action":"設定條件通知","role":"理財","block_reason":""},
+    {"category":"系統","title":"郵件附件監看","status":"已完成","next_action":"","role":"","block_reason":""},
+    {"category":"系統","title":"週一台積電零股掛單提醒","status":"待處理","next_action":"確認券商API","role":"理財","block_reason":""},
+    {"category":"系統","title":"郵件分類檢查-下午","status":"已完成","next_action":"","role":"","block_reason":""},
+    {"category":"系統","title":"BNI簡報與key單準備提醒","status":"待處理","next_action":"整理簡報重點","role":"業務","block_reason":""},
+    {"category":"系統","title":"散熱族群股價追蹤(早)","status":"待處理","next_action":"確認追蹤清單","role":"理財","block_reason":""},
+    {"category":"系統","title":"散熱族群股價追蹤","status":"阻塞","next_action":"確認資料來源","role":"理財","block_reason":"未取得即時報價來源"},
+    {"category":"系統","title":"記憶檔案每月歸檔","status":"待處理","next_action":"設定自動歸檔腳本","role":"開發","block_reason":""},
+    {"category":"系統","title":"每月定期定額規劃","status":"待處理","next_action":"確認扣款金額","role":"理財","block_reason":""},
+    {"category":"系統","title":"才多多財務分析月報更新","status":"待處理","next_action":"更新財報數據","role":"財務","block_reason":""},
+    {"category":"系統","title":"農曆三月劫財月-台積電買點提醒","status":"待處理","next_action":"設定時間條件","role":"理財","block_reason":""}
+  ]
 }
