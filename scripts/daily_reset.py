@@ -66,6 +66,14 @@ def main():
                 encoding="utf-8"
             )
 
+    # 每次執行都刷新 openclaw updated_at（讓儀表板顯示「最後同步時間」是活的）
+    oc_path = REPO / "data" / "openclaw" / "tasks.json"
+    if oc_path.exists():
+        oc = json.loads(oc_path.read_text(encoding="utf-8"))
+        oc["updated_at"] = now_iso()
+        oc_path.write_text(json.dumps(oc, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"[openclaw] updated_at 刷新 → {oc['updated_at']}")
+
     if total_reset == 0:
         print("[daily_reset] 無需重設")
     else:
