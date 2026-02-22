@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-22T23:03:05Z",
+  "updated_at": "2026-02-22T23:31:05Z",
   "categories": [
     "才多多",
     "顧問",
@@ -60,7 +60,7 @@
       "category": "顧問",
       "title": "【急件】兆鯨資料每日同步與索引",
       "status": "阻塞",
-      "next_action": "租金狀態: 資料核對中",
+      "next_action": "租金狀態: ",
       "role": "昌松",
       "block_reason": "Error: cron: job execution timed out"
     },
@@ -188,7 +188,7 @@
       "category": "理財",
       "title": "散熱族群股價追蹤(早)",
       "status": "待處理",
-      "next_action": "目前 SOX: 待更新",
+      "next_action": "目前 SOX: 價格",
       "role": "理財助",
       "block_reason": ""
     },
@@ -204,7 +204,7 @@
       "category": "理財",
       "title": "散熱族群股價追蹤",
       "status": "阻塞",
-      "next_action": "目前 SOX: 待更新",
+      "next_action": "目前 SOX: 價格",
       "role": "理財助",
       "block_reason": "cron announce delivery failed"
     },
