@@ -1,108 +1,536 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenClaw 管理儀表板</title>
+<title>Open Claw · 全儀表板</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:Arial;background:#0f172a;color:#e2e8f0}
-.container{max-width:1200px;margin:auto;padding:20px}
-h1{margin:0 0 10px}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}
-.card{background:#1e293b;padding:20px;border-radius:12px}
-.card h2{margin:0;font-size:14px;color:#94a3b8}
-.card p{margin:10px 0 0;font-size:28px;font-weight:bold}
-.table-wrap{background:#1e293b;border-radius:12px;padding:20px}
-table{width:100%;border-collapse:collapse}
-th,td{padding:12px;text-align:left}
-th{color:#94a3b8;border-bottom:1px solid #334155}
-tr:not(:last-child){border-bottom:1px solid #334155}
-.status{padding:4px 10px;border-radius:20px;font-size:12px}
-.done{background:#065f46;color:#34d399}
-.block{background:#7f1d1d;color:#f87171}
-.pending{background:#374151;color:#d1d5db}
-.live{color:#22c55e;font-weight:bold}
-.header{display:flex;justify-content:space-between;align-items:center}
+:root{
+  --bg:#F1F1EF;--bg2:#F8F8F7;--bg3:#E8E8E6;
+  --panel:#FFFFFF;--border:#E2E2DE;--border2:#C8C8C4;
+  --text:#242422;--dim:#8C8C88;--muted:#B4B4B0;
+  --bright:#0C0C0A;
+  --urgent-bg:#FBF5EE;--urgent-bd:#DDB87A;
+  --blocked-bg:#F9F2FC;--blocked-bd:#C090D8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ── HEADER ── */
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:56px;
+  background:var(--panel);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:200;
+}
+.hdr-l{display:flex;align-items:center;gap:11px}
+.logo{width:36px;height:36px;border-radius:50%;overflow:hidden;border:1.5px solid var(--border2);flex-shrink:0}
+.logo img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.hdr-name{font-size:13px;font-weight:700;color:var(--bright)}
+.hdr-sub{font-size:10px;color:var(--muted);font-weight:300}
+.hdr-clock{font-size:11px;color:var(--muted);font-weight:300;text-align:right;line-height:1.7}
+
+/* ── ALERT STRIP ── */
+#alert-strip{
+  background:var(--panel);border-bottom:1px solid var(--border);
+  padding:0 28px;height:34px;
+  display:flex;align-items:center;gap:0;
+  overflow-x:auto;white-space:nowrap;scrollbar-width:none;
+  position:sticky;top:56px;z-index:190;
+  transition:background .2s,border-color .2s;
+}
+#alert-strip::-webkit-scrollbar{display:none}
+#alert-strip.live{background:var(--urgent-bg);border-bottom-color:var(--urgent-bd)}
+.a-lbl{font-size:9px;font-weight:600;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;flex-shrink:0;margin-right:12px}
+.a-lbl.hot{color:#9A6030}
+.a-chip{
+  display:inline-flex;align-items:center;gap:5px;flex-shrink:0;
+  font-size:10px;font-weight:400;
+  border:1px solid var(--border2);background:var(--bg);color:var(--dim);
+  padding:2px 9px 2px 6px;border-radius:20px;margin-right:6px;
+}
+.a-chip.u{border-color:#D4A070;background:#FDF1E4;color:#8A5A28}
+.a-chip.b{border-color:#B070C8;background:#F3EAF8;color:#6A2888}
+.a-chip.r{border-color:#70A4C8;background:#EAF3FA;color:#2A6688}
+.a-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.a-chip.u .a-dot{background:#D4883A}
+.a-chip.b .a-dot{background:#8830C4}
+.a-chip.r .a-dot{background:#3A88C4}
+.a-area{font-size:9px;color:inherit;opacity:.6;margin-left:2px}
+.a-sep{width:1px;height:11px;background:var(--border);flex-shrink:0;margin:0 5px}
+.a-none{font-size:11px;color:var(--muted);font-weight:300}
+
+/* ── MAIN ── */
+main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:column;gap:20px}
+
+/* section label */
+.sec-lbl{
+  font-size:9px;letter-spacing:1.5px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+}
+.sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
+
+/* ── WARNING CARDS ── */
+.warn-grid{display:flex;flex-direction:column;gap:8px}
+.warn-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;display:flex;flex-direction:column;gap:7px;
+}
+.warn-card.urgent{border-color:var(--urgent-bd);background:var(--urgent-bg)}
+.warn-card.blocked{border-color:var(--blocked-bd);background:var(--blocked-bg)}
+.wc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.wc-title{font-size:13px;font-weight:500;color:var(--bright);flex:1;line-height:1.4}
+.wc-tags{display:flex;gap:5px;flex-shrink:0;align-items:center}
+.tag{font-size:9px;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.tag-area{background:var(--bg3);color:var(--dim);border:1px solid var(--border)}
+.tag-pri{border:1px solid var(--border2);color:var(--dim)}
+.tag-pri.urgent{border-color:#D4A070;color:#8A5A28;background:#FDF1E4}
+.tag-pri.important{border-color:var(--border2);color:var(--text);background:var(--bg2)}
+.tag-status{border:1px solid var(--border);color:var(--dim)}
+.tag-status.blocked{border-color:#B070C8;color:#6A2888;background:#F3EAF8}
+.tag-type{background:var(--bg3);color:var(--dim)}
+.tag-type.remittance{background:#EAF3FA;color:#2A6688}
+.wc-meta{display:flex;gap:14px;font-size:10px;color:var(--dim)}
+.wc-meta-lbl{font-size:9px;color:var(--muted);margin-right:3px}
+.wc-next{font-size:10px;color:var(--dim);background:var(--bg2);border-radius:6px;padding:5px 10px}
+.wc-blocked{font-size:10px;color:#6A2888;background:#F3EAF8;border:1px solid #D4A0DC;border-radius:6px;padding:5px 10px}
+.warn-empty{font-size:12px;color:var(--muted);padding:16px 0;text-align:center}
+
+/* ── DAILY BRIEF ── */
+.brief-wrap{
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  padding:18px 20px;display:flex;flex-direction:column;gap:14px;
+}
+.brief-date{font-size:11px;font-weight:600;color:var(--bright);letter-spacing:.5px}
+.brief-block{display:flex;flex-direction:column;gap:4px}
+.brief-lbl{
+  font-size:9px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px;
+}
+.brief-line{
+  font-size:12px;color:var(--dim);font-weight:300;line-height:1.8;
+  display:flex;align-items:baseline;gap:8px;
+}
+.brief-time{
+  font-size:10px;font-weight:600;color:var(--muted);
+  min-width:40px;flex-shrink:0;
+}
+.brief-text{flex:1;color:var(--text)}
+.brief-line .b-blk{font-size:9px;color:#6A2888;background:#F3EAF8;border-radius:4px;padding:1px 6px;margin-left:4px}
+.brief-line .b-urg{font-size:9px;color:#8A5A28;background:#FDF1E4;border-radius:4px;padding:1px 6px;margin-left:4px}
+.brief-line .b-due{font-size:9px;color:var(--muted);margin-left:4px}
+.brief-div{height:1px;background:var(--border)}
+
+/* ── ACCORDION: 全區總覽 ── */
+.acc-wrap{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.acc-item{border-bottom:1px solid var(--border)}
+.acc-item:last-child{border-bottom:none}
+
+.acc-hdr{
+  display:flex;align-items:center;gap:0;
+  padding:0;cursor:pointer;user-select:none;
+  transition:background .1s;
+}
+.acc-hdr:hover{background:var(--bg2)}
+.acc-toggle{
+  font-size:15px;color:var(--muted);
+  width:44px;height:52px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:transform .2s;
+}
+.acc-toggle.open{transform:rotate(90deg)}
+.acc-info{flex:1;padding:12px 0;min-width:0}
+.acc-name{font-size:14px;font-weight:600;color:var(--bright)}
+.acc-role{font-size:10px;color:var(--muted);font-weight:300;margin-top:2px}
+.acc-counts{display:flex;gap:6px;padding:12px 0;flex-shrink:0}
+.cnt-badge{
+  display:flex;flex-direction:column;align-items:center;
+  background:var(--bg2);border:1px solid var(--border);border-radius:7px;
+  padding:6px 12px;min-width:52px;
+}
+.cnt-badge.hot{border-color:#B070C8;background:#F9F2FC}
+.cnt-val{font-size:18px;font-weight:700;color:var(--bright);line-height:1}
+.cnt-badge.hot .cnt-val{color:#6A2888}
+.cnt-lbl{font-size:8px;color:var(--muted);font-weight:500;margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+.acc-link{
+  display:flex;align-items:center;justify-content:center;
+  width:44px;height:52px;flex-shrink:0;
+  font-size:18px;color:var(--muted);text-decoration:none;
+  transition:color .12s;border-left:1px solid var(--border);
+}
+.acc-link:hover{color:var(--text);background:var(--bg3)}
+
+/* accordion body */
+.acc-body{border-top:1px solid var(--border);display:none}
+.acc-body.open{display:block}
+.acc-tbl{width:100%;border-collapse:collapse}
+.acc-tbl td{
+  padding:8px 14px;border-bottom:1px solid var(--border);
+  font-size:11px;vertical-align:middle;font-weight:300;
+}
+.acc-tbl tr:last-child td{border-bottom:none}
+.acc-tbl tr:hover td{background:var(--bg2)}
+.ov-ttl{color:var(--text);font-weight:400;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.t-pri{font-size:9px;padding:2px 8px;border-radius:20px;border:1px solid var(--border2);color:var(--dim);white-space:nowrap}
+.t-pri.urgent{border-color:#D4A070;color:#8A5A28}
+.t-pri.important{color:var(--text)}
+.t-type{font-size:9px;padding:2px 8px;background:var(--bg3);color:var(--dim);border-radius:20px;white-space:nowrap}
+.t-type.alert{background:#E8F4E8;color:#2A6830}
+.t-type.remittance{background:#EAF3FA;color:#2A6688}
+.t-status{font-size:9px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);color:var(--dim);white-space:nowrap}
+.t-status.blocked{border-color:#B070C8;color:#6A2888;background:#F3EAF8}
+.t-status.done{color:var(--muted)}
+.t-due{font-size:10px;color:var(--muted);white-space:nowrap}
+.acc-empty{padding:14px 18px;font-size:11px;color:var(--muted)}
+
+/* responsive */
+@media(max-width:640px){
+  header{padding:0 16px}
+  #alert-strip{padding:0 16px}
+  main{padding:16px;gap:16px}
+  .acc-counts{display:none}
+}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 </style>
 </head>
 <body>
-<div class="container">
-<div class="header">
-<div>
-<h1>OpenClaw 管理儀表板</h1>
-<p id="updated"></p>
-</div>
-<div class="live">● LIVE</div>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr-l">
+    <div class="logo"><img src="assets/avatar.png" alt="大總管"></div>
+    <div>
+      <div class="hdr-name">Open Claw</div>
+      <div class="hdr-sub">全儀表板</div>
+    </div>
+  </div>
+  <div id="clk" class="hdr-clock"></div>
+</header>
+
+<!-- ALERT STRIP -->
+<div id="alert-strip">
+  <span class="a-lbl" id="a-lbl">急件</span>
+  <span id="a-items" class="a-none">載入中…</span>
 </div>
 
-<div class="cards">
-<div class="card"><h2>總任務</h2><p id="total">0</p></div>
-<div class="card"><h2>待處理</h2><p id="pending">0</p></div>
-<div class="card"><h2>進行中</h2><p id="progress">0</p></div>
-<div class="card"><h2>阻塞</h2><p id="blocked">0</p></div>
-<div class="card"><h2>已完成</h2><p id="done">0</p></div>
-</div>
+<main>
 
-<div class="table-wrap">
-<h2>任務列表</h2>
-<table>
-<thead>
-<tr>
-<th>類別</th>
-<th>任務</th>
-<th>狀態</th>
-<th>下一步</th>
-<th>角色</th>
-<th>阻塞原因</th>
-</tr>
-</thead>
-<tbody id="tbody"></tbody>
-</table>
-</div>
-</div>
+  <!-- SECTION 1: 重點警示 -->
+  <section>
+    <div class="sec-lbl">重點警示</div>
+    <div class="warn-grid" id="warn-grid">
+      <div class="warn-empty">載入中…</div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: 今日提醒 -->
+  <section>
+    <div class="sec-lbl">今日提醒</div>
+    <div class="brief-wrap" id="brief-wrap">載入中…</div>
+  </section>
+
+  <!-- SECTION 3: 全區總覽 (4 accordions) -->
+  <section>
+    <div class="sec-lbl">全區總覽</div>
+    <div class="acc-wrap" id="acc-wrap">
+      <div style="padding:20px;font-size:11px;color:var(--muted)">載入中…</div>
+    </div>
+  </section>
+
+</main>
 
 <script>
-async function load(){
-const res=await fetch("tasks.json?"+Date.now());
-const data=await res.json();
+const AREAS = [
+  { key:"openclaw", name:"OpenClaw",  role:"開發優化師", path:"openclaw/",  data:"data/openclaw/tasks.json"  },
+  { key:"caitodo",  name:"才多多",    role:"才多多",     path:"caitodo/",   data:"data/caitodo/tasks.json"   },
+  { key:"zhaojing", name:"兆鯨顧問",  role:"兆鯨顧問",   path:"zhaojing/",  data:"data/zhaojing/tasks.json"  },
+  { key:"finance",  name:"理財分析師", role:"理財分析師", path:"finance/",   data:"data/finance/tasks.json"   },
+];
 
-document.getElementById("updated").innerText="更新："+data.updated_at;
+const DATA = {};
+const PRI_LBL  = {urgent:"急件",important:"重要",normal:"一般"};
+const TYPE_LBL = {remittance:"💳 匯款",alert:"🔔 提醒",task:"任務"};
 
-let total=data.items.length;
-let pending=0,progress=0,blocked=0,done=0;
+function isWarn(t){ return t.priority==="urgent" || t.type==="remittance" || t.status==="阻塞"; }
 
-const tbody=document.getElementById("tbody");
-tbody.innerHTML="";
-
-data.items.forEach(item=>{
-if(item.status==="待處理") pending++;
-if(item.status==="進行中") progress++;
-if(item.status==="阻塞") blocked++;
-if(item.status==="已完成") done++;
-
-let statusClass="pending";
-if(item.status==="已完成") statusClass="done";
-if(item.status==="阻塞") statusClass="block";
-
-const tr=document.createElement("tr");
-tr.innerHTML=`
-<td>${item.category||"-"}</td>
-<td>${item.title}</td>
-<td><span class="status ${statusClass}">${item.status}</span></td>
-<td>${item.next_step||"-"}</td>
-<td>${item.owner_role||"-"}</td>
-<td>${item.blocked_reason||"-"}</td>
-`;
-tbody.appendChild(tr);
-});
-
-document.getElementById("total").innerText=total;
-document.getElementById("pending").innerText=pending;
-document.getElementById("progress").innerText=progress;
-document.getElementById("blocked").innerText=blocked;
-document.getElementById("done").innerText=done;
+function chipCls(t){
+  if(t.type==="remittance") return "r";
+  if(t.status==="阻塞")     return "b";
+  return "u";
 }
-load();
+function chipIcon(t){
+  if(t.type==="remittance") return "💳";
+  if(t.status==="阻塞")     return "🚫";
+  return "⚡";
+}
+function fmtTs(iso){
+  if(!iso||iso==="-") return "-";
+  const d=new Date(iso); if(isNaN(d)) return iso;
+  const now=new Date();
+  if(d.toDateString()===now.toDateString())
+    return "今日 "+d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
+  return d.toLocaleDateString("zh-TW",{month:"2-digit",day:"2-digit"})+" "+
+         d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
+}
+function counts(tasks){
+  const c={pending:0,blocked:0,done:0};
+  tasks.forEach(t=>{
+    if(t.status==="已完成") c.done++;
+    else if(t.status==="阻塞") c.blocked++;
+    else c.pending++;
+  });
+  return c;
+}
+
+// ── ALERT STRIP ────────────────────────────────────────────────
+function renderStrip(){
+  const strip=document.getElementById("alert-strip");
+  const lbl  =document.getElementById("a-lbl");
+  const el   =document.getElementById("a-items");
+  const items=[];
+  AREAS.forEach(area=>{
+    (DATA[area.key]?.tasks||[]).filter(isWarn).forEach(t=>items.push({t,area}));
+  });
+  if(!items.length){
+    strip.classList.remove("live"); lbl.classList.remove("hot");
+    lbl.textContent="急件"; el.className="a-none";
+    el.textContent="目前無急件・無待匯款・無阻塞"; return;
+  }
+  strip.classList.add("live"); lbl.classList.add("hot");
+  lbl.textContent=`急件 (${items.length})`; el.className="";
+  el.innerHTML=items.map(({t,area},i)=>`
+    ${i>0?'<span class="a-sep"></span>':''}
+    <span class="a-chip ${chipCls(t)}">
+      <span class="a-dot"></span>${chipIcon(t)} ${t.title}
+      <span class="a-area">[${area.name}]</span>
+    </span>`).join("");
+}
+
+// ── WARNING CARDS ──────────────────────────────────────────────
+function renderWarnings(){
+  const grid=document.getElementById("warn-grid");
+  const items=[];
+  AREAS.forEach(area=>{
+    (DATA[area.key]?.tasks||[]).filter(isWarn).forEach(t=>items.push({t,area}));
+  });
+
+  // sort: blocked first, then urgent, then remittance; by due date
+  items.sort((a,b)=>{
+    const rank=x=>(x.t.status==="阻塞"?0:x.t.priority==="urgent"?1:2);
+    if(rank(a)!==rank(b)) return rank(a)-rank(b);
+    return (a.t.due||"9999")>(b.t.due||"9999")?1:-1;
+  });
+
+  if(!items.length){
+    grid.innerHTML='<div class="warn-empty">目前無急件、無阻塞、無待匯款 ✓</div>';
+    return;
+  }
+
+  grid.innerHTML=items.map(({t,area})=>{
+    const isBlk=t.status==="阻塞";
+    const cls=isBlk?"warn-card blocked":t.priority==="urgent"?"warn-card urgent":"warn-card";
+    const meta=[];
+    if(t.due&&t.due!=="-") meta.push(`<span><span class="wc-meta-lbl">到期</span>${t.due}</span>`);
+    return `<div class="${cls}">
+      <div class="wc-top">
+        <div class="wc-title">${t.title}</div>
+        <div class="wc-tags">
+          <span class="tag tag-area">${area.name}</span>
+          <span class="tag tag-pri ${t.priority||''}">${PRI_LBL[t.priority]||t.priority}</span>
+          <span class="tag tag-status ${isBlk?"blocked":""}">${t.status}</span>
+          ${t.type==="remittance"?'<span class="tag tag-type remittance">💳 匯款</span>':""}
+        </div>
+      </div>
+      ${meta.length?`<div class="wc-meta">${meta.join("")}</div>`:""}
+      ${t.next_step&&t.next_step!=="-"?`<div class="wc-next">→ ${t.next_step}</div>`:""}
+      ${t.blocked_reason&&t.blocked_reason!=="-"?`<div class="wc-blocked">🚫 ${t.blocked_reason}</div>`:""}
+    </div>`;
+  }).join("");
+}
+
+// ── DAILY BRIEF ───────────────────────────────────────────────
+function renderBrief(){
+  const wrap = document.getElementById("brief-wrap");
+  const now  = new Date();
+  const days = ["日","一","二","三","四","五","六"];
+  const isMonday = now.getDay() === 1;
+  const dateStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")} 週${days[now.getDay()]}`;
+
+  // 早班任務（06:00-10:00），時間排序
+  const morning = [];
+  AREAS.forEach(area=>{
+    (DATA[area.key]?.tasks||[]).forEach(t=>{
+      if(!t.time || t.time==="-") return;
+      const h = parseInt(t.time.split(":")[0]);
+      if(h < 6 || h >= 10) return;
+      // 週一限定：非週一就跳過
+      if(t.freq==="weekly-mon" && !isMonday) return;
+      morning.push({t, area});
+    });
+  });
+  morning.sort((a,b)=> a.t.time > b.t.time ? 1 : -1);
+
+  // 近期到期（有 due 且非 "-"，已完成除外）
+  const dueItems = [];
+  AREAS.forEach(area=>{
+    (DATA[area.key]?.tasks||[]).forEach(t=>{
+      if(!t.due || t.due==="-" || t.status==="已完成") return;
+      dueItems.push({t, area});
+    });
+  });
+  dueItems.sort((a,b)=> a.t.due > b.t.due ? 1 : -1);
+
+  // 阻塞總覽
+  const blocked = [];
+  AREAS.forEach(area=>{
+    (DATA[area.key]?.tasks||[]).filter(t=>t.status==="阻塞").forEach(t=>blocked.push({t,area}));
+  });
+
+  const morningHTML = morning.length
+    ? morning.map(({t,area})=>`
+        <div class="brief-line">
+          <span class="brief-time">${t.time}</span>
+          <span class="brief-text">${t.title}
+            <span style="font-size:9px;color:var(--muted)">（${area.name}）</span>
+            ${t.status==="阻塞"?'<span class="b-blk">阻塞</span>':""}
+            ${t.status!=="阻塞"&&t.priority==="urgent"?'<span class="b-urg">急件</span>':""}
+          </span>
+        </div>`).join("")
+    : `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">今日無早班排程</span></div>`;
+
+  const dueHTML = dueItems.length
+    ? dueItems.map(({t,area})=>`
+        <div class="brief-line">
+          <span class="brief-text">${t.title}
+            <span style="font-size:9px;color:var(--muted)">（${area.name}）</span>
+            <span class="b-due">→ ${t.due}</span>
+          </span>
+        </div>`).join("")
+    : `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">無近期到期項目</span></div>`;
+
+  const blockedHTML = blocked.length
+    ? blocked.map(({t,area})=>`
+        <div class="brief-line">
+          <span class="brief-text">${t.title}
+            <span style="font-size:9px;color:var(--muted)">（${area.name}）</span>
+            <span class="b-blk">阻塞</span>
+          </span>
+        </div>`).join("")
+    : `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">無阻塞項目 ✓</span></div>`;
+
+  wrap.innerHTML = `
+    <div class="brief-date">${dateStr}</div>
+    <div class="brief-div"></div>
+    <div class="brief-block">
+      <div class="brief-lbl">早班 06:00–10:00${isMonday?" · 含週一任務":""}</div>
+      ${morningHTML}
+    </div>
+    <div class="brief-div"></div>
+    <div class="brief-block">
+      <div class="brief-lbl">近期到期</div>
+      ${dueHTML}
+    </div>
+    <div class="brief-div"></div>
+    <div class="brief-block">
+      <div class="brief-lbl">阻塞中（${blocked.length} 件）</div>
+      ${blockedHTML}
+    </div>`;
+}
+
+// ── ACCORDIONS ─────────────────────────────────────────────────
+const accState={};
+
+function toggleAcc(key){
+  accState[key]=!accState[key];
+  const body  =document.getElementById("acc-body-"+key);
+  const toggle=document.getElementById("acc-tog-"+key);
+  body.classList.toggle("open",accState[key]);
+  toggle.classList.toggle("open",accState[key]);
+}
+
+function sortTasks(ts){
+  return [...ts].sort((a,b)=>{
+    const pa={urgent:0,important:1,normal:2};
+    const sa={阻塞:0};
+    const av=(pa[a.priority]??2)+(sa[a.status]??1);
+    const bv=(pa[b.priority]??2)+(sa[b.status]??1);
+    if(av!==bv) return av-bv;
+    return (a.due||"9999")>(b.due||"9999")?1:-1;
+  });
+}
+
+function renderAccordions(){
+  const wrap=document.getElementById("acc-wrap");
+  wrap.innerHTML=AREAS.map(area=>{
+    const d=DATA[area.key]; const tasks=sortTasks(d?.tasks||[]);
+    const c=counts(tasks);
+    const hot=c.blocked>0;
+
+    const rows=tasks.length ? tasks.map(t=>`
+      <tr>
+        <td class="ov-ttl" title="${t.title}">${t.title}</td>
+        <td><span class="t-pri ${t.priority||''}">${PRI_LBL[t.priority]||t.priority}</span></td>
+        <td><span class="t-type ${t.type||''}">${TYPE_LBL[t.type]||t.type}</span></td>
+        <td><span class="t-status ${t.status==="阻塞"?"blocked":t.status==="已完成"?"done":""}">${t.status}</span></td>
+        <td class="t-due">${t.due&&t.due!=="-"?t.due:""}</td>
+      </tr>`).join("") :
+      `<tr><td colspan="5" class="acc-empty">暫無任務資料</td></tr>`;
+
+    return `
+    <div class="acc-item">
+      <div class="acc-hdr" onclick="toggleAcc('${area.key}')">
+        <span class="acc-toggle" id="acc-tog-${area.key}">›</span>
+        <div class="acc-info">
+          <div class="acc-name">${area.name}</div>
+          <div class="acc-role">${area.role}</div>
+        </div>
+        <div class="acc-counts">
+          ${hot?`<div class="cnt-badge hot"><div class="cnt-val">${c.blocked}</div><div class="cnt-lbl">阻塞</div></div>`:""}
+          <div class="cnt-badge"><div class="cnt-val">${c.pending}</div><div class="cnt-lbl">待處理</div></div>
+          <div class="cnt-badge"><div class="cnt-val">${c.done}</div><div class="cnt-lbl">完成</div></div>
+        </div>
+        <a class="acc-link" href="${area.path}" onclick="event.stopPropagation()" title="前往 ${area.name}">›</a>
+      </div>
+      <div class="acc-body" id="acc-body-${area.key}">
+        <table class="acc-tbl"><tbody>${rows}</tbody></table>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// ── FETCH & INIT ────────────────────────────────────────────────
+async function loadArea(area){
+  try{
+    const r=await fetch(area.data+"?_="+Date.now());
+    if(!r.ok) throw 0;
+    return await r.json();
+  }catch(e){ return null; }
+}
+
+async function init(){
+  const results=await Promise.all(AREAS.map(loadArea));
+  AREAS.forEach((a,i)=>{ DATA[a.key]=results[i]||{updated_at:null,tasks:[]}; });
+  renderStrip();
+  renderWarnings();
+  renderBrief();
+  renderAccordions();
+}
+
+// ── CLOCK ───────────────────────────────────────────────────────
+function tick(){
+  const e=document.getElementById("clk"); if(!e) return;
+  const now=new Date();
+  const days=["日","一","二","三","四","五","六"];
+  const date=`${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")} 週${days[now.getDay()]}`;
+  const time=now.toLocaleTimeString("zh-TW",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  e.innerHTML=`${time}<br>${date}`;
+}
+tick(); setInterval(tick,1000);
+init();
 </script>
 </body>
 </html>

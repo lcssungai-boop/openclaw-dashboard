@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>才多多</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F1F1EF;--bg2:#F8F8F7;--bg3:#E8E8E6;
+  --panel:#FFFFFF;--border:#E2E2DE;--border2:#C8C8C4;
+  --text:#242422;--dim:#8C8C88;--muted:#B4B4B0;
+  --bright:#0C0C0A;--accent:#383836;
+  --urgent-bg:#FBF5EE;--urgent-bd:#DDB87A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:56px;
+  background:var(--panel);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:200;
+}
+.hdr-l{display:flex;align-items:center;gap:11px}
+.back-btn{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;color:var(--dim);text-decoration:none;font-weight:400;
+  padding:5px 10px;border-radius:6px;transition:background .12s,color .12s;
+}
+.back-btn:hover{background:var(--bg3);color:var(--text)}
+.hdr-div{width:1px;height:20px;background:var(--border);margin:0 4px}
+.logo{width:36px;height:36px;border-radius:50%;overflow:hidden;border:1.5px solid var(--border2);flex-shrink:0}
+.logo img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.hdr-name{font-size:13px;font-weight:700;color:var(--bright)}
+.hdr-sub{font-size:10px;color:var(--muted);font-weight:300}
+.hdr-clock{font-size:11px;color:var(--muted);font-weight:300;text-align:right;line-height:1.7}
+
+/* summary bar */
+.sum-bar{
+  background:var(--panel);border-bottom:1px solid var(--border);
+  padding:0 28px;height:38px;display:flex;align-items:center;gap:16px;
+  position:sticky;top:56px;z-index:190;
+  font-size:10px;color:var(--dim);
+}
+.sum-bdg{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:2px 10px;border-radius:20px;border:1px solid var(--border);font-size:10px;
+}
+.sum-bdg.blocked{border-color:#B070C8;color:#6A2888;background:#F3EAF8}
+.sum-bdg.urgent{border-color:#D4A070;color:#8A5A28;background:#FDF1E4}
+.sum-bdg.done{color:var(--muted)}
+.sum-ts{margin-left:auto;font-size:9px;color:var(--muted)}
+
+main{max-width:860px;margin:0 auto;padding:24px 24px;display:flex;flex-direction:column;gap:10px}
+
+/* section label */
+.sec-lbl{
+  font-size:9px;letter-spacing:1.5px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;margin-bottom:10px;
+  display:flex;align-items:center;gap:10px;
+}
+.sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
+
+/* task card */
+.task-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;display:flex;flex-direction:column;gap:8px;
+  transition:box-shadow .12s;
+}
+.task-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.task-card.urgent-card{border-color:var(--urgent-bd);background:var(--urgent-bg)}
+.task-card.blocked-card{border-color:#B070C8;background:#F9F2FC}
+.tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.tc-title{font-size:13px;font-weight:500;color:var(--bright);line-height:1.4;flex:1}
+.tc-tags{display:flex;gap:5px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.tag{font-size:9px;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.tag-pri{border:1px solid var(--border2);color:var(--dim)}
+.tag-pri.urgent{border-color:#D4A070;color:#8A5A28;background:#FDF1E4}
+.tag-pri.important{border-color:var(--border2);color:var(--text);background:var(--bg2)}
+.tag-type{background:var(--bg3);color:var(--dim)}
+.tag-type.alert{background:#E8F4E8;color:#2A6830}
+.tag-type.remittance{background:#EAF3FA;color:#2A6688}
+.tag-status{border:1px solid var(--border);color:var(--dim)}
+.tag-status.blocked{border-color:#B070C8;color:#6A2888;background:#F3EAF8}
+.tag-status.done{color:var(--muted);background:var(--bg2)}
+.tc-meta{display:flex;gap:16px;font-size:10px;color:var(--dim)}
+.tc-meta-item{display:flex;align-items:center;gap:4px}
+.tc-meta-lbl{font-size:9px;color:var(--muted)}
+.tc-blocked{
+  font-size:10px;color:#6A2888;
+  background:#F3EAF8;border:1px solid #D4A0DC;border-radius:6px;
+  padding:5px 10px;
+}
+.tc-next{
+  font-size:10px;color:var(--dim);
+  background:var(--bg2);border-radius:6px;
+  padding:5px 10px;
+}
+
+/* group */
+.grp{margin-bottom:8px}
+
+/* loading / empty */
+.loading-wrap{text-align:center;padding:60px 0;font-size:12px;color:var(--muted)}
+
+@media(max-width:640px){
+  header{padding:0 16px}
+  .sum-bar{padding:0 16px}
+  main{padding:16px}
+  .tc-top{flex-direction:column;gap:6px}
+  .tc-tags{justify-content:flex-start}
+}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-l">
+    <a class="back-btn" href="../">‹ 返回</a>
+    <div class="hdr-div"></div>
+    <div class="logo"><img src="../assets/avatar.png" alt="大總管"></div>
+    <div>
+      <div class="hdr-name">才多多</div>
+      <div class="hdr-sub">才多多</div>
+    </div>
+  </div>
+  <div id="clk" class="hdr-clock"></div>
+</header>
+
+<div class="sum-bar" id="sum-bar">
+  <span id="sum-content">載入中…</span>
+  <span class="sum-ts" id="sum-ts"></span>
+</div>
+
+<main id="main">
+  <div class="loading-wrap">載入任務中…</div>
+</main>
+
+<script>
+const CFG = {
+  name: "才多多",
+  role: "才多多",
+  dataPath: "../data/caitodo/tasks.json"
+};
+
+const PRI_ORDER = {urgent:0, important:1, normal:2};
+const PRI_LBL   = {urgent:"急件", important:"重要", normal:"一般"};
+const TYPE_LBL  = {remittance:"💳 匯款", alert:"🔔 提醒", task:"任務"};
+const STATUS_CLS= {"阻塞":"blocked","已完成":"done"};
+
+function fmtTs(iso){
+  if(!iso||iso==="-") return "-";
+  const d=new Date(iso); if(isNaN(d)) return iso;
+  const now=new Date();
+  if(d.toDateString()===now.toDateString()){
+    return "今日 "+d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
+  }
+  return d.toLocaleDateString("zh-TW",{month:"2-digit",day:"2-digit"})+" "+
+         d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
+}
+
+function renderSummary(tasks, ts){
+  const c={pending:0,blocked:0,done:0};
+  tasks.forEach(t=>{
+    if(t.status==="已完成") c.done++;
+    else if(t.status==="阻塞") c.blocked++;
+    else c.pending++;
+  });
+  const parts=[];
+  if(c.blocked) parts.push(`<span class="sum-bdg blocked">🚫 阻塞 ${c.blocked}</span>`);
+  parts.push(`<span class="sum-bdg urgent">待處理 ${c.pending}</span>`);
+  parts.push(`<span class="sum-bdg done">已完成 ${c.done}</span>`);
+  document.getElementById("sum-content").innerHTML = parts.join("");
+  document.getElementById("sum-ts").textContent = "更新 " + fmtTs(ts);
+}
+
+function taskCard(t){
+  const priCls  = t.priority || "normal";
+  const typeCls = t.type || "task";
+  const stCls   = STATUS_CLS[t.status] || "";
+  const isBlk   = t.status==="阻塞";
+  const isUrg   = t.priority==="urgent";
+
+  const cardCls = isBlk ? "task-card blocked-card" : isUrg ? "task-card urgent-card" : "task-card";
+
+  const meta=[];
+  if(t.due && t.due!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">到期</span> ${t.due}</span>`);
+  if(t.owner_role && t.owner_role!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">負責</span> ${t.owner_role}</span>`);
+
+  return `<div class="${cardCls}">
+    <div class="tc-top">
+      <div class="tc-title">${t.title}</div>
+      <div class="tc-tags">
+        <span class="tag tag-pri ${priCls}">${PRI_LBL[t.priority]||t.priority}</span>
+        <span class="tag tag-type ${typeCls}">${TYPE_LBL[t.type]||t.type}</span>
+        <span class="tag tag-status ${stCls}">${t.status}</span>
+      </div>
+    </div>
+    ${meta.length ? `<div class="tc-meta">${meta.join("")}</div>` : ""}
+    ${t.next_step && t.next_step!=="-" ? `<div class="tc-next">→ ${t.next_step}</div>` : ""}
+    ${t.blocked_reason && t.blocked_reason!=="-" ? `<div class="tc-blocked">🚫 ${t.blocked_reason}</div>` : ""}
+  </div>`;
+}
+
+function renderTasks(data){
+  const tasks = data.tasks || [];
+  const main = document.getElementById("main");
+
+  if(!tasks.length){
+    main.innerHTML = `<div class="loading-wrap">目前無任務資料</div>`;
+    return;
+  }
+
+  renderSummary(tasks, data.updated_at);
+
+  const groups = [
+    { label:"阻塞中", filter: t => t.status==="阻塞" },
+    { label:"待處理 · 急件", filter: t => t.status!=="阻塞" && t.status!=="已完成" && t.priority==="urgent" },
+    { label:"待處理 · 重要", filter: t => t.status!=="阻塞" && t.status!=="已完成" && t.priority==="important" },
+    { label:"待處理 · 一般", filter: t => t.status!=="阻塞" && t.status!=="已完成" && t.priority==="normal" },
+    { label:"已完成",         filter: t => t.status==="已完成" },
+  ];
+
+  main.innerHTML = groups.map(g=>{
+    const items = tasks.filter(g.filter);
+    if(!items.length) return "";
+    return `<div class="grp">
+      <div class="sec-lbl">${g.label}</div>
+      ${items.map(taskCard).join("")}
+    </div>`;
+  }).join("");
+}
+
+async function init(){
+  try{
+    const r = await fetch(CFG.dataPath+"?_="+Date.now());
+    if(!r.ok) throw 0;
+    renderTasks(await r.json());
+  } catch(e){
+    document.getElementById("main").innerHTML = `<div class="loading-wrap">無法載入 tasks.json</div>`;
+  }
+}
+
+function tick(){
+  const e=document.getElementById("clk"); if(!e) return;
+  const now=new Date();
+  const days=["日","一","二","三","四","五","六"];
+  const date=`${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")} 週${days[now.getDay()]}`;
+  const time=now.toLocaleTimeString("zh-TW",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  e.innerHTML=`${time}<br>${date}`;
+}
+tick(); setInterval(tick,1000);
+init();
+</script>
+</body>
+</html>

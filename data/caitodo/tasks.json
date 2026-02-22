@@ -1,0 +1,8 @@
+{
+  "updated_at": "2026-02-22T05:41:14Z",
+  "tasks": [
+    { "title": "才多多週會重點確認提醒",   "status": "待處理", "next_step": "-", "owner_role": "才多多", "blocked_reason": "-", "priority": "important", "type": "alert", "due": "-", "time": "-", "freq": "weekly", "updated_at": "2026-02-22T05:41:14Z" },
+    { "title": "三年免招募費專案追蹤提醒", "status": "待處理", "next_step": "-", "owner_role": "才多多", "blocked_reason": "-", "priority": "normal",    "type": "alert", "due": "-", "time": "-", "freq": "-",      "updated_at": "2026-02-22T05:41:14Z" },
+    { "title": "BNI簡報與key單準備提醒",   "status": "待處理", "next_step": "-", "owner_role": "才多多", "blocked_reason": "-", "priority": "normal",    "type": "alert", "due": "-", "time": "-", "freq": "-",      "updated_at": "2026-02-22T05:41:14Z" }
+  ]
+}
