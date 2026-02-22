@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-22T22:39:05Z",
+  "updated_at": "2026-02-22T22:56:05Z",
   "categories": [
     "才多多",
     "顧問",
@@ -46,15 +46,23 @@
       "status": "阻塞",
       "next_action": "",
       "role": "",
-      "block_reason": "模型權限不足"
+      "block_reason": "model not allowed: openai-code"
     },
     {
-      "category": "理財",
+      "category": "系統",
       "title": "每日美股台股匯報",
       "status": "阻塞",
       "next_action": "",
       "role": "",
-      "block_reason": "訊息發送失敗"
+      "block_reason": "cron announce delivery failed"
+    },
+    {
+      "category": "顧問",
+      "title": "【急件】兆鯨資料每日同步與索引",
+      "status": "阻塞",
+      "next_action": "每日 08:00 執行",
+      "role": "昌松",
+      "block_reason": "執行逾時 (需優化腳本)"
     },
     {
       "category": "系統",
@@ -129,7 +137,7 @@
       "block_reason": ""
     },
     {
-      "category": "理財",
+      "category": "系統",
       "title": "週一台積電零股掛單提醒",
       "status": "待處理",
       "next_action": "",
@@ -153,7 +161,7 @@
       "block_reason": ""
     },
     {
-      "category": "開發",
+      "category": "系統",
       "title": "每日Token使用記錄",
       "status": "已完成",
       "next_action": "",
@@ -161,7 +169,7 @@
       "block_reason": ""
     },
     {
-      "category": "開發",
+      "category": "系統",
       "title": "記憶體優化提醒",
       "status": "已完成",
       "next_action": "",
@@ -198,18 +206,10 @@
       "status": "阻塞",
       "next_action": "",
       "role": "",
-      "block_reason": "訊息發送失敗"
+      "block_reason": "cron announce delivery failed"
     },
     {
-      "category": "顧問",
-      "title": "兆鯨資料每日同步與索引",
-      "status": "阻塞",
-      "next_action": "",
-      "role": "",
-      "block_reason": "Error: cron: job execution tim"
-    },
-    {
-      "category": "開發",
+      "category": "系統",
       "title": "記憶檔案每月歸檔",
       "status": "待處理",
       "next_action": "",
@@ -217,7 +217,7 @@
       "block_reason": ""
     },
     {
-      "category": "理財",
+      "category": "系統",
       "title": "每月定期定額規劃",
       "status": "待處理",
       "next_action": "",
@@ -233,7 +233,7 @@
       "block_reason": ""
     },
     {
-      "category": "理財",
+      "category": "系統",
       "title": "農曆三月劫財月-台積電買點提醒",
       "status": "待處理",
       "next_action": "",
