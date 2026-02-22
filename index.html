@@ -426,11 +426,14 @@ function renderBrief(){
   });
   morning.sort((a,b)=> a.t.time > b.t.time ? 1 : -1);
 
-  // 近期到期（有 due 且非 "-"，已完成除外）
+  // 近期到期（2 週內，已完成除外）
+  const twoWeeks = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
   const dueItems = [];
   AREAS.forEach(area=>{
     (DATA[area.key]?.tasks||[]).forEach(t=>{
       if(!t.due || t.due==="-" || t.status==="已完成") return;
+      const d = new Date(t.due.replace(/\//g,"-"));
+      if(isNaN(d) || d > twoWeeks) return;
       dueItems.push({t, area});
     });
   });
@@ -613,20 +616,35 @@ const WMO_DESC = {
   95:"雷陣雨",96:"雷陣雨",99:"雷陣雨"
 };
 
+const GEO_KEY = "oc_geo";
+const GEO_TTL = 12 * 60 * 60 * 1000; // 12 小時
+
 async function fetchWeather(){
   const el = document.getElementById("ib-weather");
   if(!el) return;
   try{
     let lat = 22.9999, lon = 120.2269, city = "台南";
-    // 手機可授權定位；電腦或拒絕則用台南預設
-    if(navigator.geolocation){
-      await new Promise(res=>{
-        navigator.geolocation.getCurrentPosition(
-          pos=>{ lat=pos.coords.latitude; lon=pos.coords.longitude; city=""; res(); },
-          ()=>res(), {timeout:4000, maximumAge:300000}
-        );
-      });
-    }
+
+    // 先讀 localStorage 快取
+    try{
+      const c = JSON.parse(localStorage.getItem(GEO_KEY)||"null");
+      if(c && Date.now() - c.ts < GEO_TTL){
+        lat = c.lat; lon = c.lon; city = "";
+      } else if(navigator.geolocation){
+        // 快取過期或無快取 → 重新取得位置
+        await new Promise(res=>{
+          navigator.geolocation.getCurrentPosition(
+            pos=>{
+              lat = pos.coords.latitude; lon = pos.coords.longitude; city = "";
+              localStorage.setItem(GEO_KEY, JSON.stringify({lat, lon, ts: Date.now()}));
+              res();
+            },
+            ()=>res(), {timeout:5000}
+          );
+        });
+      }
+    }catch(e){}
+
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode,windspeed_10m&timezone=Asia/Taipei`;
     const r = await fetch(url);
     if(!r.ok) throw 0;
