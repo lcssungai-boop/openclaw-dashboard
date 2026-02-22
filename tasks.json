@@ -21,7 +21,7 @@
     {
       "id": "870be614",
       "title": "兆鯨資料每日同步與索引",
-      "status": "阻塞",
+      "status": "待處理",
       "category": "系統"
     },
     {
@@ -45,13 +45,13 @@
     {
       "id": "2bdf58dc",
       "title": "每日健康檢查",
-      "status": "阻塞",
+      "status": "待處理",
       "category": "系統"
     },
     {
       "id": "341379a4",
       "title": "每日美股台股匯報",
-      "status": "阻塞",
+      "status": "待處理",
       "category": "系統"
     },
     {
@@ -153,7 +153,7 @@
     {
       "id": "ec8289dc",
       "title": "散熱族群股價追蹤",
-      "status": "阻塞",
+      "status": "待處理",
       "category": "系統"
     },
     {
