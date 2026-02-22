@@ -126,6 +126,8 @@ main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:colu
 
 /* ── ACCORDION: 全區總覽 ── */
 .acc-wrap{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.acc-item:first-child .acc-link{border-top-right-radius:11px}
+.acc-item:last-child  .acc-link{border-bottom-right-radius:11px}
 .acc-item{border-bottom:1px solid var(--border)}
 .acc-item:last-child{border-bottom:none}
 
@@ -187,29 +189,29 @@ main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:colu
 
 /* responsive — tablet */
 @media(max-width:1024px){
-  .hdr-name{font-size:15px}
-  .hdr-sub{font-size:12px}
-  .hdr-clock{font-size:13px}
-  .a-lbl{font-size:11px}
-  .a-chip{font-size:12px}
-  .a-none{font-size:13px}
-  .sec-lbl{font-size:11px}
-  .wc-title{font-size:15px}
-  .wc-meta{font-size:12px}
-  .wc-next,.wc-blocked{font-size:12px}
-  .tag{font-size:11px}
-  .brief-date{font-size:13px}
-  .brief-lbl{font-size:11px}
-  .brief-line{font-size:14px}
-  .brief-time{font-size:12px}
-  .acc-name{font-size:16px}
-  .acc-role{font-size:12px}
-  .cnt-val{font-size:20px}
-  .cnt-lbl{font-size:10px}
-  .acc-tbl td{font-size:13px}
-  .t-pri,.t-type,.t-status{font-size:11px}
-  .t-due{font-size:12px}
-  .acc-empty{font-size:13px}
+  .hdr-name{font-size:16px}
+  .hdr-sub{font-size:13px}
+  .hdr-clock{font-size:14px}
+  .a-lbl{font-size:12px}
+  .a-chip{font-size:13px}
+  .a-none{font-size:14px}
+  .sec-lbl{font-size:12px}
+  .wc-title{font-size:16px}
+  .wc-meta{font-size:13px}
+  .wc-next,.wc-blocked{font-size:13px}
+  .tag{font-size:12px}
+  .brief-date{font-size:14px}
+  .brief-lbl{font-size:12px}
+  .brief-line{font-size:15px}
+  .brief-time{font-size:13px}
+  .acc-name{font-size:17px}
+  .acc-role{font-size:13px}
+  .cnt-val{font-size:22px}
+  .cnt-lbl{font-size:11px}
+  .acc-tbl td{font-size:14px}
+  .t-pri,.t-type,.t-status{font-size:12px}
+  .t-due{font-size:13px}
+  .acc-empty{font-size:14px}
 }
 /* responsive — phone */
 @media(max-width:640px){
@@ -217,11 +219,11 @@ main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:colu
   #alert-strip{padding:0 16px}
   main{padding:16px;gap:16px}
   .acc-counts{display:none}
-  .wc-title{font-size:16px}
-  .brief-line{font-size:15px}
-  .brief-time{font-size:13px}
-  .acc-name{font-size:17px}
-  .acc-tbl td{font-size:14px}
+  .wc-title{font-size:17px}
+  .brief-line{font-size:16px}
+  .brief-time{font-size:14px}
+  .acc-name{font-size:18px}
+  .acc-tbl td{font-size:15px}
 }
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-track{background:transparent}
