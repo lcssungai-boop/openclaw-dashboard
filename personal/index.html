@@ -79,7 +79,7 @@ main{max-width:880px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
   display:flex;justify-content:space-between;align-items:center;
 }
 .avail-box .lbl{font-size:11px;color:var(--green);font-weight:600}
-.avail-box .val{font-size:20px;font-weight:700;color:var(--green);font-family:monospace}
+.avail-box .val{font-size:20px;font-weight:700;color:var(--bright);font-family:monospace}
 .avail-note{font-size:10px;color:var(--muted);margin-top:5px}
 
 /* stock */
@@ -249,7 +249,7 @@ function render(fin){
         <div style="font-weight:600">總計</div>
         <div class="row-sub">現值 $${fmt(fin.stocks_value)}｜${fin.stocks_note||""}</div>
       </div>
-      <span class="row-val ${totalProfit>=0?"pos":"neg"}">${fmtSign(totalProfit)}</span>
+      <span class="s-profit ${totalProfit>=0?"pos":"neg"}">${fmtSign(totalProfit)}</span>
     </div>
   </div>`;
 

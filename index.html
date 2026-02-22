@@ -617,7 +617,16 @@ async function fetchWeather(){
   const el = document.getElementById("ib-weather");
   if(!el) return;
   try{
-    const lat = 22.9999, lon = 120.2269, city = "台南";
+    let lat = 22.9999, lon = 120.2269, city = "台南";
+    // 手機可授權定位；電腦或拒絕則用台南預設
+    if(navigator.geolocation){
+      await new Promise(res=>{
+        navigator.geolocation.getCurrentPosition(
+          pos=>{ lat=pos.coords.latitude; lon=pos.coords.longitude; city=""; res(); },
+          ()=>res(), {timeout:4000, maximumAge:300000}
+        );
+      });
+    }
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode,windspeed_10m&timezone=Asia/Taipei`;
     const r = await fetch(url);
     if(!r.ok) throw 0;
@@ -627,7 +636,7 @@ async function fetchWeather(){
     const icon = WMO_ICON[code] ?? "🌡";
     const desc = WMO_DESC[code] ?? "";
     const temp = Math.round(cur.temperature_2m);
-    el.innerHTML = `${icon} <b>${temp}°C</b> ${desc} · ${city}`;
+    el.innerHTML = `${icon} <b>${temp}°C</b> ${desc}${city?" · "+city:""}`;
   } catch(e){
     el.textContent = "天氣載入失敗";
   }
