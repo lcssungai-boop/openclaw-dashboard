@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-22T13:55:00Z",
+  "updated_at": "2026-02-22T14:10:00Z",
   "categories": [
     "才多多",
     "顧問",
@@ -67,10 +67,10 @@
     {
       "category": "理財",
       "title": "每日美股台股匯報",
-      "status": "阻塞",
+      "status": "待處理",
       "next_action": "",
       "role": "",
-      "block_reason": "訊息發送失敗"
+      "block_reason": ""
     },
     {
       "category": "系統",
@@ -195,18 +195,18 @@
     {
       "category": "系統",
       "title": "散熱族群股價追蹤",
-      "status": "阻塞",
+      "status": "待處理",
       "next_action": "",
       "role": "",
-      "block_reason": "訊息發送失敗"
+      "block_reason": ""
     },
     {
       "category": "顧問",
       "title": "兆鯨資料每日同步與索引",
-      "status": "阻塞",
+      "status": "待處理",
       "next_action": "",
       "role": "",
-      "block_reason": "Error: cron: job execution tim"
+      "block_reason": ""
     },
     {
       "category": "開發",
