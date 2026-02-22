@@ -208,9 +208,9 @@ main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:colu
 .pfin-col+.pfin-col{border-left:1px solid var(--border)}
 .pfin-lbl{font-size:9px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px}
 .pfin-val{font-size:14px;font-weight:700;font-family:monospace}
-.pfin-val.inc{color:#1A7A4A}
+.pfin-val.inc{color:var(--bright)}
 .pfin-val.exp{color:#A02020}
-.pfin-val.pos{color:#1A7A4A}
+.pfin-val.pos{color:var(--bright)}
 .pfin-val.neg{color:#A02020}
 .pfin-val.dim{color:var(--dim)}
 .pfin-tx{padding:0 14px 10px;font-size:11px;color:var(--dim)}
@@ -591,7 +591,7 @@ function renderAccordions(){
       return `<div class="pfin-tx-row">
         <span class="pfin-tx-date">${t.date.slice(5)} ${WDAY[d.getDay()]}</span>
         <span class="pfin-tx-item">${t.item}</span>
-        <span class="pfin-tx-amt" style="color:${isInc?"#1A7A4A":"#A02020"}">${isInc?"+":"−"}${fmt(isInc?t.income:t.expense)}</span>
+        <span class="pfin-tx-amt" style="color:${isInc?"#0C0C0A":"#A02020"}">${isInc?"+":"−"}${fmt(isInc?t.income:t.expense)}</span>
       </div>`;
     }).join("");
     return `
