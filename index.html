@@ -2,39 +2,50 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>OpenClaw Dashboard</title>
-<script>
-async function loadTasks() {
-  const res = await fetch("tasks.json?ts=" + Date.now());
-  const data = await res.json();
-  const tbody = document.getElementById("task-body");
-  tbody.innerHTML = "";
-
-  data.items.forEach(item => {
-    const tr = document.createElement("tr");
-
-    const next = item.next_step && item.next_step.trim() ? item.next_step : "-";
-    const role = item.owner_role && item.owner_role.trim() ? item.owner_role : "-";
-    const block = item.blocked_reason && item.blocked_reason.trim() ? item.blocked_reason : "-";
-
-    tr.innerHTML = `
-      <td>${item.category}</td>
-      <td>${item.title}</td>
-      <td>${item.status}</td>
-      <td>${next}</td>
-      <td>${role}</td>
-      <td>${block}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-window.onload = loadTasks;
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw 管理儀表板</title>
+<style>
+body{margin:0;font-family:Arial;background:#0f172a;color:#e2e8f0}
+.container{max-width:1200px;margin:auto;padding:20px}
+h1{margin:0 0 10px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}
+.card{background:#1e293b;padding:20px;border-radius:12px}
+.card h2{margin:0;font-size:14px;color:#94a3b8}
+.card p{margin:10px 0 0;font-size:28px;font-weight:bold}
+.table-wrap{background:#1e293b;border-radius:12px;padding:20px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:12px;text-align:left}
+th{color:#94a3b8;border-bottom:1px solid #334155}
+tr:not(:last-child){border-bottom:1px solid #334155}
+.status{padding:4px 10px;border-radius:20px;font-size:12px}
+.done{background:#065f46;color:#34d399}
+.block{background:#7f1d1d;color:#f87171}
+.pending{background:#374151;color:#d1d5db}
+.live{color:#22c55e;font-weight:bold}
+.header{display:flex;justify-content:space-between;align-items:center}
+</style>
 </head>
 <body>
+<div class="container">
+<div class="header">
+<div>
+<h1>OpenClaw 管理儀表板</h1>
+<p id="updated"></p>
+</div>
+<div class="live">● LIVE</div>
+</div>
+
+<div class="cards">
+<div class="card"><h2>總任務</h2><p id="total">0</p></div>
+<div class="card"><h2>待處理</h2><p id="pending">0</p></div>
+<div class="card"><h2>進行中</h2><p id="progress">0</p></div>
+<div class="card"><h2>阻塞</h2><p id="blocked">0</p></div>
+<div class="card"><h2>已完成</h2><p id="done">0</p></div>
+</div>
+
+<div class="table-wrap">
 <h2>任務列表</h2>
-<table border="1" width="100%">
+<table>
 <thead>
 <tr>
 <th>類別</th>
@@ -45,7 +56,53 @@ window.onload = loadTasks;
 <th>阻塞原因</th>
 </tr>
 </thead>
-<tbody id="task-body"></tbody>
+<tbody id="tbody"></tbody>
 </table>
+</div>
+</div>
+
+<script>
+async function load(){
+const res=await fetch("tasks.json?"+Date.now());
+const data=await res.json();
+
+document.getElementById("updated").innerText="更新："+data.updated_at;
+
+let total=data.items.length;
+let pending=0,progress=0,blocked=0,done=0;
+
+const tbody=document.getElementById("tbody");
+tbody.innerHTML="";
+
+data.items.forEach(item=>{
+if(item.status==="待處理") pending++;
+if(item.status==="進行中") progress++;
+if(item.status==="阻塞") blocked++;
+if(item.status==="已完成") done++;
+
+let statusClass="pending";
+if(item.status==="已完成") statusClass="done";
+if(item.status==="阻塞") statusClass="block";
+
+const tr=document.createElement("tr");
+tr.innerHTML=`
+<td>${item.category||"-"}</td>
+<td>${item.title}</td>
+<td><span class="status ${statusClass}">${item.status}</span></td>
+<td>${item.next_step||"-"}</td>
+<td>${item.owner_role||"-"}</td>
+<td>${item.blocked_reason||"-"}</td>
+`;
+tbody.appendChild(tr);
+});
+
+document.getElementById("total").innerText=total;
+document.getElementById("pending").innerText=pending;
+document.getElementById("progress").innerText=progress;
+document.getElementById("blocked").innerText=blocked;
+document.getElementById("done").innerText=done;
+}
+load();
+</script>
 </body>
 </html>
