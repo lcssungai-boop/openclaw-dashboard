@@ -185,12 +185,43 @@ main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:colu
 .t-due{font-size:10px;color:var(--muted);white-space:nowrap}
 .acc-empty{padding:14px 18px;font-size:11px;color:var(--muted)}
 
-/* responsive */
+/* responsive — tablet */
+@media(max-width:1024px){
+  .hdr-name{font-size:15px}
+  .hdr-sub{font-size:12px}
+  .hdr-clock{font-size:13px}
+  .a-lbl{font-size:11px}
+  .a-chip{font-size:12px}
+  .a-none{font-size:13px}
+  .sec-lbl{font-size:11px}
+  .wc-title{font-size:15px}
+  .wc-meta{font-size:12px}
+  .wc-next,.wc-blocked{font-size:12px}
+  .tag{font-size:11px}
+  .brief-date{font-size:13px}
+  .brief-lbl{font-size:11px}
+  .brief-line{font-size:14px}
+  .brief-time{font-size:12px}
+  .acc-name{font-size:16px}
+  .acc-role{font-size:12px}
+  .cnt-val{font-size:20px}
+  .cnt-lbl{font-size:10px}
+  .acc-tbl td{font-size:13px}
+  .t-pri,.t-type,.t-status{font-size:11px}
+  .t-due{font-size:12px}
+  .acc-empty{font-size:13px}
+}
+/* responsive — phone */
 @media(max-width:640px){
   header{padding:0 16px}
   #alert-strip{padding:0 16px}
   main{padding:16px;gap:16px}
   .acc-counts{display:none}
+  .wc-title{font-size:16px}
+  .brief-line{font-size:15px}
+  .brief-time{font-size:13px}
+  .acc-name{font-size:17px}
+  .acc-tbl td{font-size:14px}
 }
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-track{background:transparent}
