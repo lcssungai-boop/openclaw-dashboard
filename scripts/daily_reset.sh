@@ -18,14 +18,11 @@ OUTPUT=$("$PYTHON" "$REPO/scripts/daily_reset.py" 2>&1)
 echo "$OUTPUT" >> "$LOG"
 echo "$OUTPUT"
 
-# 檢查是否有任何重設發生（輸出含「reset」就代表有變動）
-if echo "$OUTPUT" | grep -q "\[reset\]"; then
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] 有變動，執行 push" >> "$LOG"
-    PUSH_OUT=$(bash "$REPO/scripts/push.sh" "cron 自動重設 $(date '+%Y-%m-%d')" 2>&1)
-    echo "$PUSH_OUT" >> "$LOG"
-    echo "$PUSH_OUT"
-else
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] 無變動，跳過 push" >> "$LOG"
-fi
+# 每次都 push（daily_reset.py 已更新 openclaw updated_at，確保有變動可 commit）
+# 同時也會把期間手動改過的任務帶上線
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] 執行 push（含所有本期間更新）" >> "$LOG"
+PUSH_OUT=$(bash "$REPO/scripts/push.sh" "cron 12h 同步 $(date '+%Y-%m-%d %H:%M')" 2>&1)
+echo "$PUSH_OUT" >> "$LOG"
+echo "$PUSH_OUT"
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] daily_reset 完成" >> "$LOG"
