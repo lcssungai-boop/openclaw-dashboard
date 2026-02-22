@@ -19,5 +19,8 @@ if git diff --cached --quiet; then
 fi
 
 git commit -m "$MSG"
+
+# 若 remote 有新 commit，先 rebase 再 push
+git pull --rebase origin main
 git push origin main
 echo "[push.sh] 同步完成 → https://dashboard.changsung.uk"
