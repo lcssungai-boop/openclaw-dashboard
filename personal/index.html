@@ -106,14 +106,32 @@ main{max-width:880px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
 .r-badge{font-size:9px;padding:1px 7px;border-radius:20px;margin-left:6px;white-space:nowrap}
 .r-badge.remittance{background:#EAF3FA;color:#2A6688;border:1px solid #A0C4E0}
 
-/* transactions */
-.tx-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+/* transaction summary bar */
+.tx-summary{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  background:var(--bg2);border-bottom:2px solid var(--border);
+  margin:-16px -16px 8px -16px;border-radius:10px 10px 0 0;
+}
+.tx-sum-item{padding:12px 6px;text-align:center}
+.tx-sum-item+.tx-sum-item{border-left:1px solid var(--border)}
+.tx-sum-lbl{font-size:9px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+.tx-sum-val{font-size:15px;font-weight:700;font-family:monospace}
+.tx-sum-val.income{color:var(--green)}
+.tx-sum-val.expense{color:var(--red)}
+.tx-sum-val.pos{color:var(--green)}
+.tx-sum-val.neg{color:var(--red)}
+.tx-sum-val.neutral{color:var(--dim)}
+/* transaction rows */
+.tx-list{margin-top:4px}
+.tx-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px}
 .tx-row:last-child{border-bottom:none}
-.tx-date{font-size:10px;color:var(--muted);min-width:52px;flex-shrink:0}
+.tx-date{font-size:10px;color:var(--muted);min-width:68px;flex-shrink:0}
 .tx-cat{font-size:9px;background:var(--bg3);color:var(--dim);padding:1px 7px;border-radius:20px;flex-shrink:0}
 .tx-item{flex:1;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tx-note{font-size:10px;color:var(--muted);flex-shrink:0}
-.tx-amount{font-family:monospace;font-weight:600;color:var(--red);flex-shrink:0}
+.tx-note{font-size:10px;color:var(--muted);flex-shrink:0;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-amount{font-family:monospace;font-weight:600;flex-shrink:0}
+.tx-amount.tx-income{color:var(--green)}
+.tx-amount.tx-expense{color:var(--red)}
 
 /* responsive */
 @media(max-width:1024px){
@@ -127,6 +145,8 @@ main{max-width:880px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
   .s-profit{font-size:16px}
   .p-val{font-size:22px}
   .reminder-row{font-size:16px}
+  .tx-sum-val{font-size:17px}
+  .tx-sum-lbl{font-size:11px}
   .tx-row{font-size:15px;line-height:1.6}.tx-date{font-size:14px}
   .avail-box .val{font-size:26px}
   .avail-box .lbl{font-size:15px}
@@ -143,7 +163,9 @@ main{max-width:880px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
   .stock-row{font-size:17px}
   .s-profit{font-size:17px}
   .reminder-row{font-size:17px}
-  .tx-row{font-size:16px;line-height:1.7}
+  .tx-sum-val{font-size:18px}
+  .tx-summary{grid-template-columns:repeat(2,1fr)}
+  .tx-row{font-size:16px;line-height:1.7}.tx-date{font-size:15px}
   .avail-box .val{font-size:28px}
 }
 ::-webkit-scrollbar{width:3px;height:3px}
@@ -292,15 +314,54 @@ function render(fin){
     <div style="font-size:11px;color:var(--muted);text-align:center">預計退休：${p.retire_age} 歲（${p.retire_year}）</div>
   </div>`;
 
-  // reminders (from tasks.json) & transactions
-  const txRows = (fin.transactions||[]).map(t=>`
-    <div class="tx-row">
-      <span class="tx-date">${t.date.slice(5)}</span>
-      <span class="tx-cat">${t.category}</span>
-      <span class="tx-item" title="${t.note}">${t.item}</span>
-      <span class="tx-note">${t.payment}</span>
-      <span class="tx-amount">-${fmt(t.expense)}</span>
-    </div>`).join("");
+  // 流水帳明細（近30天）
+  const WDAY = ["日","一","二","三","四","五","六"];
+  const today30 = new Date(); today30.setHours(0,0,0,0);
+  const cutoff = new Date(today30.getTime() - 30*24*60*60*1000);
+  const allTx = (fin.transactions||[])
+    .filter(t => new Date(t.date) >= cutoff)
+    .sort((a,b) => b.date > a.date ? 1 : b.date < a.date ? -1 : 0);
+  let txIncome=0, txExpense=0;
+  allTx.forEach(t=>{ txIncome+=(t.income||0); txExpense+=(t.expense||0); });
+  const txNet = txIncome - txExpense;
+
+  const txSummary = `
+    <div class="tx-summary">
+      <div class="tx-sum-item">
+        <div class="tx-sum-lbl">收入</div>
+        <div class="tx-sum-val income">+${fmt(txIncome)}</div>
+      </div>
+      <div class="tx-sum-item">
+        <div class="tx-sum-lbl">支出</div>
+        <div class="tx-sum-val expense">-${fmt(txExpense)}</div>
+      </div>
+      <div class="tx-sum-item">
+        <div class="tx-sum-lbl">淨額</div>
+        <div class="tx-sum-val ${txNet>=0?"pos":"neg"}">${txNet>=0?"+":""}${fmt(txNet)}</div>
+      </div>
+      <div class="tx-sum-item">
+        <div class="tx-sum-lbl">筆數</div>
+        <div class="tx-sum-val neutral">${allTx.length}</div>
+      </div>
+    </div>`;
+
+  const txRows = allTx.length
+    ? allTx.map(t=>{
+        const d = new Date(t.date);
+        const dateStr = t.date.slice(5) + " " + WDAY[d.getDay()];
+        const amtHTML = t.income>0
+          ? `<span class="tx-amount tx-income">+${fmt(t.income)}</span>`
+          : `<span class="tx-amount tx-expense">-${fmt(t.expense)}</span>`;
+        return `
+          <div class="tx-row">
+            <span class="tx-date">${dateStr}</span>
+            <span class="tx-cat">${t.category}</span>
+            <span class="tx-item" title="${t.note||''}">${t.item}</span>
+            <span class="tx-note">${t.payment}</span>
+            ${amtHTML}
+          </div>`;
+      }).join("")
+    : `<div style="font-size:12px;color:var(--muted);padding:12px 0">近30天無記錄</div>`;
 
   document.getElementById("main").innerHTML = `
     <div class="sec-lbl">資產分佈</div>
@@ -309,8 +370,8 @@ function render(fin){
     <div class="sec-lbl">負債與退休</div>
     <div class="grid2">${debtCard}${pensionCard}</div>
 
-    <div class="sec-lbl">最近消費</div>
-    <div class="card">${txRows||'<div style="font-size:12px;color:var(--muted)">無記錄</div>'}</div>
+    <div class="sec-lbl">流水帳明細（近30天）</div>
+    <div class="card">${txSummary}<div class="tx-list">${txRows}</div></div>
 
     <div style="font-size:10px;color:var(--muted);text-align:right;margin-top:-8px">資料截至 ${ts}</div>
   `;
