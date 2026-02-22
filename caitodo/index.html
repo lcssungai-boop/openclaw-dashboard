@@ -10,12 +10,12 @@
 :root{
   --bg:#F1F1EF;--bg2:#F8F8F7;--bg3:#E8E8E6;
   --panel:#FFFFFF;--border:#E2E2DE;--border2:#C8C8C4;
-  --text:#242422;--dim:#666666;--muted:#B4B4B0;
+  --text:#242422;--dim:#4A4A48;--muted:#7A7A78;
   --bright:#0C0C0A;--accent:#383836;
   --urgent-bg:#FBF5EE;--urgent-bd:#DDB87A;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:400;min-height:100vh;-webkit-font-smoothing:antialiased}
 
 header{
   display:flex;align-items:center;justify-content:space-between;
@@ -107,18 +107,20 @@ main{max-width:860px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
 
 /* responsive — tablet */
 @media(max-width:1024px){
-  .hdr-name{font-size:16px}
-  .hdr-sub{font-size:13px}
-  .hdr-clock{font-size:14px}
-  .back-btn{font-size:15px}
-  .sum-bar{font-size:13px}
-  .sec-lbl{font-size:12px}
-  .tc-title{font-size:16px}
-  .tc-meta{font-size:13px}
-  .tc-next,.tc-blocked{font-size:13px}
-  .tag{font-size:12px}
-  .cnt-val{font-size:22px}
-  .cnt-lbl{font-size:11px}
+  body{font-weight:400}
+  .hdr-name{font-size:17px}
+  .hdr-sub{font-size:14px}
+  .hdr-clock{font-size:15px}
+  .back-btn{font-size:16px}
+  .sum-bar{font-size:15px}
+  .sec-lbl{font-size:13px}
+  .tc-title{font-size:18px}
+  .tc-meta{font-size:15px}
+  .tc-meta-lbl{font-size:13px}
+  .tc-next,.tc-blocked{font-size:15px;line-height:1.7}
+  .tag{font-size:14px;padding:3px 10px}
+  .cnt-val{font-size:24px}
+  .cnt-lbl{font-size:12px}
   .loading-wrap{font-size:15px}
 }
 /* responsive — phone */
@@ -126,11 +128,14 @@ main{max-width:860px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
   header{padding:0 16px}
   .sum-bar{padding:0 16px}
   main{padding:16px}
+  body{font-weight:400}
   .tc-top{flex-direction:column;gap:6px}
   .tc-tags{justify-content:flex-start}
-  .tc-title{font-size:17px}
-  .tc-meta{font-size:14px}
-  .tc-next,.tc-blocked{font-size:14px}
+  .tc-title{font-size:19px;line-height:1.5}
+  .tc-meta{font-size:16px}
+  .tc-meta-lbl{font-size:14px}
+  .tc-next,.tc-blocked{font-size:16px;line-height:1.8}
+  .tag{font-size:15px;padding:4px 11px}
 }
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-track{background:transparent}

@@ -10,14 +10,14 @@
 :root{
   --bg:#F1F1EF;--bg2:#F8F8F7;--bg3:#E8E8E6;
   --panel:#FFFFFF;--border:#E2E2DE;--border2:#C8C8C4;
-  --text:#242422;--dim:#666666;--muted:#B4B4B0;
+  --text:#242422;--dim:#4A4A48;--muted:#7A7A78;
   --bright:#0C0C0A;
   --green:#1A7A4A;--green-bg:#EEF7F2;--green-bd:#A0D4B8;
   --red:#A02020;--red-bg:#FDF2F2;--red-bd:#E0A8A8;
   --blue:#1A4A7A;--blue-bg:#EEF2F7;--blue-bd:#A8C4E0;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:400;min-height:100vh;-webkit-font-smoothing:antialiased}
 
 header{
   display:flex;align-items:center;justify-content:space-between;
@@ -117,27 +117,34 @@ main{max-width:880px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
 
 /* responsive */
 @media(max-width:1024px){
-  .hdr-name{font-size:16px}.hdr-sub{font-size:13px}.hdr-clock{font-size:14px}
-  .back-btn{font-size:15px}
-  .hero-main .amount{font-size:32px}
-  .hero-kpi .k-val{font-size:20px}
-  .row{font-size:14px}.row-val{font-size:14px}
-  .stock-row{font-size:14px}
-  .s-profit{font-size:14px}
-  .p-val{font-size:20px}
-  .reminder-row{font-size:14px}
-  .tx-row{font-size:13px}.tx-date{font-size:12px}
-  .avail-box .val{font-size:22px}
-  .avail-box .lbl{font-size:13px}
+  body{font-weight:400}
+  .hdr-name{font-size:17px}.hdr-sub{font-size:14px}.hdr-clock{font-size:15px}
+  .back-btn{font-size:16px}
+  .hero-main .amount{font-size:34px}
+  .hero-kpi .k-val{font-size:22px}
+  .row{font-size:16px;line-height:1.7}.row-val{font-size:16px}
+  .stock-row{font-size:16px}
+  .s-profit{font-size:16px}
+  .p-val{font-size:22px}
+  .reminder-row{font-size:16px}
+  .tx-row{font-size:15px;line-height:1.6}.tx-date{font-size:14px}
+  .avail-box .val{font-size:26px}
+  .avail-box .lbl{font-size:15px}
 }
 @media(max-width:640px){
   header{padding:0 16px}
   .hero{padding:16px}
   main{padding:16px}
+  body{font-weight:400}
   .grid2{grid-template-columns:1fr}
-  .hero-main .amount{font-size:28px}
+  .hero-main .amount{font-size:30px}
   .hero-kpis{gap:12px}
-  .row{font-size:15px}.row-val{font-size:15px}
+  .row{font-size:17px;line-height:1.8}.row-val{font-size:17px}
+  .stock-row{font-size:17px}
+  .s-profit{font-size:17px}
+  .reminder-row{font-size:17px}
+  .tx-row{font-size:16px;line-height:1.7}
+  .avail-box .val{font-size:28px}
 }
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-track{background:transparent}
