@@ -32,13 +32,25 @@ header{
 .hdr-sub{font-size:10px;color:var(--muted);font-weight:300}
 .hdr-clock{font-size:11px;color:var(--muted);font-weight:300;text-align:right;line-height:1.7}
 
+/* ── INFO BAR（天氣 + 農民曆）── */
+#info-bar{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:0 28px;height:30px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:56px;z-index:195;
+  font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;
+}
+.ib-weather{display:flex;align-items:center;gap:6px}
+.ib-lunar{font-size:11px;color:var(--dim);letter-spacing:.3px}
+.ib-sep{color:var(--border2);margin:0 6px}
+
 /* ── ALERT STRIP ── */
 #alert-strip{
   background:var(--panel);border-bottom:1px solid var(--border);
   padding:0 28px;height:34px;
   display:flex;align-items:center;gap:0;
   overflow-x:auto;white-space:nowrap;scrollbar-width:none;
-  position:sticky;top:56px;z-index:190;
+  position:sticky;top:86px;z-index:190;
   transition:background .2s,border-color .2s;
 }
 #alert-strip::-webkit-scrollbar{display:none}
@@ -244,6 +256,12 @@ main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:colu
   <div id="clk" class="hdr-clock"></div>
 </header>
 
+<!-- INFO BAR -->
+<div id="info-bar">
+  <div class="ib-weather" id="ib-weather">⋯</div>
+  <div class="ib-lunar"   id="ib-lunar">農曆載入中</div>
+</div>
+
 <!-- ALERT STRIP -->
 <div id="alert-strip">
   <span class="a-lbl" id="a-lbl">急件</span>
@@ -282,6 +300,7 @@ const AREAS = [
   { key:"caitodo",  name:"才多多",    role:"才多多",     path:"caitodo/",   data:"data/caitodo/tasks.json"   },
   { key:"zhaojing", name:"兆鯨顧問",  role:"兆鯨顧問",   path:"zhaojing/",  data:"data/zhaojing/tasks.json"  },
   { key:"finance",  name:"理財分析師", role:"理財分析師", path:"finance/",   data:"data/finance/tasks.json"   },
+  { key:"personal", name:"個人財務",  role:"大總管",     path:"personal/",  data:"data/personal/tasks.json"  },
 ];
 
 const DATA = {};
@@ -553,6 +572,80 @@ async function init(){
   renderAccordions();
 }
 
+// ── LUNAR CALENDAR ───────────────────────────────────────────────
+function getLunar(){
+  try{
+    const now = new Date();
+    const lunarFmt = new Intl.DateTimeFormat("zh-TW-u-ca-chinese",{
+      year:"numeric", month:"long", day:"numeric"
+    });
+    const raw = lunarFmt.format(now); // e.g. "民國115年乙巳年正月二十四"
+    // extract relevant part: 年干支 + 月日
+    const m = raw.match(/([甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]年.*)/);
+    return m ? m[1] : raw;
+  } catch(e){ return ""; }
+}
+
+function renderLunar(){
+  const el = document.getElementById("ib-lunar");
+  if(!el) return;
+  const lunar = getLunar();
+  el.textContent = lunar ? "農曆 " + lunar : "";
+}
+
+// ── WEATHER ──────────────────────────────────────────────────────
+const WMO_ICON = {
+  0:"☀️",1:"🌤",2:"⛅️",3:"☁️",
+  45:"🌫",48:"🌫",
+  51:"🌦",53:"🌦",55:"🌧",
+  61:"🌧",63:"🌧",65:"🌧",
+  71:"🌨",73:"🌨",75:"❄️",
+  80:"🌦",81:"🌧",82:"⛈",
+  95:"⛈",96:"⛈",99:"⛈"
+};
+const WMO_DESC = {
+  0:"晴",1:"晴時多雲",2:"多雲",3:"陰天",
+  45:"霧",48:"霧",
+  51:"毛毛雨",53:"毛毛雨",55:"毛毛雨",
+  61:"小雨",63:"中雨",65:"大雨",
+  71:"小雪",73:"中雪",75:"大雪",
+  80:"陣雨",81:"中陣雨",82:"暴雨",
+  95:"雷陣雨",96:"雷陣雨",99:"雷陣雨"
+};
+
+async function fetchWeather(){
+  const el = document.getElementById("ib-weather");
+  if(!el) return;
+  try{
+    // 使用 Open-Meteo（無需 API key，無 CORS 限制）
+    // 預設高雄座標；若取得 geolocation 則更新
+    let lat = 22.6273, lon = 120.3014, city = "高雄";
+
+    // 嘗試 geolocation（非阻塞）
+    if(navigator.geolocation){
+      await new Promise(res=>{
+        navigator.geolocation.getCurrentPosition(
+          pos=>{ lat=pos.coords.latitude; lon=pos.coords.longitude; city=""; res(); },
+          ()=>res(), {timeout:3000}
+        );
+      });
+    }
+
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode,windspeed_10m&timezone=Asia/Taipei`;
+    const r = await fetch(url);
+    if(!r.ok) throw 0;
+    const d = await r.json();
+    const cur = d.current;
+    const code = cur.weathercode;
+    const icon = WMO_ICON[code] ?? "🌡";
+    const desc = WMO_DESC[code] ?? "";
+    const temp = Math.round(cur.temperature_2m);
+    el.innerHTML = `${icon} <b>${temp}°C</b> ${desc}${city?" · "+city:""}`;
+  } catch(e){
+    el.textContent = "天氣載入失敗";
+  }
+}
+
 // ── CLOCK ───────────────────────────────────────────────────────
 function tick(){
   const e=document.getElementById("clk"); if(!e) return;
@@ -563,6 +656,8 @@ function tick(){
   e.innerHTML=`${time}<br>${date}`;
 }
 tick(); setInterval(tick,1000);
+renderLunar();
+fetchWeather();
 init();
 </script>
 </body>
