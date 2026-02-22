@@ -1,10 +1,10 @@
 {
-  "updated_at": "2026-02-22T15:15:00Z",
+  "updated_at": "2026-02-22T15:18:05Z",
   "tasks": [
     {
       "title": "cron 每日任務自動化（重設狀態）",
-      "status": "待處理",
-      "next_step": "研究 launchd / crontab 在 macOS 自動執行 update_task.py",
+      "status": "已完成",
+      "next_step": "launchd 已載入，每日 06:00 自動執行 daily_reset.py + push",
       "owner_role": "開發優化師",
       "blocked_reason": "-",
       "priority": "important",
@@ -12,7 +12,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-22T15:15:00Z"
+      "updated_at": "2026-02-22T15:18:05Z"
     },
     {
       "title": "NotebookLM Skill 開發",
