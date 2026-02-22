@@ -214,6 +214,7 @@ function taskCard(t){
   const cardCls = isBlk ? "task-card blocked-card" : isUrg ? "task-card urgent-card" : "task-card";
 
   const meta=[];
+  if(t.time && t.time!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">排程</span> ${t.time}</span>`);
   if(t.due && t.due!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">到期</span> ${t.due}</span>`);
   if(t.owner_role && t.owner_role!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">負責</span> ${t.owner_role}</span>`);
 

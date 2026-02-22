@@ -134,6 +134,7 @@ main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:colu
 .brief-line .b-blk{font-size:9px;color:#6A2888;background:#F3EAF8;border-radius:4px;padding:1px 6px;margin-left:4px}
 .brief-line .b-urg{font-size:9px;color:#8A5A28;background:#FDF1E4;border-radius:4px;padding:1px 6px;margin-left:4px}
 .brief-line .b-due{font-size:9px;color:var(--muted);margin-left:4px}
+.brief-line .b-area{font-size:9px;color:var(--muted);margin-left:2px}
 .brief-div{height:1px;background:var(--border)}
 
 /* ── ACCORDION: 全區總覽 ── */
@@ -247,7 +248,7 @@ main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:colu
   .t-pri,.t-type,.t-status{font-size:15px;padding:3px 10px}
   .t-due{font-size:15px}
   .a-chip{font-size:16px}
-  .b-blk,.b-urg,.b-due{font-size:13px}
+  .b-blk,.b-urg,.b-due,.b-area{font-size:13px}
 }
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -424,66 +425,81 @@ function renderBrief(){
   const isMonday = now.getDay() === 1;
   const dateStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")} 週${days[now.getDay()]}`;
 
-  // 早班任務（06:00-10:00），時間排序
-  const morning = [];
-  AREAS.forEach(area=>{
+  // 商務區域（排除 openclaw 系統區）
+  const BIZ = AREAS.filter(a => a.key !== "openclaw");
+
+  // 1. 今日行程：有排程時間，商務區域，未完成
+  const schedule = [];
+  BIZ.forEach(area=>{
     (DATA[area.key]?.tasks||[]).forEach(t=>{
       if(!t.time || t.time==="-") return;
-      const h = parseInt(t.time.split(":")[0]);
-      if(h < 6 || h >= 10) return;
-      // 週一限定：非週一就跳過
+      if(t.status==="已完成") return;
       if(t.freq==="weekly-mon" && !isMonday) return;
-      morning.push({t, area});
+      schedule.push({t, area});
     });
   });
-  morning.sort((a,b)=> a.t.time > b.t.time ? 1 : -1);
+  schedule.sort((a,b)=> a.t.time > b.t.time ? 1 : -1);
 
-  // 近期到期（2 週內，已完成除外）
-  const twoWeeks = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
-  const dueItems = [];
-  AREAS.forEach(area=>{
+  // 2. 重要提醒：7天內到期 或 urgent，商務區域，非完成、非阻塞
+  const sevenDays = new Date(now.getTime() + 7*24*60*60*1000);
+  const important = [];
+  const seen = new Set();
+  BIZ.forEach(area=>{
     (DATA[area.key]?.tasks||[]).forEach(t=>{
-      if(!t.due || t.due==="-" || t.status==="已完成") return;
-      const d = new Date(t.due.replace(/\//g,"-"));
-      if(isNaN(d) || d > twoWeeks) return;
-      dueItems.push({t, area});
+      if(t.status==="已完成" || t.status==="阻塞") return;
+      const key = area.key+"|"+t.title;
+      if(seen.has(key)) return;
+      let include=false, isDueSoon=false;
+      if(t.due && t.due!=="-"){
+        const d = new Date(t.due.replace(/\//g,"-"));
+        if(!isNaN(d) && d <= sevenDays){ include=true; isDueSoon=true; }
+      }
+      if(t.priority==="urgent") include=true;
+      if(!include) return;
+      seen.add(key);
+      important.push({t, area, isDueSoon});
     });
   });
-  dueItems.sort((a,b)=> a.t.due > b.t.due ? 1 : -1);
+  important.sort((a,b)=>{
+    if(a.isDueSoon && b.isDueSoon) return a.t.due > b.t.due ? 1:-1;
+    if(a.isDueSoon) return -1;
+    if(b.isDueSoon) return 1;
+    return 0;
+  });
 
-  // 阻塞總覽
+  // 3. 阻塞：全區域
   const blocked = [];
   AREAS.forEach(area=>{
     (DATA[area.key]?.tasks||[]).filter(t=>t.status==="阻塞").forEach(t=>blocked.push({t,area}));
   });
 
-  const morningHTML = morning.length
-    ? morning.map(({t,area})=>`
+  const schedHTML = schedule.length
+    ? schedule.map(({t,area})=>`
         <div class="brief-line">
           <span class="brief-time">${t.time}</span>
           <span class="brief-text">${t.title}
-            <span style="font-size:9px;color:var(--muted)">（${area.name}）</span>
-            ${t.status==="阻塞"?'<span class="b-blk">阻塞</span>':""}
-            ${t.status!=="阻塞"&&t.priority==="urgent"?'<span class="b-urg">急件</span>':""}
+            <span class="b-area">（${area.name}）</span>
+            ${t.priority==="urgent"?'<span class="b-urg">急件</span>':""}
           </span>
         </div>`).join("")
-    : `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">今日無早班排程</span></div>`;
+    : `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">今日無排程行程</span></div>`;
 
-  const dueHTML = dueItems.length
-    ? dueItems.map(({t,area})=>`
+  const impHTML = important.length
+    ? important.map(({t,area})=>`
         <div class="brief-line">
           <span class="brief-text">${t.title}
-            <span style="font-size:9px;color:var(--muted)">（${area.name}）</span>
-            <span class="b-due">→ ${t.due}</span>
+            <span class="b-area">（${area.name}）</span>
+            ${t.due&&t.due!=="-"?`<span class="b-due">→ ${t.due}</span>`:""}
+            ${t.priority==="urgent"?'<span class="b-urg">急件</span>':""}
           </span>
         </div>`).join("")
-    : `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">無近期到期項目</span></div>`;
+    : `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">本週無急件</span></div>`;
 
-  const blockedHTML = blocked.length
+  const blkHTML = blocked.length
     ? blocked.map(({t,area})=>`
         <div class="brief-line">
           <span class="brief-text">${t.title}
-            <span style="font-size:9px;color:var(--muted)">（${area.name}）</span>
+            <span class="b-area">（${area.name}）</span>
             <span class="b-blk">阻塞</span>
           </span>
         </div>`).join("")
@@ -493,18 +509,18 @@ function renderBrief(){
     <div class="brief-date">${dateStr}</div>
     <div class="brief-div"></div>
     <div class="brief-block">
-      <div class="brief-lbl">早班 06:00–10:00${isMonday?" · 含週一任務":""}</div>
-      ${morningHTML}
+      <div class="brief-lbl">今日行程${isMonday?" · 含週一任務":""}</div>
+      ${schedHTML}
     </div>
     <div class="brief-div"></div>
     <div class="brief-block">
-      <div class="brief-lbl">近期到期</div>
-      ${dueHTML}
+      <div class="brief-lbl">重要提醒（7天內到期・急件）</div>
+      ${impHTML}
     </div>
     <div class="brief-div"></div>
     <div class="brief-block">
       <div class="brief-lbl">阻塞中（${blocked.length} 件）</div>
-      ${blockedHTML}
+      ${blkHTML}
     </div>`;
 }
 
