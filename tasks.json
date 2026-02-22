@@ -59,10 +59,10 @@
     {
       "category": "系統",
       "title": "自我檢測",
-      "status": "阻塞",
-      "next_action": "",
-      "role": "",
-      "block_reason": "模型權限不足"
+      "status": "待處理",
+      "next_action": "每天 07:00 執行",
+      "role": "開發",
+      "block_reason": ""
     },
     {
       "category": "理財",
