@@ -1,430 +1,133 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>兆鯨顧問</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#1A1A1A;--bg2:#222222;--bg3:#2A2A2A;--bg4:#303030;
-  --panel:#242424;--border:#363636;--border2:#424242;
-  --text:#E8E8E6;--dim:#A8A8A6;--muted:#686866;--bright:#F0F0EE;
-  --urgent-bg:#2A1E12;--urgent-bd:#7A5830;--urgent-text:#D4943A;
-  --blocked-bg:#1E1428;--blocked-bd:#6040A0;--blocked-text:#A880E0;
-  --remit-bg:#122030;--remit-bd:#3060A0;--remit-text:#60A0D8;
-  --green:#4A9C6A;--green-dim:#1E3028;
-  --radius:12px;--radius-xs:6px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:400;min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
-::-webkit-scrollbar{width:3px;height:3px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-
-/* ── HEADER ── */
-header{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:58px;background:var(--panel);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
-.hdr-l{display:flex;align-items:center;gap:12px}
-.back-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);text-decoration:none;padding:5px 10px;border-radius:6px;transition:background .12s,color .12s}
-.back-btn:hover{background:var(--bg3);color:var(--text)}
-.hdr-div{width:1px;height:20px;background:var(--border);margin:0 4px}
-.logo{width:34px;height:34px;border-radius:50%;overflow:hidden;border:1.5px solid var(--border2);flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px}
-.logo img{width:100%;height:100%;object-fit:cover;object-position:top center}
-.hdr-name{font-size:14px;font-weight:700;color:var(--bright);letter-spacing:.3px}
-.hdr-sub{font-size:10px;color:var(--muted);font-weight:300;margin-top:1px}
-.hdr-clock{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--dim);text-align:right;line-height:1.7}
-
-/* ── SUMMARY BAR ── */
-.sum-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:36px;display:flex;align-items:center;gap:12px;position:sticky;top:58px;z-index:190;font-size:10px;color:var(--dim);}
-.sum-bdg{display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:20px;border:1px solid var(--border);font-size:10px;background:var(--bg3);color:var(--dim);}
-.sum-bdg.blocked{border-color:var(--blocked-bd);color:var(--blocked-text);background:var(--blocked-bg)}
-.sum-bdg.urgent{border-color:var(--urgent-bd);color:var(--urgent-text);background:var(--urgent-bg)}
-.sum-bdg.done{color:var(--muted);opacity:.7}
-.sum-ts{margin-left:auto;font-size:9px;color:var(--muted);font-family:"JetBrains Mono",monospace}
-
-/* ── TAB NAV ── */
-.tab-nav{
-  background:var(--panel);border-bottom:1px solid var(--border);
-  padding:0;display:flex;
-  position:sticky;top:94px;z-index:180;
-}
-.tab-btn{
-  flex:1;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-  height:68px;padding:0 8px;
-  color:var(--muted);text-decoration:none;cursor:pointer;user-select:none;
-  border-bottom:3px solid transparent;
-  transition:color .15s,border-color .15s,background .15s;
-  position:relative;
-}
-.tab-btn:hover{color:var(--dim);background:var(--bg3)}
-.tab-btn.active{color:var(--bright);border-bottom-color:var(--text);background:var(--bg2)}
-.tab-icon{font-size:22px;line-height:1}
-.tab-label{font-size:12px;font-weight:600;letter-spacing:.3px;white-space:nowrap}
-.tab-badge{
-  position:absolute;top:10px;right:calc(50% - 28px);
-  font-size:10px;font-weight:700;
-  background:var(--bg4);color:var(--muted);
-  border:1px solid var(--border);border-radius:20px;
-  padding:1px 7px;font-family:"JetBrains Mono",monospace;
-  min-width:22px;text-align:center;
-}
-.tab-badge.hot{background:var(--blocked-bg);color:var(--blocked-text);border-color:var(--blocked-bd)}
-
-/* ── TAB PANELS ── */
-.tab-panel{display:none}
-.tab-panel.active{display:block}
-
-/* ── MAIN ── */
-main{max-width:860px;margin:0 auto;padding:22px 24px;display:flex;flex-direction:column;gap:10px}
-
-/* ── SECTION LABEL ── */
-.sec-lbl{font-size:9px;letter-spacing:2px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:12px;font-family:"JetBrains Mono",monospace;}
-.sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
-
-/* ── TASK CARDS ── */
-.task-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;flex-direction:column;gap:8px;transition:border-color .15s;}
-.task-card:hover{border-color:var(--border2)}
-.task-card.urgent-card{border-color:var(--urgent-bd);background:var(--urgent-bg)}
-.task-card.blocked-card{border-color:var(--blocked-bd);background:var(--blocked-bg)}
-.tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.tc-title{font-size:13px;font-weight:500;color:var(--bright);line-height:1.45;flex:1}
-.tc-tags{display:flex;gap:5px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
-.tag{font-size:9px;padding:2px 8px;border-radius:20px;white-space:nowrap;font-weight:500}
-.tag-pri{border:1px solid var(--border);color:var(--dim);background:var(--bg3)}
-.tag-pri.urgent{border-color:var(--urgent-bd);color:var(--urgent-text);background:var(--urgent-bg)}
-.tag-pri.important{border-color:var(--border2);color:var(--text);background:var(--bg4)}
-.tag-type{background:var(--bg4);color:var(--dim);border:1px solid var(--border)}
-.tag-type.alert{background:#1A2E1A;color:var(--green);border-color:#2A4A2A}
-.tag-type.remittance{background:var(--remit-bg);color:var(--remit-text);border-color:var(--remit-bd)}
-.tag-status{border:1px solid var(--border);color:var(--dim);background:var(--bg3)}
-.tag-status.blocked{border-color:var(--blocked-bd);color:var(--blocked-text);background:var(--blocked-bg)}
-.tag-status.done{color:var(--muted);opacity:.6}
-.tc-meta{display:flex;gap:16px;font-size:10px;color:var(--dim)}
-.tc-meta-item{display:flex;align-items:center;gap:4px}
-.tc-meta-lbl{font-size:9px;color:var(--muted)}
-.tc-blocked{font-size:10px;color:var(--blocked-text);background:var(--blocked-bg);border:1px solid var(--blocked-bd);border-radius:var(--radius-xs);padding:5px 10px;}
-.tc-next{font-size:10px;color:var(--dim);background:var(--bg3);border-radius:var(--radius-xs);padding:5px 10px;border:1px solid var(--border);}
-.grp{margin-bottom:8px}
-.loading-wrap{text-align:center;padding:60px 0;font-size:12px;color:var(--muted)}
-
-/* ── PROPERTY TABLE ── */
-.prop-wrap{display:flex;flex-direction:column;gap:8px}
-.prop-card{
-  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
-  padding:14px 16px;display:flex;flex-direction:column;gap:8px;
-  transition:border-color .15s;
-}
-.prop-card:hover{border-color:var(--border2)}
-.prop-card.status-招租中{border-color:var(--urgent-bd)}
-.prop-card.status-無合約{border-color:var(--blocked-bd)}
-.prop-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.prop-addr{font-size:14px;font-weight:600;color:var(--bright);flex:1}
-.prop-status{font-size:10px;padding:3px 10px;border-radius:20px;font-weight:500;white-space:nowrap;border:1px solid var(--border);background:var(--bg3);color:var(--dim)}
-.prop-status.已出租{background:var(--green-dim);color:var(--green);border-color:#2A4A2A}
-.prop-status.招租中{background:var(--urgent-bg);color:var(--urgent-text);border-color:var(--urgent-bd)}
-.prop-status.無合約{background:var(--blocked-bg);color:var(--blocked-text);border-color:var(--blocked-bd)}
-.prop-meta{display:flex;flex-wrap:wrap;gap:14px;font-size:10px;color:var(--dim)}
-.prop-meta-item{display:flex;align-items:center;gap:4px}
-.prop-meta-lbl{font-size:9px;color:var(--muted)}
-.prop-rent{font-family:"JetBrains Mono",monospace;font-weight:600;color:var(--text)}
-.prop-note{font-size:10px;color:var(--dim);background:var(--bg3);border-radius:var(--radius-xs);padding:5px 10px;border:1px solid var(--border);}
-
-/* ── TENANT TABLE ── */
-.tenant-wrap{display:flex;flex-direction:column;gap:8px}
-.tenant-card{
-  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
-  padding:14px 16px;display:flex;flex-direction:column;gap:8px;
-  transition:border-color .15s;
-}
-.tenant-card:hover{border-color:var(--border2)}
-.tenant-card.status-欠租{border-color:var(--urgent-bd);background:var(--urgent-bg)}
-.tenant-card.status-無合約{border-color:var(--blocked-bd);background:var(--blocked-bg)}
-.tenant-card.status-協商中{border-color:var(--remit-bd)}
-.tenant-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.tenant-name{font-size:14px;font-weight:600;color:var(--bright);flex:1}
-.tenant-status{font-size:10px;padding:3px 10px;border-radius:20px;font-weight:500;white-space:nowrap;border:1px solid var(--border);background:var(--bg3);color:var(--dim)}
-.tenant-status.正常{background:var(--green-dim);color:var(--green);border-color:#2A4A2A}
-.tenant-status.欠租{background:var(--urgent-bg);color:var(--urgent-text);border-color:var(--urgent-bd)}
-.tenant-status.無合約{background:var(--blocked-bg);color:var(--blocked-text);border-color:var(--blocked-bd)}
-.tenant-status.協商中{background:var(--remit-bg);color:var(--remit-text);border-color:var(--remit-bd)}
-.tenant-meta{display:flex;flex-wrap:wrap;gap:14px;font-size:10px;color:var(--dim)}
-.tenant-meta-item{display:flex;align-items:center;gap:4px}
-.tenant-meta-lbl{font-size:9px;color:var(--muted)}
-.tenant-arrears{font-family:"JetBrains Mono",monospace;font-weight:700;color:var(--urgent-text)}
-.tenant-note{font-size:10px;color:var(--dim);background:var(--bg3);border-radius:var(--radius-xs);padding:5px 10px;border:1px solid var(--border);}
-
-/* ── RESPONSIVE ── */
-@media(max-width:1024px){
-  .hdr-name{font-size:17px}.hdr-sub{font-size:14px}.hdr-clock{font-size:15px}
-  .back-btn{font-size:16px}.sum-bar{font-size:15px}
-  .tab-btn{height:76px}
-  .tab-icon{font-size:26px}
-  .tab-label{font-size:15px}
-  .sec-lbl{font-size:13px}.tc-title{font-size:18px}.tc-meta{font-size:15px}
-  .tc-meta-lbl{font-size:13px}.tc-next,.tc-blocked{font-size:15px;line-height:1.7}
-  .tag{font-size:14px;padding:3px 10px}
-  .prop-addr,.tenant-name{font-size:17px}
-  .prop-meta,.tenant-meta{font-size:15px}
-  .loading-wrap{font-size:15px}
-}
-@media(max-width:640px){
-  header{padding:0 16px}.sum-bar{padding:0 16px}
-  .tab-btn{height:64px}
-  .tab-icon{font-size:20px}
-  .tab-label{font-size:11px}
-  main{padding:14px 16px}
-  .tc-top{flex-direction:column;gap:6px}.tc-tags{justify-content:flex-start}
-  .tc-title{font-size:19px;line-height:1.5}.tc-meta{font-size:16px}
-  .tc-meta-lbl{font-size:14px}.tc-next,.tc-blocked{font-size:16px;line-height:1.8}
-  .tag{font-size:15px;padding:4px 11px}
-  .prop-top,.tenant-top{flex-direction:column;gap:6px}
-  .prop-addr,.tenant-name{font-size:18px}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>兆鯨顧問 - 物件資料</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; color: #fff; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
+        h1 { font-size: 1.8em; margin-bottom: 5px; }
+        .subtitle { color: #aaa; font-size: 0.9em; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab { padding: 12px 24px; background: rgba(255,255,255,0.1); border: none; border-radius: 10px; color: #fff; cursor: pointer; font-size: 1em; transition: all 0.3s; }
+        .tab.active { background: #4ade80; color: #1a1a2e; font-weight: bold; }
+        .tab:hover:not(.active) { background: rgba(255,255,255,0.2); }
+        .card { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin-bottom: 15px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-box { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; text-align: center; }
+        .stat-num { font-size: 2em; font-weight: bold; color: #4ade80; }
+        .stat-label { color: #aaa; margin-top: 5px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { background: rgba(255,255,255,0.1); font-weight: 600; }
+        .status-paid { color: #4ade80; }
+        .status-unpaid { color: #f87171; }
+        .status-vacant { color: #fbbf24; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>🏠 兆鯨顧問</h1>
+            <div class="subtitle">顧問 · 物業 · 電商</div>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('tasks')">📋 工作任務</button>
+            <button class="tab" onclick="switchTab('properties')">🏠 物件資料</button>
+            <button class="tab" onclick="switchTab('tenants')">👤 房客資料</button>
+        </div>
 
-<header>
-  <div class="hdr-l">
-    <a class="back-btn" href="../">‹ 返回</a>
-    <div class="hdr-div"></div>
-    <div class="logo"><img src="../assets/avatar.png" alt="logo" onerror="this.style.display='none';this.parentElement.innerHTML='🏢'"></div>
-    <div>
-      <div class="hdr-name">兆鯨顧問</div>
-      <div class="hdr-sub">顧問・物業・電商</div>
+        <div id="tasks" class="tab-content active">
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-num">2</div>
+                    <div class="stat-label">⚠️ 阻塞事項</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">5</div>
+                    <div class="stat-label">📌 待處理</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">21</div>
+                    <div class="stat-label">✅ 已完成</div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>⚠️ 阻塞事項</h3>
+                <table>
+                    <tr><th>事項</th><th>原因</th><th>到期</th></tr>
+                    <tr><td>王原浦 2-1-1 合約催簽</td><td>缺口：開25K/底22K/對方出20K</td><td>2026/2/28</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="properties" class="tab-content">
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-num">28</div>
+                    <div class="stat-label">總物件</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num" style="color:#4ade80">23</div>
+                    <div class="stat-label">已收款</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num" style="color:#f87171">5</div>
+                    <div class="stat-label">未收款</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num" style="color:#fbbf24">4</div>
+                    <div class="stat-label">空置</div>
+                </div>
+            </div>
+            <div class="card">
+                <table>
+                    <tr><th>編號</th><th>簡稱</th><th>承租人</th><th>租金</th><th>到期日</th><th>狀態</th></tr>
+                    <tr><td>1</td><td>裕農路808</td><td>-</td><td>$65,000</td><td>2029/9/30</td><td class="status-vacant">空置</td></tr>
+                    <tr><td>2</td><td>武松街8號</td><td>陳俊臣</td><td>$12,000</td><td>2025/6/5</td><td class="status-paid">已收</td></tr>
+                    <tr><td>3</td><td>74巷3號</td><td>趙朝陽</td><td>$10,000</td><td>2025/9/5</td><td class="status-paid">已收</td></tr>
+                    <tr><td>7</td><td>2-1-1</td><td>王原浦</td><td>$18,000</td><td>2025/9/5</td><td class="status-unpaid">未收</td></tr>
+                    <tr><td>17</td><td>永二街8-2</td><td>程進龍</td><td>$20,000</td><td>2025/7/20</td><td class="status-unpaid">欠租</td></tr>
+                    <tr><td>21</td><td>勝利70</td><td>王虞鈞</td><td>$18,000</td><td>2025/9/5</td><td class="status-paid">已收</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="tenants" class="tab-content">
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-num">24</div>
+                    <div class="stat-label">現住戶</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num" style="color:#f87171">2</div>
+                    <div class="stat-label">欠租戶</div>
+                </div>
+            </div>
+            <div class="card">
+                <table>
+                    <tr><th>編號</th><th>房客</th><th>電話</th><th>物件</th><th>租金</th><th>狀態</th></tr>
+                    <tr><td>2</td><td>陳俊臣</td><td>T123345661</td><td>武松街8號</td><td>$12,000</td><td class="status-paid">正常</td></tr>
+                    <tr><td>3</td><td>趙朝陽</td><td>R122436241</td><td>74巷3號</td><td>$10,000</td><td class="status-paid">正常</td></tr>
+                    <tr><td>7</td><td>王原浦</td><td>R121760417</td><td>2-1-1</td><td>$18,000</td><td class="status-unpaid">催繳</td></tr>
+                    <tr><td>17</td><td>程進龍</td><td>D120068593</td><td>永二街8-2</td><td>$20,000</td><td class="status-unpaid">欠租</td></tr>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
-  <div id="clk" class="hdr-clock"></div>
-</header>
-
-<div class="sum-bar" id="sum-bar">
-  <span id="sum-content">載入中…</span>
-  <span class="sum-ts" id="sum-ts"></span>
-</div>
-
-<!-- TAB NAV -->
-<nav class="tab-nav">
-  <a class="tab-btn active" onclick="switchTab('tasks')" id="tab-tasks">
-    <span class="tab-badge" id="badge-tasks">-</span>
-    <span class="tab-icon">📋</span>
-    <span class="tab-label">工作任務</span>
-  </a>
-  <a class="tab-btn" onclick="switchTab('props')" id="tab-props">
-    <span class="tab-badge" id="badge-props">-</span>
-    <span class="tab-icon">🏠</span>
-    <span class="tab-label">物件資料</span>
-  </a>
-  <a class="tab-btn" onclick="switchTab('tenants')" id="tab-tenants">
-    <span class="tab-badge" id="badge-tenants">-</span>
-    <span class="tab-icon">👤</span>
-    <span class="tab-label">房客資料</span>
-  </a>
-</nav>
-
-<!-- TAB 1: 工作任務 -->
-<div class="tab-panel active" id="panel-tasks">
-  <main id="main-tasks">
-    <div class="loading-wrap">載入任務中…</div>
-  </main>
-</div>
-
-<!-- TAB 2: 物件資料 -->
-<div class="tab-panel" id="panel-props">
-  <main id="main-props">
-    <div class="loading-wrap">載入物件中…</div>
-  </main>
-</div>
-
-<!-- TAB 3: 房客資料 -->
-<div class="tab-panel" id="panel-tenants">
-  <main id="main-tenants">
-    <div class="loading-wrap">載入房客中…</div>
-  </main>
-</div>
-
-<script>
-const PRI_LBL  = {urgent:"急件", important:"重要", normal:"一般"};
-const TYPE_LBL = {remittance:"💳 匯款", alert:"🔔 提醒", task:"任務"};
-const STATUS_CLS= {"阻塞":"blocked","已完成":"done"};
-
-function fmtTs(iso){
-  if(!iso||iso==="-") return "-";
-  const d=new Date(iso); if(isNaN(d)) return iso;
-  const now=new Date();
-  if(d.toDateString()===now.toDateString())
-    return "今日 "+d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
-  return d.toLocaleDateString("zh-TW",{month:"2-digit",day:"2-digit"})+" "+
-         d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
-}
-function fmt$（n){ return n?`$${n.toLocaleString("zh-TW")}`:"－" }
-
-// ── TAB 切換 ─────────────────────────────────────────────────────
-function switchTab(tab){
-  ["tasks","props","tenants"].forEach(t=>{
-    document.getElementById("panel-"+t).classList.toggle("active", t===tab);
-    document.getElementById("tab-"+t).classList.toggle("active", t===tab);
-  });
-}
-
-// ── 工作任務 ──────────────────────────────────────────────────────
-function taskCard(t){
-  const priCls=t.priority||"normal";
-  const typeCls=t.type||"task";
-  const stCls=STATUS_CLS[t.status]||"";
-  const isBlk=t.status==="阻塞", isUrg=t.priority==="urgent";
-  const cardCls=isBlk?"task-card blocked-card":isUrg?"task-card urgent-card":"task-card";
-  const meta=[];
-  if(t.time&&t.time!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">排程</span> ${t.time}</span>`);
-  if(t.due&&t.due!=="-")   meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">到期</span> ${t.due}</span>`);
-  return `<div class="${cardCls}">
-    <div class="tc-top">
-      <div class="tc-title">${t.title}</div>
-      <div class="tc-tags">
-        <span class="tag tag-pri ${priCls}">${PRI_LBL[t.priority]||t.priority}</span>
-        <span class="tag tag-type ${typeCls}">${TYPE_LBL[t.type]||t.type}</span>
-        <span class="tag tag-status ${stCls}">${t.status}</span>
-      </div>
-    </div>
-    ${meta.length?`<div class="tc-meta">${meta.join("")}</div>`:""}
-    ${t.next_step&&t.next_step!=="-"?`<div class="tc-next">→ ${t.next_step}</div>`:""}
-    ${t.blocked_reason&&t.blocked_reason!=="-"?`<div class="tc-blocked">🚫 ${t.blocked_reason}</div>`:""}
-  </div>`;
-}
-function renderTasks(tasks){
-  const main=document.getElementById("main-tasks");
-  const groups=[
-    {label:"阻塞中",        filter:t=>t.status==="阻塞"},
-    {label:"待處理 · 急件", filter:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="urgent"},
-    {label:"待處理 · 重要", filter:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="important"},
-    {label:"待處理 · 一般", filter:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="normal"},
-    {label:"已完成",         filter:t=>t.status==="已完成"},
-  ];
-  const c={pending:0,blocked:0,done:0};
-  tasks.forEach(t=>{
-    if(t.status==="已完成") c.done++;
-    else if(t.status==="阻塞") c.blocked++;
-    else c.pending++;
-  });
-  const pending=c.pending+c.blocked;
-  const badge=document.getElementById("badge-tasks");
-  badge.textContent=pending||0;
-  if(c.blocked>0) badge.className="tab-badge hot";
-  main.innerHTML=groups.map(g=>{
-    const items=tasks.filter(g.filter);
-    if(!items.length) return "";
-    return `<div class="grp"><div class="sec-lbl">${g.label}</div>${items.map(taskCard).join("")}</div>`;
-  }).join("")||`<div class="loading-wrap">目前無任務</div>`;
-}
-
-// ── 物件資料 ──────────────────────────────────────────────────────
-function propCard(p){
-  const stCls=p.status.replace(/\s/g,"");
-  const rentStr=p.rent?`NT$ ${p.rent.toLocaleString("zh-TW")}/月`:"－";
-  return `<div class="prop-card status-${stCls}">
-    <div class="prop-top">
-      <div class="prop-addr">🏠 ${p.address}</div>
-      <span class="prop-status ${stCls}">${p.status}</span>
-    </div>
-    <div class="prop-meta">
-      <span class="prop-meta-item"><span class="prop-meta-lbl">類型</span> ${p.type}</span>
-      <span class="prop-meta-item"><span class="prop-meta-lbl">租金</span> <span class="prop-rent">${rentStr}</span></span>
-      <span class="prop-meta-item"><span class="prop-meta-lbl">承租人</span> ${p.tenant||"－"}</span>
-      ${p.contract_end&&p.contract_end!=="-"?`<span class="prop-meta-item"><span class="prop-meta-lbl">合約到期</span> ${p.contract_end}</span>`:""}
-    </div>
-    ${p.note&&p.note!=="-"?`<div class="prop-note">📌 ${p.note}</div>`:""}
-  </div>`;
-}
-function renderProps(props){
-  const main=document.getElementById("main-props");
-  document.getElementById("badge-props").textContent=props.length;
-  const groups=[
-    {label:"需關注",  items:props.filter(p=>["招租中","無合約"].includes(p.status))},
-    {label:"已出租",  items:props.filter(p=>p.status==="已出租")},
-  ];
-  main.innerHTML=groups.map(g=>{
-    if(!g.items.length) return "";
-    return `<div class="grp"><div class="sec-lbl">${g.label}</div><div class="prop-wrap">${g.items.map(propCard).join("")}</div></div>`;
-  }).join("")||`<div class="loading-wrap">目前無物件資料</div>`;
-}
-
-// ── 房客資料 ──────────────────────────────────────────────────────
-function tenantCard(t){
-  const stCls=t.status.replace(/\s/g,"");
-  return `<div class="tenant-card status-${stCls}">
-    <div class="tenant-top">
-      <div class="tenant-name">👤 ${t.name}</div>
-      <span class="tenant-status ${stCls}">${t.status}</span>
-    </div>
-    <div class="tenant-meta">
-      <span class="tenant-meta-item"><span class="tenant-meta-lbl">物件</span> ${t.property}</span>
-      <span class="tenant-meta-item"><span class="tenant-meta-lbl">月租</span> <span class="prop-rent">${t.rent?`NT$ ${t.rent.toLocaleString("zh-TW")}`:"－"}</span></span>
-      ${t.arrears>0?`<span class="tenant-meta-item"><span class="tenant-meta-lbl">欠租</span> <span class="tenant-arrears">NT$ ${t.arrears.toLocaleString("zh-TW")}</span></span>`:""}
-      ${t.contract_end&&t.contract_end!=="-"?`<span class="tenant-meta-item"><span class="tenant-meta-lbl">合約到期</span> ${t.contract_end}</span>`:""}
-      ${t.contact&&t.contact!=="-"?`<span class="tenant-meta-item"><span class="tenant-meta-lbl">聯絡</span> ${t.contact}</span>`:""}
-    </div>
-    ${t.note&&t.note!=="-"?`<div class="tenant-note">📝 ${t.note}</div>`:""}
-  </div>`;
-}
-function renderTenants(tenants){
-  const main=document.getElementById("main-tenants");
-  document.getElementById("badge-tenants").textContent=tenants.length;
-  const groups=[
-    {label:"需關注",  items:tenants.filter(t=>["欠租","無合約","協商中"].includes(t.status))},
-    {label:"正常租戶", items:tenants.filter(t=>t.status==="正常")},
-  ];
-  main.innerHTML=groups.map(g=>{
-    if(!g.items.length) return "";
-    return `<div class="grp"><div class="sec-lbl">${g.label}</div><div class="tenant-wrap">${g.items.map(tenantCard).join("")}</div></div>`;
-  }).join("")||`<div class="loading-wrap">目前無房客資料</div>`;
-}
-
-// ── SUMMARY BAR ──────────────────────────────────────────────────
-function renderSummary(tasks, ts){
-  const c={pending:0,blocked:0,done:0};
-  tasks.forEach(t=>{
-    if(t.status==="已完成") c.done++;
-    else if(t.status==="阻塞") c.blocked++;
-    else c.pending++;
-  });
-  const parts=[];
-  if(c.blocked) parts.push(`<span class="sum-bdg blocked">🚫 阻塞 ${c.blocked}</span>`);
-  parts.push(`<span class="sum-bdg urgent">待處理 ${c.pending}</span>`);
-  parts.push(`<span class="sum-bdg done">已完成 ${c.done}</span>`);
-  document.getElementById("sum-content").innerHTML=parts.join("");
-  document.getElementById("sum-ts").textContent="更新 "+fmtTs(ts);
-}
-
-// ── INIT ─────────────────────────────────────────────────────────
-async function init(){
-  const [taskRes, propRes, tenantRes] = await Promise.all([
-    fetch("../data/zhaojing/tasks.json?_="+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch("../data/zhaojing/properties.json?_="+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch("../data/zhaojing/tenants.json?_="+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null),
-  ]);
-  if(taskRes){
-    renderSummary(taskRes.tasks||[], taskRes.updated_at);
-    renderTasks(taskRes.tasks||[]);
-  } else {
-    document.getElementById("main-tasks").innerHTML=`<div class="loading-wrap">無法載入任務資料</div>`;
-  }
-  renderProps(propRes?.properties||[]);
-  renderTenants(tenantRes?.tenants||[]);
-}
-
-// ── CLOCK ─────────────────────────────────────────────────────────
-function tick(){
-  const e=document.getElementById("clk"); if(!e) return;
-  const now=new Date();
-  const days=["日","一","二","三","四","五","六"];
-  const date=`${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")} 週${days[now.getDay()]}`;
-  const time=now.toLocaleTimeString("zh-TW",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"});
-  e.innerHTML=`${time}<br>${date}`;
-}
-tick(); setInterval(tick,1000);
-init();
-</script>
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
 </body>
 </html>
