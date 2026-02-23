@@ -5,138 +5,150 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>個人財務</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F1F1EF;--bg2:#F8F8F7;--bg3:#E8E8E6;
-  --panel:#FFFFFF;--border:#E2E2DE;--border2:#C8C8C4;
-  --text:#242422;--dim:#4A4A48;--muted:#7A7A78;
-  --bright:#0C0C0A;
-  --green:#1A7A4A;--green-bg:#EEF7F2;--green-bd:#A0D4B8;
-  --red:#A02020;--red-bg:#FDF2F2;--red-bd:#E0A8A8;
-  --blue:#1A4A7A;--blue-bg:#EEF2F7;--blue-bd:#A8C4E0;
+  --bg:#111111;--bg2:#191919;--bg3:#232323;--bg4:#2B2B2B;
+  --panel:#161616;--border:#2A2A2A;--border2:#363636;
+  --text:#D4D4D2;--dim:#8A8A88;--muted:#505050;--bright:#F0F0EE;
+  /* Financial colors */
+  --inc:#489A68;--inc-bg:#0C1E14;--inc-bd:#1C4028;
+  --exp:#B86060;--exp-bg:#1A0C0C;--exp-bd:#3A1818;
+  --steel:#5A7A90;--steel-bg:#0A1418;--steel-bd:#1E3040;
+  --urgent-text:#AE7838;--urgent-bg:#161008;--urgent-bd:#5C3C18;
+  --radius:12px;--radius-xs:6px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:400;min-height:100vh;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:400;min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
+/* ── HEADER ── */
 header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;height:56px;
+  padding:0 28px;height:58px;
   background:var(--panel);border-bottom:1px solid var(--border);
   position:sticky;top:0;z-index:200;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
 }
 .hdr-l{display:flex;align-items:center;gap:11px}
-.back-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);text-decoration:none;font-weight:400;padding:5px 10px;border-radius:6px;transition:background .12s,color .12s}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);text-decoration:none;padding:5px 10px;border-radius:6px;transition:background .12s,color .12s}
 .back-btn:hover{background:var(--bg3);color:var(--text)}
 .hdr-div{width:1px;height:20px;background:var(--border);margin:0 4px}
-.logo{width:36px;height:36px;border-radius:50%;overflow:hidden;border:1.5px solid var(--border2);flex-shrink:0}
+.logo{width:36px;height:36px;border-radius:50%;overflow:hidden;border:1.5px solid var(--border2);flex-shrink:0;background:var(--bg3)}
 .logo img{width:100%;height:100%;object-fit:cover;object-position:top center}
-.hdr-name{font-size:13px;font-weight:700;color:var(--bright)}
+.hdr-name{font-size:16px;font-weight:700;color:var(--bright)}
 .hdr-sub{font-size:10px;color:var(--muted);font-weight:300}
-.hdr-clock{font-size:11px;color:var(--muted);font-weight:300;text-align:right;line-height:1.7}
+.hdr-clock{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--dim);text-align:right;line-height:1.7}
 
-/* net worth hero */
+/* ── HERO ── */
 .hero{
-  background:linear-gradient(135deg,#1f2937,#374151);
-  color:#fff;padding:20px 28px;
+  background:linear-gradient(135deg,#141414,#1E1E22);
+  border-bottom:1px solid var(--border);
+  color:var(--text);padding:20px 28px;
   display:flex;align-items:center;justify-content:space-between;gap:16px;
   flex-wrap:wrap;
 }
-.hero-main .label{font-size:10px;opacity:.7;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px}
-.hero-main .amount{font-size:36px;font-weight:700;letter-spacing:-1px}
-.hero-main .sub{font-size:11px;opacity:.6;margin-top:5px}
+.hero-main .label{font-size:10px;opacity:.6;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;color:var(--muted)}
+.hero-main .amount{font-size:36px;font-weight:700;letter-spacing:-1px;color:var(--bright);font-family:"JetBrains Mono",monospace}
+.hero-main .sub{font-size:11px;opacity:.55;margin-top:5px;color:var(--dim)}
 .hero-kpis{display:flex;gap:16px;flex-wrap:wrap}
 .hero-kpi{text-align:center}
-.hero-kpi .k-val{font-size:18px;font-weight:600}
-.hero-kpi .k-lbl{font-size:9px;opacity:.6;margin-top:2px;letter-spacing:.5px;text-transform:uppercase}
-.hero-kpi.green .k-val{color:#6EE7B7}
-.hero-kpi.blue  .k-val{color:#93C5FD}
+.hero-kpi .k-val{font-size:18px;font-weight:600;font-family:"JetBrains Mono",monospace;color:var(--bright)}
+.hero-kpi .k-lbl{font-size:9px;opacity:.5;margin-top:2px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+.hero-kpi.green .k-val{color:var(--inc)}
+.hero-kpi.steel .k-val{color:var(--steel)}
 
+/* ── MAIN ── */
 main{max-width:880px;margin:0 auto;padding:22px 24px;display:flex;flex-direction:column;gap:16px}
 
-.sec-lbl{font-size:9px;letter-spacing:1.5px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+/* ── SEC LABEL ── */
+.sec-lbl{font-size:10px;letter-spacing:1.5px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px;font-family:"JetBrains Mono",monospace}
 .sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
 
+/* ── GRID & CARDS ── */
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px}
-.card-title{font-size:11px;font-weight:600;color:var(--dim);letter-spacing:.6px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.card-title{font-size:12px;font-weight:600;color:var(--dim);letter-spacing:.5px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 
-/* rows */
-.row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+/* ── ROWS ── */
+.row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
 .row:last-child{border-bottom:none}
-.row.total{border-top:2px solid var(--border);margin-top:4px;padding-top:10px;font-weight:600}
+.row.total{border-top:1px solid var(--border2);margin-top:4px;padding-top:10px;font-weight:600}
 .row-name{color:var(--text)}
-.row-val{font-weight:500;font-family:monospace;font-size:12px}
-.row-val.pos{color:var(--green)}
-.row-val.neg{color:var(--red)}
+.row-val{font-weight:500;font-family:"JetBrains Mono",monospace;font-size:13px}
+.row-val.pos{color:var(--inc)}
+.row-val.neg{color:var(--exp)}
 .row-val.neutral{color:var(--dim)}
 .row-sub{font-size:10px;color:var(--muted);margin-top:2px}
 
-/* available cash highlight */
+/* ── AVAILABLE CASH ── */
 .avail-box{
-  background:var(--green-bg);border:1px solid var(--green-bd);
+  background:var(--inc-bg);border:1px solid var(--inc-bd);
   border-radius:8px;padding:10px 14px;margin-top:10px;
   display:flex;justify-content:space-between;align-items:center;
 }
-.avail-box .lbl{font-size:11px;color:var(--green);font-weight:600}
-.avail-box .val{font-size:20px;font-weight:700;color:var(--bright);font-family:monospace}
+.avail-box .lbl{font-size:12px;color:var(--inc);font-weight:600}
+.avail-box .val{font-size:20px;font-weight:700;color:var(--bright);font-family:"JetBrains Mono",monospace}
 .avail-note{font-size:10px;color:var(--muted);margin-top:5px}
 
-/* stock */
-.stock-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+/* ── STOCKS ── */
+.stock-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
 .stock-row:last-child{border-bottom:none}
 .s-name{font-weight:500;color:var(--bright)}
 .s-code{font-size:10px;color:var(--muted)}
-.s-profit{font-weight:600;font-family:monospace}
-.s-profit.pos{color:var(--red)}    /* 台灣：漲=紅 */
-.s-profit.neg{color:var(--green)}  /* 台灣：跌=綠 */
+.s-profit{font-weight:600;font-family:"JetBrains Mono",monospace}
+.s-profit.pos{color:var(--exp)}   /* 台灣：漲=紅 */
+.s-profit.neg{color:var(--inc)}   /* 台灣：跌=綠 */
 
-/* pension */
+/* ── PENSION ── */
 .pension-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.p-box{background:var(--bg2);border-radius:8px;padding:10px;text-align:center}
-.p-val{font-size:18px;font-weight:700;color:var(--blue);font-family:monospace}
+.p-box{background:var(--bg3);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--border)}
+.p-val{font-size:18px;font-weight:700;color:var(--steel);font-family:"JetBrains Mono",monospace}
 .p-lbl{font-size:9px;color:var(--muted);margin-bottom:3px}
 
-/* reminders */
-.reminder-row{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;align-items:flex-start}
+/* ── REMINDERS ── */
+.reminder-row{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:flex-start}
 .reminder-row:last-child{border-bottom:none}
 .r-date{font-size:11px;font-weight:700;color:var(--dim);min-width:40px;flex-shrink:0}
-.r-date.urgent{color:var(--red)}
+.r-date.urgent{color:var(--urgent-text)}
 .r-text{color:var(--text);line-height:1.5}
 .r-badge{font-size:9px;padding:1px 7px;border-radius:20px;margin-left:6px;white-space:nowrap}
-.r-badge.remittance{background:#EAF3FA;color:#2A6688;border:1px solid #A0C4E0}
+.r-badge.remittance{background:var(--steel-bg);color:var(--steel);border:1px solid var(--steel-bd)}
 
-/* transaction summary bar */
+/* ── TRANSACTION SUMMARY ── */
 .tx-summary{
   display:grid;grid-template-columns:repeat(4,1fr);
-  background:var(--bg2);border-bottom:2px solid var(--border);
+  background:var(--bg2);border-bottom:1px solid var(--border2);
   margin:-16px -16px 8px -16px;border-radius:10px 10px 0 0;
 }
 .tx-sum-item{padding:12px 6px;text-align:center}
 .tx-sum-item+.tx-sum-item{border-left:1px solid var(--border)}
 .tx-sum-lbl{font-size:9px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
-.tx-sum-val{font-size:15px;font-weight:700;font-family:monospace}
-.tx-sum-val.income{color:#000000}
-.tx-sum-val.expense{color:var(--red)}
-.tx-sum-val.pos{color:#000000}
-.tx-sum-val.neg{color:var(--red)}
+.tx-sum-val{font-size:15px;font-weight:700;font-family:"JetBrains Mono",monospace}
+.tx-sum-val.income{color:var(--inc)}
+.tx-sum-val.expense{color:var(--exp)}
+.tx-sum-val.pos{color:var(--inc)}
+.tx-sum-val.neg{color:var(--exp)}
 .tx-sum-val.neutral{color:var(--dim)}
-/* transaction rows */
+
+/* ── TRANSACTION ROWS ── */
 .tx-list{margin-top:4px}
-.tx-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px}
+.tx-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
 .tx-row:last-child{border-bottom:none}
-.tx-date{font-size:10px;color:var(--muted);min-width:68px;flex-shrink:0}
-.tx-cat{font-size:9px;background:var(--bg3);color:var(--dim);padding:1px 7px;border-radius:20px;flex-shrink:0}
+.tx-date{font-size:10px;color:var(--muted);min-width:68px;flex-shrink:0;font-family:"JetBrains Mono",monospace}
+.tx-cat{font-size:9px;background:var(--bg3);color:var(--dim);padding:1px 7px;border-radius:20px;flex-shrink:0;border:1px solid var(--border)}
 .tx-item{flex:1;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tx-note{font-size:10px;color:var(--muted);flex-shrink:0;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tx-amount{font-family:monospace;font-weight:600;flex-shrink:0}
-.tx-amount.tx-income{color:#000000}
-.tx-amount.tx-expense{color:var(--red)}
+.tx-amount{font-family:"JetBrains Mono",monospace;font-weight:600;flex-shrink:0}
+.tx-amount.tx-income{color:var(--inc)}
+.tx-amount.tx-expense{color:var(--exp)}
 
-/* responsive */
+/* ── RESPONSIVE ── */
 @media(max-width:1024px){
-  body{font-weight:400}
-  .hdr-name{font-size:17px}.hdr-sub{font-size:14px}.hdr-clock{font-size:15px}
+  .hdr-name{font-size:18px}.hdr-sub{font-size:14px}.hdr-clock{font-size:15px}
   .back-btn{font-size:16px}
   .hero-main .amount{font-size:34px}
   .hero-kpi .k-val{font-size:22px}
@@ -155,7 +167,6 @@ main{max-width:880px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
   header{padding:0 16px}
   .hero{padding:16px}
   main{padding:16px}
-  body{font-weight:400}
   .grid2{grid-template-columns:1fr}
   .hero-main .amount{font-size:30px}
   .hero-kpis{gap:12px}
@@ -168,9 +179,6 @@ main{max-width:880px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
   .tx-row{font-size:16px;line-height:1.7}.tx-date{font-size:15px}
   .avail-box .val{font-size:28px}
 }
-::-webkit-scrollbar{width:3px;height:3px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 </style>
 </head>
 <body>
@@ -179,7 +187,7 @@ main{max-width:880px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
   <div class="hdr-l">
     <a class="back-btn" href="../">‹ 返回</a>
     <div class="hdr-div"></div>
-    <div class="logo"><img src="../assets/avatar.png" alt="大總管"></div>
+    <div class="logo"><img src="../assets/avatar.png" alt="大總管" onerror="this.style.display='none'"></div>
     <div>
       <div class="hdr-name">個人財務</div>
       <div class="hdr-sub">大總管</div>
@@ -203,7 +211,7 @@ main{max-width:880px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
       <div class="k-val" id="h-stocks">—</div>
       <div class="k-lbl">股票市值</div>
     </div>
-    <div class="hero-kpi blue">
+    <div class="hero-kpi steel">
       <div class="k-val" id="h-pension">—</div>
       <div class="k-lbl">退休金</div>
     </div>
@@ -211,7 +219,7 @@ main{max-width:880px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
 </div>
 
 <main id="main">
-  <div style="text-align:center;padding:40px;font-size:12px;color:var(--muted)">載入中…</div>
+  <div style="text-align:center;padding:40px;font-size:13px;color:var(--muted)">載入中…</div>
 </main>
 
 <script>
@@ -314,7 +322,7 @@ function render(fin){
     <div style="font-size:11px;color:var(--muted);text-align:center">預計退休：${p.retire_age} 歲（${p.retire_year}）</div>
   </div>`;
 
-  // 流水帳明細（近30天）
+  // transactions (近30天)
   const WDAY = ["日","一","二","三","四","五","六"];
   const today30 = new Date(); today30.setHours(0,0,0,0);
   const cutoff = new Date(today30.getTime() - 30*24*60*60*1000);
@@ -361,7 +369,7 @@ function render(fin){
             ${amtHTML}
           </div>`;
       }).join("")
-    : `<div style="font-size:12px;color:var(--muted);padding:12px 0">近30天無記錄</div>`;
+    : `<div style="font-size:13px;color:var(--muted);padding:12px 0">近30天無記錄</div>`;
 
   document.getElementById("main").innerHTML = `
     <div class="sec-lbl">資產分佈</div>
@@ -383,7 +391,7 @@ async function init(){
     if(!r.ok) throw 0;
     render(await r.json());
   }catch(e){
-    document.getElementById("main").innerHTML='<div style="text-align:center;padding:40px;font-size:12px;color:var(--muted)">無法載入財務資料</div>';
+    document.getElementById("main").innerHTML='<div style="text-align:center;padding:40px;font-size:13px;color:var(--muted)">無法載入財務資料</div>';
   }
 }
 
