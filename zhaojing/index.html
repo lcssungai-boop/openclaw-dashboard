@@ -47,23 +47,29 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 2
 /* ── TAB NAV ── */
 .tab-nav{
   background:var(--panel);border-bottom:1px solid var(--border);
-  padding:0 24px;display:flex;gap:0;
+  padding:0;display:flex;
   position:sticky;top:94px;z-index:180;
 }
 .tab-btn{
-  font-size:12px;font-weight:500;color:var(--muted);
-  padding:0 20px;height:42px;display:flex;align-items:center;gap:7px;
-  border-bottom:2px solid transparent;cursor:pointer;
-  transition:color .15s,border-color .15s;user-select:none;
-  text-decoration:none;
+  flex:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  height:68px;padding:0 8px;
+  color:var(--muted);text-decoration:none;cursor:pointer;user-select:none;
+  border-bottom:3px solid transparent;
+  transition:color .15s,border-color .15s,background .15s;
+  position:relative;
 }
-.tab-btn:hover{color:var(--dim)}
-.tab-btn.active{color:var(--bright);border-bottom-color:var(--border2)}
+.tab-btn:hover{color:var(--dim);background:var(--bg3)}
+.tab-btn.active{color:var(--bright);border-bottom-color:var(--text);background:var(--bg2)}
+.tab-icon{font-size:22px;line-height:1}
+.tab-label{font-size:12px;font-weight:600;letter-spacing:.3px;white-space:nowrap}
 .tab-badge{
-  font-size:9px;font-weight:700;
-  background:var(--bg3);color:var(--muted);
+  position:absolute;top:10px;right:calc(50% - 28px);
+  font-size:10px;font-weight:700;
+  background:var(--bg4);color:var(--muted);
   border:1px solid var(--border);border-radius:20px;
   padding:1px 7px;font-family:"JetBrains Mono",monospace;
+  min-width:22px;text-align:center;
 }
 .tab-badge.hot{background:var(--blocked-bg);color:var(--blocked-text);border-color:var(--blocked-bd)}
 
@@ -154,7 +160,9 @@ main{max-width:860px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
 @media(max-width:1024px){
   .hdr-name{font-size:17px}.hdr-sub{font-size:14px}.hdr-clock{font-size:15px}
   .back-btn{font-size:16px}.sum-bar{font-size:15px}
-  .tab-btn{font-size:15px;padding:0 16px}
+  .tab-btn{height:76px}
+  .tab-icon{font-size:26px}
+  .tab-label{font-size:15px}
   .sec-lbl{font-size:13px}.tc-title{font-size:18px}.tc-meta{font-size:15px}
   .tc-meta-lbl{font-size:13px}.tc-next,.tc-blocked{font-size:15px;line-height:1.7}
   .tag{font-size:14px;padding:3px 10px}
@@ -163,7 +171,10 @@ main{max-width:860px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
   .loading-wrap{font-size:15px}
 }
 @media(max-width:640px){
-  header{padding:0 16px}.sum-bar{padding:0 16px}.tab-nav{padding:0 16px}
+  header{padding:0 16px}.sum-bar{padding:0 16px}
+  .tab-btn{height:64px}
+  .tab-icon{font-size:20px}
+  .tab-label{font-size:11px}
   main{padding:14px 16px}
   .tc-top{flex-direction:column;gap:6px}.tc-tags{justify-content:flex-start}
   .tc-title{font-size:19px;line-height:1.5}.tc-meta{font-size:16px}
@@ -197,13 +208,19 @@ main{max-width:860px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
 <!-- TAB NAV -->
 <nav class="tab-nav">
   <a class="tab-btn active" onclick="switchTab('tasks')" id="tab-tasks">
-    📋 工作任務 <span class="tab-badge" id="badge-tasks">-</span>
+    <span class="tab-badge" id="badge-tasks">-</span>
+    <span class="tab-icon">📋</span>
+    <span class="tab-label">工作任務</span>
   </a>
   <a class="tab-btn" onclick="switchTab('props')" id="tab-props">
-    🏠 物件資料 <span class="tab-badge" id="badge-props">-</span>
+    <span class="tab-badge" id="badge-props">-</span>
+    <span class="tab-icon">🏠</span>
+    <span class="tab-label">物件資料</span>
   </a>
   <a class="tab-btn" onclick="switchTab('tenants')" id="tab-tenants">
-    👤 房客資料 <span class="tab-badge" id="badge-tenants">-</span>
+    <span class="tab-badge" id="badge-tenants">-</span>
+    <span class="tab-icon">👤</span>
+    <span class="tab-label">房客資料</span>
   </a>
 </nav>
 
