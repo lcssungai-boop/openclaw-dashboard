@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-23T08:18:37Z",
+  "updated_at": "2026-02-23T08:56:21Z",
   "categories": [
     "才多多",
     "顧問",
@@ -8,14 +8,6 @@
     "系統"
   ],
   "items": [
-    {
-      "category": "系統",
-      "title": "工作流週一檢查_0840",
-      "status": "待處理",
-      "next_action": "",
-      "role": "",
-      "block_reason": ""
-    },
     {
       "category": "才多多",
       "title": "才多多週會重點確認提醒",
@@ -222,6 +214,14 @@
       "status": "已完成",
       "next_action": "租金狀態: 資料核對中",
       "role": "昌松",
+      "block_reason": ""
+    },
+    {
+      "category": "系統",
+      "title": "工作流週一檢查_0840",
+      "status": "已完成",
+      "next_action": "",
+      "role": "",
       "block_reason": ""
     },
     {
