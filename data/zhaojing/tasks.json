@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-24T06:00:01Z",
+  "updated_at": "2026-02-24T06:00:57Z",
   "tasks": [
     {
       "title": "王原浦 2-1-1 合約到期催簽",
@@ -132,6 +132,20 @@
       "updated_at": "2026-02-22T05:41:14Z"
     },
     {
+      "title": "兆鯨明天任務提醒",
+      "status": "待處理",
+      "next_step": "",
+      "owner_role": "",
+      "blocked_reason": "-",
+      "priority": "normal",
+      "type": "task",
+      "due": "-",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-24T06:00:57Z",
+      "source": "auto"
+    },
+    {
       "title": "兆鯨資料每日同步與索引",
       "status": "已完成",
       "next_step": "",
@@ -142,7 +156,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-23T14:32:09Z",
+      "updated_at": "2026-02-24T06:00:57Z",
       "source": "auto"
     }
   ]
