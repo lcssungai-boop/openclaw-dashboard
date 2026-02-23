@@ -1,19 +1,6 @@
 {
-  "updated_at": "2026-02-22T15:36:44Z",
+  "updated_at": "2026-02-23T10:53:16Z",
   "tasks": [
-    {
-      "title": "兆鯨資料每日同步與索引",
-      "status": "阻塞",
-      "next_step": "-",
-      "owner_role": "兆鯨顧問",
-      "blocked_reason": "-",
-      "priority": "urgent",
-      "type": "task",
-      "due": "-",
-      "time": "08:00",
-      "freq": "daily",
-      "updated_at": "2026-02-22T05:41:14Z"
-    },
     {
       "title": "王原浦 2-1-1 合約到期催簽",
       "status": "阻塞",
@@ -143,6 +130,20 @@
       "time": "-",
       "freq": "-",
       "updated_at": "2026-02-22T05:41:14Z"
+    },
+    {
+      "title": "兆鯨資料每日同步與索引",
+      "status": "已完成",
+      "next_step": "",
+      "owner_role": "",
+      "blocked_reason": "-",
+      "priority": "normal",
+      "type": "task",
+      "due": "-",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-23T10:53:16Z",
+      "source": "auto"
     }
   ]
 }

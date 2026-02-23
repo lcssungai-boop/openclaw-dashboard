@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-23T10:38:38Z",
+  "updated_at": "2026-02-23T10:53:16Z",
   "categories": [
     "才多多",
     "顧問",
@@ -49,11 +49,11 @@
       "block_reason": ""
     },
     {
-      "category": "開發",
+      "category": "系統",
       "title": "每日Token使用記錄",
       "status": "已完成",
       "next_action": "",
-      "role": "Dev",
+      "role": "",
       "block_reason": ""
     },
     {
@@ -65,11 +65,11 @@
       "block_reason": ""
     },
     {
-      "category": "開發",
+      "category": "系統",
       "title": "AI記憶與配置自動備份",
       "status": "已完成",
       "next_action": "",
-      "role": "Dev",
+      "role": "",
       "block_reason": ""
     },
     {
@@ -145,11 +145,11 @@
       "block_reason": ""
     },
     {
-      "category": "理財",
+      "category": "系統",
       "title": "散熱族群股價追蹤(早)",
       "status": "待處理",
-      "next_action": "目前 SOX: 價格",
-      "role": "理財助",
+      "next_action": "",
+      "role": "",
       "block_reason": ""
     },
     {
@@ -161,12 +161,12 @@
       "block_reason": ""
     },
     {
-      "category": "理財",
+      "category": "系統",
       "title": "散熱族群股價追蹤",
       "status": "阻塞",
-      "next_action": "目前 SOX: 價格",
-      "role": "理財助",
-      "block_reason": "cron announce delivery failed"
+      "next_action": "",
+      "role": "",
+      "block_reason": ""
     },
     {
       "category": "系統",
@@ -177,11 +177,11 @@
       "block_reason": ""
     },
     {
-      "category": "顧問",
-      "title": "【急件】兆鯨資料每日同步與索引",
+      "category": "系統",
+      "title": "兆鯨資料每日同步與索引",
       "status": "已完成",
-      "next_action": "租金狀態: ",
-      "role": "昌松",
+      "next_action": "",
+      "role": "",
       "block_reason": ""
     },
     {
@@ -193,19 +193,19 @@
       "block_reason": ""
     },
     {
-      "category": "才多多",
+      "category": "系統",
       "title": "才多多週會重點確認提醒",
       "status": "已完成",
       "next_action": "",
-      "role": "HR",
+      "role": "",
       "block_reason": ""
     },
     {
-      "category": "才多多",
+      "category": "系統",
       "title": "三年免招募費專案追蹤提醒",
       "status": "已完成",
       "next_action": "",
-      "role": "HR",
+      "role": "",
       "block_reason": ""
     },
     {
@@ -225,11 +225,11 @@
       "block_reason": ""
     },
     {
-      "category": "才多多",
+      "category": "系統",
       "title": "才多多財務分析月報更新",
       "status": "待處理",
       "next_action": "",
-      "role": "HR",
+      "role": "",
       "block_reason": ""
     },
     {
