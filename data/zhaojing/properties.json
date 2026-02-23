@@ -1,0 +1,60 @@
+{
+  "updated_at": "2026-02-23T00:00:00Z",
+  "properties": [
+    {
+      "id": "p001",
+      "address": "永二街 8-2 號",
+      "type": "住宅",
+      "status": "已出租",
+      "rent": 8000,
+      "tenant": "程進龍",
+      "contract_start": "2024-03-01",
+      "contract_end": "2026-03-01",
+      "note": "欠租追繳中 $20,000"
+    },
+    {
+      "id": "p002",
+      "address": "74巷 3 號",
+      "type": "住宅",
+      "status": "已出租",
+      "rent": 0,
+      "tenant": "趙朝陽",
+      "contract_start": "-",
+      "contract_end": "-",
+      "note": "無合約書，需補簽"
+    },
+    {
+      "id": "p003",
+      "address": "74巷 14 號",
+      "type": "住宅",
+      "status": "招租中",
+      "rent": 0,
+      "tenant": "-",
+      "contract_start": "-",
+      "contract_end": "-",
+      "note": "591 刊登中"
+    },
+    {
+      "id": "p004",
+      "address": "2-1-1",
+      "type": "住宅",
+      "status": "已出租",
+      "rent": 22000,
+      "tenant": "王原浦",
+      "contract_start": "2024-03-01",
+      "contract_end": "2026-02-28",
+      "note": "合約即將到期，協商中（開25K/底22K）"
+    },
+    {
+      "id": "p005",
+      "address": "2-2",
+      "type": "住宅",
+      "status": "已出租",
+      "rent": 20000,
+      "tenant": "謝瑾君",
+      "contract_start": "2024-03-01",
+      "contract_end": "2026-02-28",
+      "note": "2/23 已續約完成"
+    }
+  ]
+}

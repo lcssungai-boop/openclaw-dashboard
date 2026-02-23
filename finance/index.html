@@ -5,141 +5,81 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>理財分析師</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F1F1EF;--bg2:#F8F8F7;--bg3:#E8E8E6;
-  --panel:#FFFFFF;--border:#E2E2DE;--border2:#C8C8C4;
-  --text:#242422;--dim:#4A4A48;--muted:#7A7A78;
-  --bright:#0C0C0A;--accent:#383836;
-  --urgent-bg:#FBF5EE;--urgent-bd:#DDB87A;
+  --bg:#1A1A1A;--bg2:#222222;--bg3:#2A2A2A;--bg4:#303030;
+  --panel:#242424;--border:#363636;--border2:#424242;
+  --text:#E8E8E6;--dim:#A8A8A6;--muted:#686866;--bright:#F0F0EE;
+  --urgent-bg:#2A1E12;--urgent-bd:#7A5830;--urgent-text:#D4943A;
+  --blocked-bg:#1E1428;--blocked-bd:#6040A0;--blocked-text:#A880E0;
+  --remit-bg:#122030;--remit-bd:#3060A0;--remit-text:#60A0D8;
+  --green:#4A9C6A;--radius:12px;--radius-xs:6px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:400;min-height:100vh;-webkit-font-smoothing:antialiased}
-
-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;height:56px;
-  background:var(--panel);border-bottom:1px solid var(--border);
-  position:sticky;top:0;z-index:200;
-}
-.hdr-l{display:flex;align-items:center;gap:11px}
-.back-btn{
-  display:flex;align-items:center;gap:6px;
-  font-size:12px;color:var(--dim);text-decoration:none;font-weight:400;
-  padding:5px 10px;border-radius:6px;transition:background .12s,color .12s;
-}
-.back-btn:hover{background:var(--bg3);color:var(--text)}
-.hdr-div{width:1px;height:20px;background:var(--border);margin:0 4px}
-.logo{width:36px;height:36px;border-radius:50%;overflow:hidden;border:1.5px solid var(--border2);flex-shrink:0}
-.logo img{width:100%;height:100%;object-fit:cover;object-position:top center}
-.hdr-name{font-size:13px;font-weight:700;color:var(--bright)}
-.hdr-sub{font-size:10px;color:var(--muted);font-weight:300}
-.hdr-clock{font-size:11px;color:var(--muted);font-weight:300;text-align:right;line-height:1.7}
-
-/* summary bar */
-.sum-bar{
-  background:var(--panel);border-bottom:1px solid var(--border);
-  padding:0 28px;height:38px;display:flex;align-items:center;gap:16px;
-  position:sticky;top:56px;z-index:190;
-  font-size:10px;color:var(--dim);
-}
-.sum-bdg{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:2px 10px;border-radius:20px;border:1px solid var(--border);font-size:10px;
-}
-.sum-bdg.blocked{border-color:#B070C8;color:#6A2888;background:#F3EAF8}
-.sum-bdg.urgent{border-color:#D4A070;color:#8A5A28;background:#FDF1E4}
-.sum-bdg.done{color:var(--muted)}
-.sum-ts{margin-left:auto;font-size:9px;color:var(--muted)}
-
-main{max-width:860px;margin:0 auto;padding:24px 24px;display:flex;flex-direction:column;gap:10px}
-
-/* section label */
-.sec-lbl{
-  font-size:9px;letter-spacing:1.5px;font-weight:600;color:var(--muted);
-  text-transform:uppercase;margin-bottom:10px;
-  display:flex;align-items:center;gap:10px;
-}
-.sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
-
-/* task card */
-.task-card{
-  background:var(--panel);border:1px solid var(--border);border-radius:10px;
-  padding:14px 16px;display:flex;flex-direction:column;gap:8px;
-  transition:box-shadow .12s;
-}
-.task-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
-.task-card.urgent-card{border-color:var(--urgent-bd);background:var(--urgent-bg)}
-.task-card.blocked-card{border-color:#B070C8;background:#F9F2FC}
-.tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.tc-title{font-size:13px;font-weight:500;color:var(--bright);line-height:1.4;flex:1}
-.tc-tags{display:flex;gap:5px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
-.tag{font-size:9px;padding:2px 8px;border-radius:20px;white-space:nowrap}
-.tag-pri{border:1px solid var(--border2);color:var(--dim)}
-.tag-pri.urgent{border-color:#D4A070;color:#8A5A28;background:#FDF1E4}
-.tag-pri.important{border-color:var(--border2);color:var(--text);background:var(--bg2)}
-.tag-type{background:var(--bg3);color:var(--dim)}
-.tag-type.alert{background:#E8F4E8;color:#2A6830}
-.tag-type.remittance{background:#EAF3FA;color:#2A6688}
-.tag-status{border:1px solid var(--border);color:var(--dim)}
-.tag-status.blocked{border-color:#B070C8;color:#6A2888;background:#F3EAF8}
-.tag-status.done{color:var(--muted);background:var(--bg2)}
-.tc-meta{display:flex;gap:16px;font-size:10px;color:var(--dim)}
-.tc-meta-item{display:flex;align-items:center;gap:4px}
-.tc-meta-lbl{font-size:9px;color:var(--muted)}
-.tc-blocked{
-  font-size:10px;color:#6A2888;
-  background:#F3EAF8;border:1px solid #D4A0DC;border-radius:6px;
-  padding:5px 10px;
-}
-.tc-next{
-  font-size:10px;color:var(--dim);
-  background:var(--bg2);border-radius:6px;
-  padding:5px 10px;
-}
-
-/* group */
-.grp{margin-bottom:8px}
-
-/* loading / empty */
-.loading-wrap{text-align:center;padding:60px 0;font-size:12px;color:var(--muted)}
-
-/* responsive — tablet */
-@media(max-width:1024px){
-  body{font-weight:400}
-  .hdr-name{font-size:17px}
-  .hdr-sub{font-size:14px}
-  .hdr-clock{font-size:15px}
-  .back-btn{font-size:16px}
-  .sum-bar{font-size:15px}
-  .sec-lbl{font-size:13px}
-  .tc-title{font-size:18px}
-  .tc-meta{font-size:15px}
-  .tc-meta-lbl{font-size:13px}
-  .tc-next,.tc-blocked{font-size:15px;line-height:1.7}
-  .tag{font-size:14px;padding:3px 10px}
-  .cnt-val{font-size:24px}
-  .cnt-lbl{font-size:12px}
-  .loading-wrap{font-size:15px}
-}
-/* responsive — phone */
-@media(max-width:640px){
-  header{padding:0 16px}
-  .sum-bar{padding:0 16px}
-  main{padding:16px}
-  body{font-weight:400}
-  .tc-top{flex-direction:column;gap:6px}
-  .tc-tags{justify-content:flex-start}
-  .tc-title{font-size:19px;line-height:1.5}
-  .tc-meta{font-size:16px}
-  .tc-meta-lbl{font-size:14px}
-  .tc-next,.tc-blocked{font-size:16px;line-height:1.8}
-  .tag{font-size:15px;padding:4px 11px}
-}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:400;min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+header{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:58px;background:var(--panel);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.hdr-l{display:flex;align-items:center;gap:12px}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);text-decoration:none;padding:5px 10px;border-radius:6px;transition:background .12s,color .12s}
+.back-btn:hover{background:var(--bg3);color:var(--text)}
+.hdr-div{width:1px;height:20px;background:var(--border);margin:0 4px}
+.logo{width:34px;height:34px;border-radius:50%;overflow:hidden;border:1.5px solid var(--border2);flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px}
+.logo img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.hdr-name{font-size:14px;font-weight:700;color:var(--bright);letter-spacing:.3px}
+.hdr-sub{font-size:10px;color:var(--muted);font-weight:300;margin-top:1px}
+.hdr-clock{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--dim);text-align:right;line-height:1.7}
+.sum-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:36px;display:flex;align-items:center;gap:12px;position:sticky;top:58px;z-index:190;font-size:10px;color:var(--dim);}
+.sum-bdg{display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:20px;border:1px solid var(--border);font-size:10px;background:var(--bg3);color:var(--dim);}
+.sum-bdg.blocked{border-color:var(--blocked-bd);color:var(--blocked-text);background:var(--blocked-bg)}
+.sum-bdg.urgent{border-color:var(--urgent-bd);color:var(--urgent-text);background:var(--urgent-bg)}
+.sum-bdg.done{color:var(--muted);opacity:.7}
+.sum-ts{margin-left:auto;font-size:9px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+main{max-width:860px;margin:0 auto;padding:22px 24px;display:flex;flex-direction:column;gap:10px}
+.sec-lbl{font-size:9px;letter-spacing:2px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:12px;font-family:"JetBrains Mono",monospace;}
+.sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
+.task-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;flex-direction:column;gap:8px;transition:border-color .15s;}
+.task-card:hover{border-color:var(--border2)}
+.task-card.urgent-card{border-color:var(--urgent-bd);background:var(--urgent-bg)}
+.task-card.blocked-card{border-color:var(--blocked-bd);background:var(--blocked-bg)}
+.tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.tc-title{font-size:13px;font-weight:500;color:var(--bright);line-height:1.45;flex:1}
+.tc-tags{display:flex;gap:5px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.tag{font-size:9px;padding:2px 8px;border-radius:20px;white-space:nowrap;font-weight:500}
+.tag-pri{border:1px solid var(--border);color:var(--dim);background:var(--bg3)}
+.tag-pri.urgent{border-color:var(--urgent-bd);color:var(--urgent-text);background:var(--urgent-bg)}
+.tag-pri.important{border-color:var(--border2);color:var(--text);background:var(--bg4)}
+.tag-type{background:var(--bg4);color:var(--dim);border:1px solid var(--border)}
+.tag-type.alert{background:#1A2E1A;color:var(--green);border-color:#2A4A2A}
+.tag-type.remittance{background:var(--remit-bg);color:var(--remit-text);border-color:var(--remit-bd)}
+.tag-status{border:1px solid var(--border);color:var(--dim);background:var(--bg3)}
+.tag-status.blocked{border-color:var(--blocked-bd);color:var(--blocked-text);background:var(--blocked-bg)}
+.tag-status.done{color:var(--muted);opacity:.6}
+.tc-meta{display:flex;gap:16px;font-size:10px;color:var(--dim)}
+.tc-meta-item{display:flex;align-items:center;gap:4px}
+.tc-meta-lbl{font-size:9px;color:var(--muted)}
+.tc-blocked{font-size:10px;color:var(--blocked-text);background:var(--blocked-bg);border:1px solid var(--blocked-bd);border-radius:var(--radius-xs);padding:5px 10px;}
+.tc-next{font-size:10px;color:var(--dim);background:var(--bg3);border-radius:var(--radius-xs);padding:5px 10px;border:1px solid var(--border);}
+.grp{margin-bottom:8px}
+.loading-wrap{text-align:center;padding:60px 0;font-size:12px;color:var(--muted)}
+
+@media(max-width:1024px){
+  .hdr-name{font-size:17px}.hdr-sub{font-size:14px}.hdr-clock{font-size:15px}
+  .back-btn{font-size:16px}.sum-bar{font-size:15px}.sec-lbl{font-size:13px}
+  .tc-title{font-size:18px}.tc-meta{font-size:15px}.tc-meta-lbl{font-size:13px}
+  .tc-next,.tc-blocked{font-size:15px;line-height:1.7}.tag{font-size:14px;padding:3px 10px}
+  .loading-wrap{font-size:15px}
+}
+@media(max-width:640px){
+  header{padding:0 16px}.sum-bar{padding:0 16px}.main{padding:14px 16px}
+  .tc-top{flex-direction:column;gap:6px}.tc-tags{justify-content:flex-start}
+  .tc-title{font-size:19px;line-height:1.5}.tc-meta{font-size:16px}
+  .tc-meta-lbl{font-size:14px}.tc-next,.tc-blocked{font-size:16px;line-height:1.8}
+  .tag{font-size:15px;padding:4px 11px}
+}
 </style>
 </head>
 <body>
@@ -148,10 +88,10 @@ main{max-width:860px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
   <div class="hdr-l">
     <a class="back-btn" href="../">‹ 返回</a>
     <div class="hdr-div"></div>
-    <div class="logo"><img src="../assets/avatar.png" alt="大總管"></div>
+    <div class="logo"><img src="../assets/avatar.png" alt="logo" onerror="this.style.display='none';this.parentElement.innerHTML='🦅'"></div>
     <div>
       <div class="hdr-name">理財分析師</div>
-      <div class="hdr-sub">理財分析師</div>
+      <div class="hdr-sub">股票・帳務・投資</div>
     </div>
   </div>
   <div id="clk" class="hdr-clock"></div>
@@ -169,7 +109,7 @@ main{max-width:860px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
 <script>
 const CFG = {
   name: "理財分析師",
-  role: "理財分析師",
+  role: "股票・帳務・投資",
   dataPath: "../data/finance/tasks.json"
 };
 
@@ -182,9 +122,8 @@ function fmtTs(iso){
   if(!iso||iso==="-") return "-";
   const d=new Date(iso); if(isNaN(d)) return iso;
   const now=new Date();
-  if(d.toDateString()===now.toDateString()){
+  if(d.toDateString()===now.toDateString())
     return "今日 "+d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
-  }
   return d.toLocaleDateString("zh-TW",{month:"2-digit",day:"2-digit"})+" "+
          d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
 }
@@ -205,19 +144,16 @@ function renderSummary(tasks, ts){
 }
 
 function taskCard(t){
-  const priCls  = t.priority || "normal";
-  const typeCls = t.type || "task";
-  const stCls   = STATUS_CLS[t.status] || "";
-  const isBlk   = t.status==="阻塞";
-  const isUrg   = t.priority==="urgent";
-
-  const cardCls = isBlk ? "task-card blocked-card" : isUrg ? "task-card urgent-card" : "task-card";
-
+  const priCls = t.priority||"normal";
+  const typeCls= t.type||"task";
+  const stCls  = STATUS_CLS[t.status]||"";
+  const isBlk  = t.status==="阻塞";
+  const isUrg  = t.priority==="urgent";
+  const cardCls= isBlk?"task-card blocked-card":isUrg?"task-card urgent-card":"task-card";
   const meta=[];
-  if(t.time && t.time!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">排程</span> ${t.time}</span>`);
-  if(t.due && t.due!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">到期</span> ${t.due}</span>`);
-  if(t.owner_role && t.owner_role!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">負責</span> ${t.owner_role}</span>`);
-
+  if(t.time&&t.time!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">排程</span> ${t.time}</span>`);
+  if(t.due&&t.due!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">到期</span> ${t.due}</span>`);
+  if(t.owner_role&&t.owner_role!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">負責</span> ${t.owner_role}</span>`);
   return `<div class="${cardCls}">
     <div class="tc-top">
       <div class="tc-title">${t.title}</div>
@@ -227,48 +163,40 @@ function taskCard(t){
         <span class="tag tag-status ${stCls}">${t.status}</span>
       </div>
     </div>
-    ${meta.length ? `<div class="tc-meta">${meta.join("")}</div>` : ""}
-    ${t.next_step && t.next_step!=="-" ? `<div class="tc-next">→ ${t.next_step}</div>` : ""}
-    ${t.blocked_reason && t.blocked_reason!=="-" ? `<div class="tc-blocked">🚫 ${t.blocked_reason}</div>` : ""}
+    ${meta.length?`<div class="tc-meta">${meta.join("")}</div>`:""}
+    ${t.next_step&&t.next_step!=="-"?`<div class="tc-next">→ ${t.next_step}</div>`:""}
+    ${t.blocked_reason&&t.blocked_reason!=="-"?`<div class="tc-blocked">🚫 ${t.blocked_reason}</div>`:""}
   </div>`;
 }
 
-function renderTasks(data){
-  const tasks = data.tasks || [];
-  const main = document.getElementById("main");
-
-  if(!tasks.length){
-    main.innerHTML = `<div class="loading-wrap">目前無任務資料</div>`;
-    return;
-  }
-
-  renderSummary(tasks, data.updated_at);
-
-  const groups = [
-    { label:"阻塞中", filter: t => t.status==="阻塞" },
-    { label:"待處理 · 急件", filter: t => t.status!=="阻塞" && t.status!=="已完成" && t.priority==="urgent" },
-    { label:"待處理 · 重要", filter: t => t.status!=="阻塞" && t.status!=="已完成" && t.priority==="important" },
-    { label:"待處理 · 一般", filter: t => t.status!=="阻塞" && t.status!=="已完成" && t.priority==="normal" },
-    { label:"已完成",         filter: t => t.status==="已完成" },
+function renderTasks(tasks, containerId){
+  const main=document.getElementById(containerId||"main");
+  if(!tasks.length){ main.innerHTML=`<div class="loading-wrap">目前無任務資料</div>`; return; }
+  const groups=[
+    {label:"阻塞中",          filter:t=>t.status==="阻塞"},
+    {label:"待處理 · 急件",   filter:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="urgent"},
+    {label:"待處理 · 重要",   filter:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="important"},
+    {label:"待處理 · 一般",   filter:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="normal"},
+    {label:"已完成",           filter:t=>t.status==="已完成"},
   ];
-
-  main.innerHTML = groups.map(g=>{
-    const items = tasks.filter(g.filter);
+  main.innerHTML=groups.map(g=>{
+    const items=tasks.filter(g.filter);
     if(!items.length) return "";
-    return `<div class="grp">
-      <div class="sec-lbl">${g.label}</div>
-      ${items.map(taskCard).join("")}
-    </div>`;
+    return `<div class="grp"><div class="sec-lbl">${g.label}</div>${items.map(taskCard).join("")}</div>`;
   }).join("");
 }
 
+
+
 async function init(){
   try{
-    const r = await fetch(CFG.dataPath+"?_="+Date.now());
+    const r=await fetch(CFG.dataPath+"?_="+Date.now());
     if(!r.ok) throw 0;
-    renderTasks(await r.json());
-  } catch(e){
-    document.getElementById("main").innerHTML = `<div class="loading-wrap">無法載入 tasks.json</div>`;
+    const data=await r.json();
+    renderSummary(data.tasks||[], data.updated_at);
+    renderTasks(data.tasks||[]);
+  }catch(e){
+    document.getElementById("main").innerHTML=`<div class="loading-wrap">無法載入資料</div>`;
   }
 }
 
