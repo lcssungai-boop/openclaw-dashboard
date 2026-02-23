@@ -5,122 +5,200 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Open Claw · 全儀表板</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F1F1EF;--bg2:#F8F8F7;--bg3:#E8E8E6;
-  --panel:#FFFFFF;--border:#E2E2DE;--border2:#C8C8C4;
-  --text:#242422;--dim:#4A4A48;--muted:#7A7A78;
-  --bright:#0C0C0A;
-  --urgent-bg:#FBF5EE;--urgent-bd:#DDB87A;
-  --blocked-bg:#F9F2FC;--blocked-bd:#C090D8;
+  /* Dark palette inspired by phone screenshots */
+  --bg:#1A1A1A;
+  --bg2:#222222;
+  --bg3:#2A2A2A;
+  --bg4:#303030;
+  --panel:#242424;
+  --panel2:#2E2E2E;
+  --border:#363636;
+  --border2:#424242;
+  --text:#E8E8E6;
+  --dim:#A8A8A6;
+  --muted:#686866;
+  --bright:#F0F0EE;
+
+  /* Status colors — muted for dark bg */
+  --urgent-bg:#2A1E12;
+  --urgent-bd:#7A5830;
+  --urgent-text:#D4943A;
+  --blocked-bg:#1E1428;
+  --blocked-bd:#6040A0;
+  --blocked-text:#A880E0;
+  --remit-bg:#122030;
+  --remit-bd:#3060A0;
+  --remit-text:#60A0D8;
+
+  --green:#4A9C6A;
+  --green-dim:#1E3028;
+
+  --radius:12px;
+  --radius-sm:8px;
+  --radius-xs:6px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:400;min-height:100vh;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Noto Sans TC",sans-serif;
+  font-weight:400;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.5;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
 /* ── HEADER ── */
 header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;height:56px;
-  background:var(--panel);border-bottom:1px solid var(--border);
+  padding:0 24px;height:58px;
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
   position:sticky;top:0;z-index:200;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
 }
-.hdr-l{display:flex;align-items:center;gap:11px}
-.logo{width:36px;height:36px;border-radius:50%;overflow:hidden;border:1.5px solid var(--border2);flex-shrink:0}
+.hdr-l{display:flex;align-items:center;gap:12px}
+.logo{
+  width:34px;height:34px;border-radius:50%;
+  overflow:hidden;border:1.5px solid var(--border2);
+  flex-shrink:0;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+}
 .logo img{width:100%;height:100%;object-fit:cover;object-position:top center}
-.hdr-name{font-size:13px;font-weight:700;color:var(--bright)}
-.hdr-sub{font-size:10px;color:var(--muted);font-weight:300}
-.hdr-clock{font-size:11px;color:var(--muted);font-weight:300;text-align:right;line-height:1.7}
-
-/* ── INFO BAR（天氣 + 農民曆）── */
-#info-bar{
-  background:var(--bg2);border-bottom:1px solid var(--border);
-  padding:0 28px;height:30px;
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:56px;z-index:195;
-  font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;
+.hdr-brand{}
+.hdr-name{font-size:14px;font-weight:700;color:var(--bright);letter-spacing:.3px}
+.hdr-sub{font-size:10px;color:var(--muted);font-weight:300;margin-top:1px}
+.hdr-r{display:flex;align-items:center;gap:14px}
+.hdr-clock{
+  font-family:"JetBrains Mono",monospace;
+  font-size:11px;color:var(--dim);
+  text-align:right;line-height:1.7;
 }
-.ib-weather{display:flex;align-items:center;gap:6px}
-.ib-lunar{font-size:11px;color:var(--dim);letter-spacing:.3px}
-.ib-sep{color:var(--border2);margin:0 6px}
+
+/* ── INFO BAR ── */
+#info-bar{
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;height:28px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:58px;z-index:195;
+  font-size:11px;color:var(--dim);
+  white-space:nowrap;overflow:hidden;
+}
+.ib-weather{display:flex;align-items:center;gap:5px}
+.ib-lunar{font-size:10px;color:var(--muted);letter-spacing:.3px}
 
 /* ── ALERT STRIP ── */
 #alert-strip{
-  background:var(--panel);border-bottom:1px solid var(--border);
-  padding:0 28px;height:34px;
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;height:36px;
   display:flex;align-items:center;gap:0;
   overflow-x:auto;white-space:nowrap;scrollbar-width:none;
   position:sticky;top:86px;z-index:190;
   transition:background .2s,border-color .2s;
 }
 #alert-strip::-webkit-scrollbar{display:none}
-#alert-strip.live{background:var(--urgent-bg);border-bottom-color:var(--urgent-bd)}
-.a-lbl{font-size:9px;font-weight:600;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;flex-shrink:0;margin-right:12px}
-.a-lbl.hot{color:#9A6030}
+#alert-strip.live{
+  background:var(--urgent-bg);
+  border-bottom-color:var(--urgent-bd);
+}
+.a-lbl{
+  font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);flex-shrink:0;margin-right:14px;
+  font-family:"JetBrains Mono",monospace;
+}
+.a-lbl.hot{color:var(--urgent-text)}
 .a-chip{
   display:inline-flex;align-items:center;gap:5px;flex-shrink:0;
   font-size:10px;font-weight:400;
-  border:1px solid var(--border2);background:var(--bg);color:var(--dim);
-  padding:2px 9px 2px 6px;border-radius:20px;margin-right:6px;
+  border:1px solid var(--border2);background:var(--bg3);color:var(--dim);
+  padding:3px 10px 3px 7px;border-radius:20px;margin-right:6px;
 }
-.a-chip.u{border-color:#D4A070;background:#FDF1E4;color:#8A5A28}
-.a-chip.b{border-color:#B070C8;background:#F3EAF8;color:#6A2888}
-.a-chip.r{border-color:#70A4C8;background:#EAF3FA;color:#2A6688}
+.a-chip.u{border-color:var(--urgent-bd);background:var(--urgent-bg);color:var(--urgent-text)}
+.a-chip.b{border-color:var(--blocked-bd);background:var(--blocked-bg);color:var(--blocked-text)}
+.a-chip.r{border-color:var(--remit-bd);background:var(--remit-bg);color:var(--remit-text)}
 .a-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.a-chip.u .a-dot{background:#D4883A}
-.a-chip.b .a-dot{background:#8830C4}
-.a-chip.r .a-dot{background:#3A88C4}
-.a-area{font-size:9px;color:inherit;opacity:.6;margin-left:2px}
-.a-sep{width:1px;height:11px;background:var(--border);flex-shrink:0;margin:0 5px}
+.a-chip.u .a-dot{background:var(--urgent-text)}
+.a-chip.b .a-dot{background:var(--blocked-text)}
+.a-chip.r .a-dot{background:var(--remit-text)}
+.a-area{font-size:9px;color:inherit;opacity:.55;margin-left:2px}
+.a-sep{width:1px;height:12px;background:var(--border);flex-shrink:0;margin:0 4px}
 .a-none{font-size:11px;color:var(--muted);font-weight:300}
 
 /* ── MAIN ── */
-main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:column;gap:20px}
+main{max-width:900px;margin:0 auto;padding:22px 24px;display:flex;flex-direction:column;gap:22px}
 
-/* section label */
+/* ── SECTION LABEL ── */
 .sec-lbl{
-  font-size:9px;letter-spacing:1.5px;font-weight:600;color:var(--muted);
-  text-transform:uppercase;margin-bottom:12px;
-  display:flex;align-items:center;gap:10px;
+  font-size:9px;letter-spacing:2px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:12px;
+  font-family:"JetBrains Mono",monospace;
 }
 .sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
 
-/* ── WARNING CARDS ── */
+/* ── WARN CARDS ── */
 .warn-grid{display:flex;flex-direction:column;gap:8px}
 .warn-card{
-  background:var(--panel);border:1px solid var(--border);border-radius:10px;
-  padding:14px 16px;display:flex;flex-direction:column;gap:7px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:14px 16px;
+  display:flex;flex-direction:column;gap:8px;
+  transition:border-color .15s;
 }
+.warn-card:hover{border-color:var(--border2)}
 .warn-card.urgent{border-color:var(--urgent-bd);background:var(--urgent-bg)}
 .warn-card.blocked{border-color:var(--blocked-bd);background:var(--blocked-bg)}
+.warn-card.remittance{border-color:var(--remit-bd);background:var(--remit-bg)}
 .wc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.wc-title{font-size:13px;font-weight:500;color:var(--bright);flex:1;line-height:1.4}
-.wc-tags{display:flex;gap:5px;flex-shrink:0;align-items:center}
-.tag{font-size:9px;padding:2px 8px;border-radius:20px;white-space:nowrap}
-.tag-area{background:var(--bg3);color:var(--dim);border:1px solid var(--border)}
-.tag-pri{border:1px solid var(--border2);color:var(--dim)}
-.tag-pri.urgent{border-color:#D4A070;color:#8A5A28;background:#FDF1E4}
-.tag-pri.important{border-color:var(--border2);color:var(--text);background:var(--bg2)}
-.tag-status{border:1px solid var(--border);color:var(--dim)}
-.tag-status.blocked{border-color:#B070C8;color:#6A2888;background:#F3EAF8}
-.tag-type{background:var(--bg3);color:var(--dim)}
-.tag-type.remittance{background:#EAF3FA;color:#2A6688}
+.wc-title{font-size:13px;font-weight:500;color:var(--bright);flex:1;line-height:1.45}
+.wc-tags{display:flex;gap:5px;flex-shrink:0;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.tag{font-size:9px;padding:2px 8px;border-radius:20px;white-space:nowrap;font-weight:500}
+.tag-area{background:var(--bg4);color:var(--dim);border:1px solid var(--border)}
+.tag-pri{border:1px solid var(--border);color:var(--dim);background:var(--bg3)}
+.tag-pri.urgent{border-color:var(--urgent-bd);color:var(--urgent-text);background:var(--urgent-bg)}
+.tag-pri.important{border-color:var(--border2);color:var(--text);background:var(--bg4)}
+.tag-status{border:1px solid var(--border);color:var(--dim);background:var(--bg3)}
+.tag-status.blocked{border-color:var(--blocked-bd);color:var(--blocked-text);background:var(--blocked-bg)}
+.tag-type{background:var(--bg4);color:var(--dim);border:1px solid var(--border)}
+.tag-type.remittance{background:var(--remit-bg);color:var(--remit-text);border-color:var(--remit-bd)}
 .wc-meta{display:flex;gap:14px;font-size:10px;color:var(--dim)}
 .wc-meta-lbl{font-size:9px;color:var(--muted);margin-right:3px}
-.wc-next{font-size:10px;color:var(--dim);background:var(--bg2);border-radius:6px;padding:5px 10px}
-.wc-blocked{font-size:10px;color:#6A2888;background:#F3EAF8;border:1px solid #D4A0DC;border-radius:6px;padding:5px 10px}
-.warn-empty{font-size:12px;color:var(--muted);padding:16px 0;text-align:center}
+.wc-next{
+  font-size:10px;color:var(--dim);
+  background:var(--bg3);border-radius:var(--radius-xs);
+  padding:5px 10px;border:1px solid var(--border);
+}
+.wc-blocked{
+  font-size:10px;color:var(--blocked-text);
+  background:var(--blocked-bg);border:1px solid var(--blocked-bd);
+  border-radius:var(--radius-xs);padding:5px 10px;
+}
+.warn-empty{font-size:12px;color:var(--muted);padding:18px 0;text-align:center}
 
 /* ── DAILY BRIEF ── */
 .brief-wrap{
-  background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
   padding:18px 20px;display:flex;flex-direction:column;gap:14px;
 }
-.brief-date{font-size:11px;font-weight:600;color:var(--bright);letter-spacing:.5px}
-.brief-block{display:flex;flex-direction:column;gap:4px}
+.brief-date{font-size:11px;font-weight:700;color:var(--bright);letter-spacing:.5px;font-family:"JetBrains Mono",monospace}
+.brief-block{display:flex;flex-direction:column;gap:3px}
 .brief-lbl{
-  font-size:9px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
-  color:var(--muted);margin-bottom:3px;
+  font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:4px;font-family:"JetBrains Mono",monospace;
 }
 .brief-line{
   font-size:12px;color:var(--dim);font-weight:400;line-height:1.8;
@@ -128,154 +206,185 @@ main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:colu
 }
 .brief-time{
   font-size:10px;font-weight:600;color:var(--muted);
-  min-width:40px;flex-shrink:0;
+  min-width:40px;flex-shrink:0;font-family:"JetBrains Mono",monospace;
 }
 .brief-text{flex:1;color:var(--text)}
-.brief-line .b-blk{font-size:9px;color:#6A2888;background:#F3EAF8;border-radius:4px;padding:1px 6px;margin-left:4px}
-.brief-line .b-urg{font-size:9px;color:#8A5A28;background:#FDF1E4;border-radius:4px;padding:1px 6px;margin-left:4px}
+.brief-line .b-blk{font-size:9px;color:var(--blocked-text);background:var(--blocked-bg);border-radius:4px;padding:1px 6px;margin-left:4px}
+.brief-line .b-urg{font-size:9px;color:var(--urgent-text);background:var(--urgent-bg);border-radius:4px;padding:1px 6px;margin-left:4px}
 .brief-line .b-due{font-size:9px;color:var(--muted);margin-left:4px}
 .brief-line .b-area{font-size:9px;color:var(--muted);margin-left:2px}
 .brief-div{height:1px;background:var(--border)}
 
-/* ── ACCORDION: 全區總覽 ── */
-.acc-wrap{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.acc-item:first-child .acc-link{border-top-right-radius:11px}
-.acc-item:last-child  .acc-link{border-bottom-right-radius:11px}
+/* ── SCHEDULE STATUS BADGE ── */
+.sched-status{font-size:9px;padding:2px 7px;border-radius:20px;font-weight:600;flex-shrink:0;margin-left:4px}
+.sched-status.ok{background:#1E3028;color:var(--green);border:1px solid #2A4A2A}
+.sched-status.warn{background:var(--urgent-bg);color:var(--urgent-text);border:1px solid var(--urgent-bd)}
+
+/* ── ENTRY CARDS ── */
+.entry-wrap{display:flex;flex-direction:column;gap:8px}
+.entry-card{
+  display:flex;align-items:center;gap:12px;
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+  padding:14px 16px;text-decoration:none;color:inherit;
+  transition:border-color .15s,background .15s;
+}
+.entry-card:hover{border-color:var(--border2);background:var(--bg3)}
+.entry-card.hot{border-color:var(--blocked-bd)}
+.entry-icon{font-size:22px;flex-shrink:0;width:34px;text-align:center}
+.entry-info{flex:1;min-width:0}
+.entry-name{font-size:14px;font-weight:600;color:var(--bright)}
+.entry-role{font-size:10px;color:var(--muted);margin-top:2px}
+.entry-upd{font-size:9px;color:var(--muted);margin-top:3px;font-family:"JetBrains Mono",monospace}
+.entry-arrow{font-size:18px;color:var(--muted);flex-shrink:0;font-family:"JetBrains Mono",monospace}
+@media(max-width:640px){.entry-card .entry-counts{display:none}}
+
+/* ── ACCORDION ── */
+.acc-wrap{
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
+}
 .acc-item{border-bottom:1px solid var(--border)}
 .acc-item:last-child{border-bottom:none}
-
 .acc-hdr{
-  display:flex;align-items:center;gap:0;
-  padding:0;cursor:pointer;user-select:none;
-  transition:background .1s;
+  display:flex;align-items:center;padding:0;cursor:pointer;user-select:none;
+  transition:background .12s;
 }
-.acc-hdr:hover{background:var(--bg2)}
+.acc-hdr:hover{background:var(--bg3)}
 .acc-toggle{
-  font-size:15px;color:var(--muted);
-  width:44px;height:52px;display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--muted);
+  width:42px;height:52px;display:flex;align-items:center;justify-content:center;
   flex-shrink:0;transition:transform .2s;
+  font-family:"JetBrains Mono",monospace;
 }
 .acc-toggle.open{transform:rotate(90deg)}
 .acc-info{flex:1;padding:12px 0;min-width:0}
+.acc-icon{font-size:14px;margin-right:6px}
 .acc-name{font-size:14px;font-weight:600;color:var(--bright)}
 .acc-role{font-size:10px;color:var(--muted);font-weight:300;margin-top:2px}
-.acc-counts{display:flex;gap:6px;padding:12px 0;flex-shrink:0}
+.acc-counts{display:flex;gap:6px;padding:10px 0;flex-shrink:0}
 .cnt-badge{
   display:flex;flex-direction:column;align-items:center;
-  background:var(--bg2);border:1px solid var(--border);border-radius:7px;
-  padding:6px 12px;min-width:52px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-xs);
+  padding:6px 12px;min-width:50px;
 }
-.cnt-badge.hot{border-color:#B070C8;background:#F9F2FC}
-.cnt-val{font-size:18px;font-weight:700;color:var(--bright);line-height:1}
-.cnt-badge.hot .cnt-val{color:#6A2888}
-.cnt-lbl{font-size:8px;color:var(--muted);font-weight:500;margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+.cnt-badge.hot{border-color:var(--blocked-bd);background:var(--blocked-bg)}
+.cnt-val{font-size:18px;font-weight:700;color:var(--bright);line-height:1;font-family:"JetBrains Mono",monospace}
+.cnt-badge.hot .cnt-val{color:var(--blocked-text)}
+.cnt-lbl{font-size:8px;color:var(--muted);font-weight:600;margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
 .acc-link{
   display:flex;align-items:center;justify-content:center;
-  width:44px;height:52px;flex-shrink:0;
-  font-size:18px;color:var(--muted);text-decoration:none;
-  transition:color .12s;border-left:1px solid var(--border);
+  width:42px;height:52px;flex-shrink:0;
+  font-size:16px;color:var(--muted);text-decoration:none;
+  transition:color .12s,background .12s;
+  border-left:1px solid var(--border);
+  font-family:"JetBrains Mono",monospace;
 }
-.acc-link:hover{color:var(--text);background:var(--bg3)}
-
-/* accordion body */
+.acc-link:hover{color:var(--text);background:var(--bg4)}
 .acc-body{border-top:1px solid var(--border);display:none}
 .acc-body.open{display:block}
 .acc-tbl{width:100%;border-collapse:collapse}
 .acc-tbl td{
-  padding:8px 14px;border-bottom:1px solid var(--border);
+  padding:9px 14px;border-bottom:1px solid var(--border);
   font-size:11px;vertical-align:middle;font-weight:300;
 }
 .acc-tbl tr:last-child td{border-bottom:none}
-.acc-tbl tr:hover td{background:var(--bg2)}
-.ov-ttl{color:var(--text);font-weight:400;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.t-pri{font-size:9px;padding:2px 8px;border-radius:20px;border:1px solid var(--border2);color:var(--dim);white-space:nowrap}
-.t-pri.urgent{border-color:#D4A070;color:#8A5A28}
-.t-pri.important{color:var(--text)}
-.t-type{font-size:9px;padding:2px 8px;background:var(--bg3);color:var(--dim);border-radius:20px;white-space:nowrap}
-.t-type.alert{background:#E8F4E8;color:#2A6830}
-.t-type.remittance{background:#EAF3FA;color:#2A6688}
-.t-status{font-size:9px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);color:var(--dim);white-space:nowrap}
-.t-status.blocked{border-color:#B070C8;color:#6A2888;background:#F3EAF8}
-.t-status.done{color:var(--muted)}
-.t-due{font-size:10px;color:var(--muted);white-space:nowrap}
+.acc-tbl tr:hover td{background:var(--bg3)}
+.ov-ttl{color:var(--text);font-weight:400;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.t-pri{font-size:9px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);color:var(--dim);white-space:nowrap;background:var(--bg3)}
+.t-pri.urgent{border-color:var(--urgent-bd);color:var(--urgent-text);background:var(--urgent-bg)}
+.t-pri.important{border-color:var(--border2);color:var(--text);background:var(--bg4)}
+.t-type{font-size:9px;padding:2px 8px;background:var(--bg4);color:var(--dim);border-radius:20px;white-space:nowrap;border:1px solid var(--border)}
+.t-type.alert{background:#1A2E1A;color:var(--green);border-color:#2A4A2A}
+.t-type.remittance{background:var(--remit-bg);color:var(--remit-text);border-color:var(--remit-bd)}
+.t-status{font-size:9px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);color:var(--dim);white-space:nowrap;background:var(--bg3)}
+.t-status.blocked{border-color:var(--blocked-bd);color:var(--blocked-text);background:var(--blocked-bg)}
+.t-status.done{color:var(--muted);opacity:.6}
+.t-due{font-size:10px;color:var(--muted);white-space:nowrap;font-family:"JetBrains Mono",monospace}
 .acc-empty{padding:14px 18px;font-size:11px;color:var(--muted)}
-/* personal spending summary in accordion */
+
+/* ── PERSONAL FINANCE BLOCK ── */
 .pfin-summary{
-  display:flex;gap:0;border-top:2px solid var(--border);
+  display:flex;gap:0;border-top:1px solid var(--border);
   background:var(--bg2);
 }
 .pfin-col{flex:1;padding:10px 12px;text-align:center}
 .pfin-col+.pfin-col{border-left:1px solid var(--border)}
 .pfin-lbl{font-size:9px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px}
-.pfin-val{font-size:14px;font-weight:700;font-family:monospace}
-.pfin-val.inc{color:#000000}
-.pfin-val.exp{color:#A02020}
-.pfin-val.pos{color:#000000}
-.pfin-val.neg{color:#A02020}
+.pfin-val{font-size:14px;font-weight:700;font-family:"JetBrains Mono",monospace}
+.pfin-val.inc{color:#6AC48A}
+.pfin-val.exp{color:#E06060}
+.pfin-val.pos{color:#6AC48A}
+.pfin-val.neg{color:#E06060}
 .pfin-val.dim{color:var(--dim)}
 .pfin-tx{padding:0 14px 10px;font-size:11px;color:var(--dim)}
-.pfin-tx-row{display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--border)}
+.pfin-tx-row{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)}
 .pfin-tx-row:last-child{border-bottom:none}
-.pfin-tx-date{color:var(--muted);flex-shrink:0;min-width:40px}
+.pfin-tx-date{color:var(--muted);flex-shrink:0;min-width:44px;font-family:"JetBrains Mono",monospace;font-size:10px}
 .pfin-tx-item{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pfin-tx-amt{font-family:monospace;font-weight:600;flex-shrink:0}
+.pfin-tx-amt{font-family:"JetBrains Mono",monospace;font-weight:600;flex-shrink:0}
 
-/* responsive — tablet */
+/* ── FOOTER ── */
+footer{
+  text-align:center;padding:20px 24px;
+  font-size:10px;color:var(--muted);
+  border-top:1px solid var(--border);
+  background:var(--bg2);
+  font-family:"JetBrains Mono",monospace;
+}
+
+/* ── RESPONSIVE: tablet ── */
 @media(max-width:1024px){
-  body{font-weight:400}
   .hdr-name{font-size:17px}
-  .hdr-sub{font-size:14px}
-  .hdr-clock{font-size:15px}
-  .a-lbl{font-size:13px}
-  .a-chip{font-size:15px}
-  .a-none{font-size:15px}
-  .sec-lbl{font-size:13px}
-  .wc-title{font-size:18px}
+  .hdr-sub{font-size:13px}
+  .hdr-clock{font-size:14px}
+  .a-lbl{font-size:13px;letter-spacing:.8px}
+  .a-chip{font-size:14px;padding:4px 12px 4px 8px}
+  .a-none{font-size:14px}
+  .sec-lbl{font-size:12px}
+  .wc-title{font-size:17px;line-height:1.5}
+  .wc-meta{font-size:14px}
+  .wc-meta-lbl{font-size:12px}
+  .wc-next,.wc-blocked{font-size:14px;line-height:1.7}
+  .tag{font-size:13px;padding:3px 10px}
+  .brief-date{font-size:15px}
+  .brief-lbl{font-size:12px}
+  .brief-line{font-size:16px;line-height:2;font-weight:400}
+  .brief-time{font-size:14px}
+  .acc-name{font-size:18px}
+  .acc-role{font-size:13px}
+  .cnt-val{font-size:22px}
+  .cnt-lbl{font-size:11px}
+  .acc-tbl td{font-size:15px;padding:10px 14px}
+  .t-pri,.t-type,.t-status{font-size:13px;padding:3px 10px}
+  .t-due{font-size:14px}
+  .acc-empty{font-size:15px}
+  .pfin-val{font-size:15px}
+  .pfin-lbl{font-size:10px}
+  .pfin-tx{font-size:12px}
+  .ov-ttl{max-width:none}
+}
+/* ── RESPONSIVE: phone ── */
+@media(max-width:640px){
+  header{padding:0 16px}
+  #info-bar{padding:0 16px}
+  #alert-strip{padding:0 16px}
+  main{padding:14px 16px;gap:16px}
+  .acc-counts{display:none}
+  .wc-title{font-size:18px;line-height:1.5}
   .wc-meta{font-size:15px}
   .wc-meta-lbl{font-size:13px}
-  .wc-next,.wc-blocked{font-size:15px;line-height:1.7}
-  .tag{font-size:14px;padding:3px 10px}
-  .brief-date{font-size:16px}
-  .brief-lbl{font-size:13px}
+  .wc-next,.wc-blocked{font-size:15px;line-height:1.8}
+  .tag{font-size:14px;padding:4px 10px}
   .brief-line{font-size:17px;line-height:2;font-weight:400}
   .brief-time{font-size:15px}
   .acc-name{font-size:19px}
-  .acc-role{font-size:14px}
-  .cnt-val{font-size:24px}
-  .cnt-lbl{font-size:12px}
-  .acc-tbl td{font-size:16px;padding:10px 14px;line-height:1.5}
-  .t-pri,.t-type,.t-status{font-size:14px;padding:3px 10px}
-  .t-due{font-size:15px}
-  .acc-empty{font-size:16px}
-  .pfin-val{font-size:16px}
-  .pfin-lbl{font-size:11px}
-  .pfin-tx{font-size:13px}
-  .ov-ttl{max-width:none}
+  .acc-tbl td{font-size:16px;padding:10px 12px}
+  .t-pri,.t-type,.t-status{font-size:14px;padding:3px 9px}
+  .t-due{font-size:14px}
+  .a-chip{font-size:15px}
+  .a-lbl{font-size:12px}
+  .b-blk,.b-urg,.b-due,.b-area{font-size:12px}
+  .hdr-clock{font-size:12px}
 }
-/* responsive — phone */
-@media(max-width:640px){
-  header{padding:0 16px}
-  #alert-strip{padding:0 16px}
-  main{padding:16px;gap:16px}
-  .acc-counts{display:none}
-  body{font-weight:400}
-  .wc-title{font-size:19px;line-height:1.5}
-  .wc-meta{font-size:16px}
-  .wc-meta-lbl{font-size:14px}
-  .wc-next,.wc-blocked{font-size:16px;line-height:1.8}
-  .tag{font-size:15px;padding:4px 11px}
-  .brief-line{font-size:18px;line-height:2.1;font-weight:400}
-  .brief-time{font-size:16px}
-  .acc-name{font-size:20px}
-  .acc-tbl td{font-size:17px;padding:11px 14px;line-height:1.5}
-  .t-pri,.t-type,.t-status{font-size:15px;padding:3px 10px}
-  .t-due{font-size:15px}
-  .a-chip{font-size:16px}
-  .b-blk,.b-urg,.b-due,.b-area{font-size:13px}
-}
-::-webkit-scrollbar{width:3px;height:3px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 </style>
 </head>
 <body>
@@ -283,18 +392,22 @@ main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:colu
 <!-- HEADER -->
 <header>
   <div class="hdr-l">
-    <div class="logo"><img src="assets/avatar.png" alt="大總管"></div>
-    <div>
+    <div class="logo">
+      <img src="assets/avatar.png" alt="大總管" onerror="this.style.display='none';this.parentElement.innerHTML='🦅'">
+    </div>
+    <div class="hdr-brand">
       <div class="hdr-name">Open Claw</div>
       <div class="hdr-sub">全儀表板</div>
     </div>
   </div>
-  <div id="clk" class="hdr-clock"></div>
+  <div class="hdr-r">
+    <div id="clk" class="hdr-clock"></div>
+  </div>
 </header>
 
 <!-- INFO BAR -->
 <div id="info-bar">
-  <div class="ib-weather" id="ib-weather">⋯</div>
+  <div class="ib-weather" id="ib-weather">⋯ 天氣載入中</div>
   <div class="ib-lunar"   id="ib-lunar">農曆載入中</div>
 </div>
 
@@ -320,7 +433,7 @@ main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:colu
     <div class="brief-wrap" id="brief-wrap">載入中…</div>
   </section>
 
-  <!-- SECTION 3: 全區總覽 (4 accordions) -->
+  <!-- SECTION 3: 全區總覽 -->
   <section>
     <div class="sec-lbl">全區總覽</div>
     <div class="acc-wrap" id="acc-wrap">
@@ -330,17 +443,21 @@ main{max-width:880px;margin:0 auto;padding:24px;display:flex;flex-direction:colu
 
 </main>
 
+<footer>
+  Open Claw · 每日自動更新 · 資料來源 tasks.json
+</footer>
+
 <script>
 const AREAS = [
-  { key:"openclaw", name:"OpenClaw",  role:"開發優化師", path:"openclaw/",  data:"data/openclaw/tasks.json"  },
-  { key:"caitodo",  name:"才多多",    role:"才多多",     path:"caitodo/",   data:"data/caitodo/tasks.json"   },
-  { key:"zhaojing", name:"兆鯨顧問",  role:"兆鯨顧問",   path:"zhaojing/",  data:"data/zhaojing/tasks.json"  },
-  { key:"finance",  name:"理財分析師", role:"理財分析師", path:"finance/",   data:"data/finance/tasks.json"   },
-  { key:"personal", name:"個人財務",  role:"大總管",     path:"personal/",  data:"data/personal/tasks.json"  },
+  { key:"openclaw", name:"OpenClaw",   role:"開發優化師", icon:"🛠",  path:"openclaw/",  data:"data/openclaw/tasks.json"  },
+  { key:"caitodo",  name:"才多多",     role:"移工・僑外生", icon:"👥", path:"caitodo/",   data:"data/caitodo/tasks.json"   },
+  { key:"zhaojing", name:"兆鯨顧問",   role:"顧問・物業",  icon:"🏢", path:"zhaojing/",  data:"data/zhaojing/tasks.json"  },
+  { key:"finance",  name:"理財分析師", role:"股票・帳務",  icon:"📊", path:"finance/",   data:"data/finance/tasks.json"   },
+  { key:"personal", name:"個人財務",   role:"大總管",      icon:"💰", path:"personal/",  data:"data/personal/tasks.json"  },
 ];
 
 const DATA = {};
-let PFIN = null; // personal finance.json cache
+let PFIN = null;
 const PRI_LBL  = {urgent:"急件",important:"重要",normal:"一般"};
 const TYPE_LBL = {remittance:"💳 匯款",alert:"🔔 提醒",task:"任務"};
 
@@ -374,8 +491,16 @@ function counts(tasks){
   });
   return c;
 }
+function sortTasks(tasks){
+  const pri={urgent:0,important:1,normal:2};
+  return [...tasks].sort((a,b)=>{
+    const ab=a.status==="阻塞"?-1:0, bb=b.status==="阻塞"?-1:0;
+    if(ab!==bb) return ab-bb;
+    return (pri[a.priority]??2)-(pri[b.priority]??2);
+  });
+}
 
-// ── ALERT STRIP ────────────────────────────────────────────────
+// ── ALERT STRIP ──────────────────────────────────────────────────
 function renderStrip(){
   const strip=document.getElementById("alert-strip");
   const lbl  =document.getElementById("a-lbl");
@@ -399,251 +524,190 @@ function renderStrip(){
     </span>`).join("");
 }
 
-// ── WARNING CARDS ──────────────────────────────────────────────
+// ── WARNING CARDS ─────────────────────────────────────────────────
 function renderWarnings(){
   const grid=document.getElementById("warn-grid");
   const items=[];
   AREAS.forEach(area=>{
     (DATA[area.key]?.tasks||[]).filter(isWarn).forEach(t=>items.push({t,area}));
   });
-
-  // sort: blocked first, then urgent, then remittance; by due date
-  items.sort((a,b)=>{
-    const rank=x=>(x.t.status==="阻塞"?0:x.t.priority==="urgent"?1:2);
-    if(rank(a)!==rank(b)) return rank(a)-rank(b);
-    return (a.t.due||"9999")>(b.t.due||"9999")?1:-1;
-  });
-
   if(!items.length){
-    grid.innerHTML='<div class="warn-empty">目前無急件、無阻塞、無待匯款 ✓</div>';
-    return;
+    grid.innerHTML='<div class="warn-empty">✅ 目前無急件、匯款或阻塞項目</div>'; return;
   }
-
   grid.innerHTML=items.map(({t,area})=>{
-    const isBlk=t.status==="阻塞";
-    const cls=isBlk?"warn-card blocked":t.priority==="urgent"?"warn-card urgent":"warn-card";
-    const meta=[];
-    if(t.due&&t.due!=="-") meta.push(`<span><span class="wc-meta-lbl">到期</span>${t.due}</span>`);
-    return `<div class="${cls}">
+    const cls = t.type==="remittance"?"remittance":t.status==="阻塞"?"blocked":"urgent";
+    const remitWarn = t.type==="remittance" && (!t.due||t.due==="-"||!t.owner_role||t.owner_role==="-")
+      ? `<div class="wc-blocked">⚠️ 匯款缺少 due / owner_role，請補齊</div>` : "";
+    return `
+    <div class="warn-card ${cls}">
       <div class="wc-top">
         <div class="wc-title">${t.title}</div>
         <div class="wc-tags">
           <span class="tag tag-area">${area.name}</span>
-          <span class="tag tag-pri ${t.priority||''}">${PRI_LBL[t.priority]||t.priority}</span>
-          <span class="tag tag-status ${isBlk?"blocked":""}">${t.status}</span>
-          ${t.type==="remittance"?'<span class="tag tag-type remittance">💳 匯款</span>':""}
+          <span class="tag tag-pri ${t.priority||''}">${PRI_LBL[t.priority]||t.priority||"-"}</span>
+          <span class="tag tag-type ${t.type||''}">${TYPE_LBL[t.type]||t.type||"-"}</span>
+          ${t.status==="阻塞"?`<span class="tag tag-status blocked">阻塞</span>`:""}
         </div>
       </div>
-      ${meta.length?`<div class="wc-meta">${meta.join("")}</div>`:""}
-      ${t.next_step&&t.next_step!=="-"?`<div class="wc-next">→ ${t.next_step}</div>`:""}
-      ${t.blocked_reason&&t.blocked_reason!=="-"?`<div class="wc-blocked">🚫 ${t.blocked_reason}</div>`:""}
+      <div class="wc-meta">
+        <span><span class="wc-meta-lbl">負責人</span>${t.owner_role||"-"}</span>
+        <span><span class="wc-meta-lbl">截止</span>${t.due&&t.due!=="-"?t.due:"-"}</span>
+        <span><span class="wc-meta-lbl">更新</span>${fmtTs(t.updated_at)}</span>
+      </div>
+      ${t.blocked_reason&&t.blocked_reason!=="-"
+        ? `<div class="wc-blocked">🚫 阻塞：${t.blocked_reason}</div>`
+        : t.next_step&&t.next_step!=="-"
+          ? `<div class="wc-next">→ ${t.next_step}</div>` : ""}
+      ${remitWarn}
     </div>`;
   }).join("");
 }
 
-// ── DAILY BRIEF ───────────────────────────────────────────────
+// ── SCHEDULE HELPER ──────────────────────────────────────────────
+// 排程任務：有 time 且有 freq 的任務視為自動排程（非手工工作）
+function isSched(t){ return t.time&&t.time!=="-"&&t.freq&&t.freq!=="-"; }
+
+// ── DAILY BRIEF ───────────────────────────────────────────────────
 function renderBrief(){
-  const wrap = document.getElementById("brief-wrap");
-  const now  = new Date();
-  const days = ["日","一","二","三","四","五","六"];
-  const isMonday = now.getDay() === 1;
-  const dateStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")} 週${days[now.getDay()]}`;
+  const wrap=document.getElementById("brief-wrap");
+  const now=new Date();
+  const days=["日","一","二","三","四","五","六"];
+  const dateStr=`${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")} 週${days[now.getDay()]}`;
+  const isMonday=now.getDay()===1;
 
-  // 商務區域（排除 openclaw 系統區）
-  const BIZ = AREAS.filter(a => a.key !== "openclaw");
-
-  // 1. 今日行程：有排程時間，商務區域，未完成
-  const schedule = [];
-  BIZ.forEach(area=>{
-    (DATA[area.key]?.tasks||[]).forEach(t=>{
-      if(!t.time || t.time==="-") return;
-      if(t.status==="已完成") return;
-      if(t.freq==="weekly-mon" && !isMonday) return;
-      schedule.push({t, area});
-    });
-  });
-  schedule.sort((a,b)=> a.t.time > b.t.time ? 1 : -1);
-
-  // 2. 重要提醒：7天內到期 或 urgent，商務區域，非完成、非阻塞
-  const sevenDays = new Date(now.getTime() + 7*24*60*60*1000);
-  const important = [];
-  const seen = new Set();
-  BIZ.forEach(area=>{
-    (DATA[area.key]?.tasks||[]).forEach(t=>{
-      if(t.status==="已完成" || t.status==="阻塞") return;
-      const key = area.key+"|"+t.title;
-      if(seen.has(key)) return;
-      let include=false, isDueSoon=false;
-      if(t.due && t.due!=="-"){
-        const d = new Date(t.due.replace(/\//g,"-"));
-        if(!isNaN(d) && d <= sevenDays){ include=true; isDueSoon=true; }
-      }
-      if(t.priority==="urgent") include=true;
-      if(!include) return;
-      seen.add(key);
-      important.push({t, area, isDueSoon});
-    });
-  });
-  important.sort((a,b)=>{
-    if(a.isDueSoon && b.isDueSoon) return a.t.due > b.t.due ? 1:-1;
-    if(a.isDueSoon) return -1;
-    if(b.isDueSoon) return 1;
-    return 0;
-  });
-
-  // 3. 阻塞：全區域
-  const blocked = [];
+  // ── 排程任務（依 freq 決定今天是否顯示）────────────────────────
+  const schedItems=[];
   AREAS.forEach(area=>{
-    (DATA[area.key]?.tasks||[]).filter(t=>t.status==="阻塞").forEach(t=>blocked.push({t,area}));
+    (DATA[area.key]?.tasks||[]).forEach(t=>{
+      if(!isSched(t)||t.status==="已完成") return;
+      const freq=t.freq;
+      let show=false;
+      if(freq==="daily")               show=true;
+      else if(freq==="weekly-mon"&&isMonday) show=true;
+      else if(freq==="weekly")         show=true;
+      // monthly 不在首頁顯示，避免雜訊
+      if(show) schedItems.push({t,area});
+    });
   });
+  // 依時間排序（HH:MM 字串比較即可）
+  schedItems.sort((a,b)=>a.t.time.localeCompare(b.t.time));
 
-  const schedHTML = schedule.length
-    ? schedule.map(({t,area})=>`
-        <div class="brief-line">
+  // ── 工作任務 Top 3（非排程、未完成、按優先度）──────────────────
+  const workItems=[];
+  AREAS.forEach(area=>{
+    (DATA[area.key]?.tasks||[])
+      .filter(t=>!isSched(t)&&t.status!=="已完成")
+      .forEach(t=>workItems.push({t,area}));
+  });
+  const sortedWork=[...workItems].sort((a,b)=>{
+    const pri={urgent:0,important:1,normal:2};
+    const ab=a.t.status==="阻塞"?-1:0, bb=b.t.status==="阻塞"?-1:0;
+    if(ab!==bb) return ab-bb;
+    return (pri[a.t.priority]??2)-(pri[b.t.priority]??2);
+  });
+  // 優先取 urgent/important/阻塞，不足再補 normal
+  let top3=sortedWork.filter(({t})=>t.priority==="urgent"||t.priority==="important"||t.status==="阻塞").slice(0,3);
+  if(!top3.length) top3=sortedWork.slice(0,3);
+
+  // ── 排程區塊 ────────────────────────────────────────────────────
+  const schedHtml=schedItems.length?`
+    <div class="brief-block">
+      <div class="brief-lbl">早班排程</div>
+      ${schedItems.map(({t,area})=>{
+        const isWarnSt=t.status==="阻塞";
+        const badge=isWarnSt
+          ?`<span class="sched-status warn">⚠️ 需關注</span>`
+          :`<span class="sched-status ok">✅ 正常</span>`;
+        return `<div class="brief-line">
           <span class="brief-time">${t.time}</span>
-          <span class="brief-text">${t.title}
-            <span class="b-area">（${area.name}）</span>
-            ${t.priority==="urgent"?'<span class="b-urg">急件</span>':""}
-          </span>
-        </div>`).join("")
-    : `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">今日無排程行程</span></div>`;
-
-  const impHTML = important.length
-    ? important.map(({t,area})=>`
-        <div class="brief-line">
-          <span class="brief-text">${t.title}
-            <span class="b-area">（${area.name}）</span>
-            ${t.due&&t.due!=="-"?`<span class="b-due">→ ${t.due}</span>`:""}
-            ${t.priority==="urgent"?'<span class="b-urg">急件</span>':""}
-          </span>
-        </div>`).join("")
-    : `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">本週無急件</span></div>`;
-
-  const blkHTML = blocked.length
-    ? blocked.map(({t,area})=>`
-        <div class="brief-line">
-          <span class="brief-text">${t.title}
-            <span class="b-area">（${area.name}）</span>
-            <span class="b-blk">阻塞</span>
-          </span>
-        </div>`).join("")
-    : `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">無阻塞項目 ✓</span></div>`;
-
-  wrap.innerHTML = `
-    <div class="brief-date">${dateStr}</div>
-    <div class="brief-div"></div>
-    <div class="brief-block">
-      <div class="brief-lbl">今日行程${isMonday?" · 含週一任務":""}</div>
-      ${schedHTML}
+          <span class="brief-text">${t.title}<span class="b-area">[${area.name}]</span></span>
+          ${badge}
+        </div>`;
+      }).join("")}
     </div>
-    <div class="brief-div"></div>
+    <div class="brief-div"></div>`:"";
+
+  // ── 工作待辦 Top 3 ──────────────────────────────────────────────
+  const workHtml=`
     <div class="brief-block">
-      <div class="brief-lbl">重要提醒（7天內到期・急件）</div>
-      ${impHTML}
-    </div>
-    <div class="brief-div"></div>
-    <div class="brief-block">
-      <div class="brief-lbl">阻塞中（${blocked.length} 件）</div>
-      ${blkHTML}
+      <div class="brief-lbl">工作待辦 Top 3</div>
+      ${top3.length?top3.map(({t,area})=>`
+        <div class="brief-line">
+          <span class="brief-time">${t.priority==="urgent"?"🔴":t.priority==="important"?"🟡":"⚪"}</span>
+          <span class="brief-text">${t.title}
+            <span class="b-area">[${area.name}]</span>
+            ${t.status==="阻塞"?`<span class="b-blk">阻塞</span>`:""}
+            ${t.due&&t.due!=="-"?`<span class="b-due">截止 ${t.due}</span>`:""}
+          </span>
+        </div>`).join(""):
+        `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">暫無待處理事項</span></div>`
+      }
     </div>`;
+
+  wrap.innerHTML=`<div class="brief-date">${dateStr}</div>${schedHtml}${workHtml}`;
 }
 
-// ── ACCORDIONS ─────────────────────────────────────────────────
-const accState={};
-
-function toggleAcc(key){
-  accState[key]=!accState[key];
-  const body  =document.getElementById("acc-body-"+key);
-  const toggle=document.getElementById("acc-tog-"+key);
-  body.classList.toggle("open",accState[key]);
-  toggle.classList.toggle("open",accState[key]);
-}
-
-function sortTasks(ts){
-  return [...ts].sort((a,b)=>{
-    const pa={urgent:0,important:1,normal:2};
-    const sa={阻塞:0};
-    const av=(pa[a.priority]??2)+(sa[a.status]??1);
-    const bv=(pa[b.priority]??2)+(sa[b.status]??1);
-    if(av!==bv) return av-bv;
-    return (a.due||"9999")>(b.due||"9999")?1:-1;
-  });
-}
-
-function renderAccordions(){
+// ── ENTRY CARDS（各區入口卡片，點擊進子頁）───────────────────────
+function renderEntryCards(){
   const wrap=document.getElementById("acc-wrap");
-  // 個人財務 30天摘要
-  function buildPfinBlock(){
-    if(!PFIN) return "";
-    const today = new Date(); today.setHours(0,0,0,0);
-    const cutoff = new Date(today.getTime() - 30*24*60*60*1000);
-    const WDAY = ["日","一","二","三","四","五","六"];
-    const txs = (PFIN.transactions||[])
-      .filter(t=>new Date(t.date)>=cutoff)
-      .sort((a,b)=>b.date>a.date?1:b.date<a.date?-1:0);
-    let inc=0, exp=0;
-    txs.forEach(t=>{inc+=(t.income||0);exp+=(t.expense||0);});
-    const net=inc-exp;
-    const fmt=n=>n.toLocaleString("zh-TW");
-    const recent=txs.slice(0,4).map(t=>{
-      const d=new Date(t.date);
-      const isInc=t.income>0;
-      return `<div class="pfin-tx-row">
-        <span class="pfin-tx-date">${t.date.slice(5)} ${WDAY[d.getDay()]}</span>
-        <span class="pfin-tx-item">${t.item}</span>
-        <span class="pfin-tx-amt" style="color:${isInc?"#000000":"#A02020"}">${isInc?"+":"−"}${fmt(isInc?t.income:t.expense)}</span>
-      </div>`;
-    }).join("");
-    return `
-      <div class="pfin-summary">
-        <div class="pfin-col"><div class="pfin-lbl">30天收入</div><div class="pfin-val inc">+${fmt(inc)}</div></div>
-        <div class="pfin-col"><div class="pfin-lbl">30天支出</div><div class="pfin-val exp">-${fmt(exp)}</div></div>
-        <div class="pfin-col"><div class="pfin-lbl">淨額</div><div class="pfin-val ${net>=0?"pos":"neg"}">${net>=0?"+":""}${fmt(net)}</div></div>
-        <div class="pfin-col"><div class="pfin-lbl">筆數</div><div class="pfin-val dim">${txs.length}</div></div>
-      </div>
-      <div class="pfin-tx">${recent}</div>`;
-  }
-
+  wrap.className="entry-wrap";
   wrap.innerHTML=AREAS.map(area=>{
-    const d=DATA[area.key]; const tasks=sortTasks(d?.tasks||[]);
+    const d=DATA[area.key];
+    const tasks=d?.tasks||[];
     const c=counts(tasks);
     const hot=c.blocked>0;
-    const isPersonal = area.key==="personal";
-
-    const rows=tasks.length ? tasks.map(t=>`
-      <tr>
-        <td class="ov-ttl" title="${t.title}">${t.title}</td>
-        <td><span class="t-pri ${t.priority||''}">${PRI_LBL[t.priority]||t.priority}</span></td>
-        <td><span class="t-type ${t.type||''}">${TYPE_LBL[t.type]||t.type}</span></td>
-        <td><span class="t-status ${t.status==="阻塞"?"blocked":t.status==="已完成"?"done":""}">${t.status}</span></td>
-        <td class="t-due">${t.due&&t.due!=="-"?t.due:""}</td>
-      </tr>`).join("") :
-      `<tr><td colspan="5" class="acc-empty">暫無任務資料</td></tr>`;
-
+    const updStr=d?.updated_at?fmtTs(d.updated_at):"-";
     return `
-    <div class="acc-item">
-      <div class="acc-hdr" onclick="toggleAcc('${area.key}')">
-        <span class="acc-toggle" id="acc-tog-${area.key}">›</span>
-        <div class="acc-info">
-          <div class="acc-name">${area.name}</div>
-          <div class="acc-role">${area.role}</div>
-        </div>
-        <div class="acc-counts">
-          ${hot?`<div class="cnt-badge hot"><div class="cnt-val">${c.blocked}</div><div class="cnt-lbl">阻塞</div></div>`:""}
-          <div class="cnt-badge"><div class="cnt-val">${c.pending}</div><div class="cnt-lbl">待處理</div></div>
-          <div class="cnt-badge"><div class="cnt-val">${c.done}</div><div class="cnt-lbl">完成</div></div>
-        </div>
-        <a class="acc-link" href="${area.path}" onclick="event.stopPropagation()" title="前往 ${area.name}">›</a>
+    <a class="entry-card${hot?" hot":""}" href="${area.path}index.html">
+      <div class="entry-icon">${area.icon}</div>
+      <div class="entry-info">
+        <div class="entry-name">${area.name}</div>
+        <div class="entry-role">${area.role}</div>
+        <div class="entry-upd">更新 ${updStr}</div>
       </div>
-      <div class="acc-body" id="acc-body-${area.key}">
-        <table class="acc-tbl"><tbody>${rows}</tbody></table>
-        ${isPersonal ? buildPfinBlock() : ""}
+      <div class="entry-counts">
+        ${hot?`<div class="cnt-badge hot"><div class="cnt-val">${c.blocked}</div><div class="cnt-lbl">阻塞</div></div>`:""}
+        <div class="cnt-badge"><div class="cnt-val">${c.pending}</div><div class="cnt-lbl">待處理</div></div>
+        <div class="cnt-badge"><div class="cnt-val">${c.done}</div><div class="cnt-lbl">完成</div></div>
       </div>
-    </div>`;
+      <div class="entry-arrow">›</div>
+    </a>`;
   }).join("");
 }
 
-// ── FETCH & INIT ────────────────────────────────────────────────
+function buildPfinBlock(){
+  if(!PFIN) return "";
+  const today=new Date();
+  const cutoff=new Date(today.getTime()-30*24*60*60*1000);
+  const WDAY=["日","一","二","三","四","五","六"];
+  const txs=(PFIN.transactions||[])
+    .filter(t=>new Date(t.date)>=cutoff)
+    .sort((a,b)=>b.date>a.date?1:b.date<a.date?-1:0);
+  let inc=0,exp=0;
+  txs.forEach(t=>{inc+=(t.income||0);exp+=(t.expense||0);});
+  const net=inc-exp;
+  const fmt=n=>n.toLocaleString("zh-TW");
+  const recent=txs.slice(0,4).map(t=>{
+    const d=new Date(t.date);
+    const isInc=t.income>0;
+    return `<div class="pfin-tx-row">
+      <span class="pfin-tx-date">${t.date.slice(5)} ${WDAY[d.getDay()]}</span>
+      <span class="pfin-tx-item">${t.item}</span>
+      <span class="pfin-tx-amt" style="color:${isInc?"#6AC48A":"#E06060"}">${isInc?"+":"−"}${fmt(isInc?t.income:t.expense)}</span>
+    </div>`;
+  }).join("");
+  return `
+    <div class="pfin-summary">
+      <div class="pfin-col"><div class="pfin-lbl">30天收入</div><div class="pfin-val inc">+${fmt(inc)}</div></div>
+      <div class="pfin-col"><div class="pfin-lbl">30天支出</div><div class="pfin-val exp">-${fmt(exp)}</div></div>
+      <div class="pfin-col"><div class="pfin-lbl">淨額</div><div class="pfin-val ${net>=0?"pos":"neg"}">${net>=0?"+":""}${fmt(net)}</div></div>
+      <div class="pfin-col"><div class="pfin-lbl">筆數</div><div class="pfin-val dim">${txs.length}</div></div>
+    </div>
+    <div class="pfin-tx">${recent}</div>`;
+}
+
+
+// ── FETCH & INIT ─────────────────────────────────────────────────
 async function loadArea(area){
   try{
     const r=await fetch(area.data+"?_="+Date.now());
@@ -653,104 +717,70 @@ async function loadArea(area){
 }
 
 async function init(){
-  const [results, finRes] = await Promise.all([
+  const [results,finRes]=await Promise.all([
     Promise.all(AREAS.map(loadArea)),
     fetch("data/personal/finance.json?_="+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null)
   ]);
   AREAS.forEach((a,i)=>{ DATA[a.key]=results[i]||{updated_at:null,tasks:[]}; });
-  PFIN = finRes;
+  PFIN=finRes;
   renderStrip();
   renderWarnings();
   renderBrief();
-  renderAccordions();
+  renderEntryCards();
 }
 
-// ── LUNAR CALENDAR ───────────────────────────────────────────────
+// ── LUNAR ────────────────────────────────────────────────────────
 function getLunar(){
   try{
-    const now = new Date();
-    const lunarFmt = new Intl.DateTimeFormat("zh-TW-u-ca-chinese",{
-      year:"numeric", month:"long", day:"numeric"
-    });
-    const raw = lunarFmt.format(now); // e.g. "民國115年乙巳年正月二十四"
-    // extract relevant part: 年干支 + 月日
-    const m = raw.match(/([甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]年.*)/);
-    return m ? m[1] : raw;
-  } catch(e){ return ""; }
+    const now=new Date();
+    const lunarFmt=new Intl.DateTimeFormat("zh-TW-u-ca-chinese",{year:"numeric",month:"long",day:"numeric"});
+    const raw=lunarFmt.format(now);
+    const m=raw.match(/([甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]年.*)/);
+    return m?m[1]:raw;
+  }catch(e){ return ""; }
 }
-
 function renderLunar(){
-  const el = document.getElementById("ib-lunar");
-  if(!el) return;
-  const lunar = getLunar();
-  el.textContent = lunar ? "農曆 " + lunar : "";
+  const el=document.getElementById("ib-lunar"); if(!el) return;
+  const lunar=getLunar();
+  el.textContent=lunar?"農曆 "+lunar:"";
 }
 
 // ── WEATHER ──────────────────────────────────────────────────────
-const WMO_ICON = {
-  0:"☀️",1:"🌤",2:"⛅️",3:"☁️",
-  45:"🌫",48:"🌫",
-  51:"🌦",53:"🌦",55:"🌧",
-  61:"🌧",63:"🌧",65:"🌧",
-  71:"🌨",73:"🌨",75:"❄️",
-  80:"🌦",81:"🌧",82:"⛈",
-  95:"⛈",96:"⛈",99:"⛈"
-};
-const WMO_DESC = {
-  0:"晴",1:"晴時多雲",2:"多雲",3:"陰天",
-  45:"霧",48:"霧",
-  51:"毛毛雨",53:"毛毛雨",55:"毛毛雨",
-  61:"小雨",63:"中雨",65:"大雨",
-  71:"小雪",73:"中雪",75:"大雪",
-  80:"陣雨",81:"中陣雨",82:"暴雨",
-  95:"雷陣雨",96:"雷陣雨",99:"雷陣雨"
-};
-
-const GEO_KEY = "oc_geo";
-const GEO_TTL = 12 * 60 * 60 * 1000; // 12 小時
+const WMO_ICON={0:"☀️",1:"🌤",2:"⛅️",3:"☁️",45:"🌫",48:"🌫",51:"🌦",53:"🌦",55:"🌧",61:"🌧",63:"🌧",65:"🌧",71:"🌨",73:"🌨",75:"❄️",80:"🌦",81:"🌧",82:"⛈",95:"⛈",96:"⛈",99:"⛈"};
+const WMO_DESC={0:"晴",1:"晴時多雲",2:"多雲",3:"陰天",45:"霧",48:"霧",51:"毛毛雨",53:"毛毛雨",55:"毛毛雨",61:"小雨",63:"中雨",65:"大雨",71:"小雪",73:"中雪",75:"大雪",80:"陣雨",81:"中陣雨",82:"暴雨",95:"雷陣雨",96:"雷陣雨",99:"雷陣雨"};
+const GEO_KEY="oc_geo_dk";
+const GEO_TTL=12*60*60*1000;
 
 async function fetchWeather(){
-  const el = document.getElementById("ib-weather");
-  if(!el) return;
+  const el=document.getElementById("ib-weather"); if(!el) return;
   try{
-    let lat = 22.9999, lon = 120.2269, city = "台南";
-
-    // 先讀 localStorage 快取
+    let lat=22.9999,lon=120.2269,city="台南";
     try{
-      const c = JSON.parse(localStorage.getItem(GEO_KEY)||"null");
-      if(c && Date.now() - c.ts < GEO_TTL){
-        lat = c.lat; lon = c.lon; city = "";
-      } else if(navigator.geolocation){
-        // 快取過期或無快取 → 重新取得位置
+      const c=JSON.parse(localStorage.getItem(GEO_KEY)||"null");
+      if(c&&Date.now()-c.ts<GEO_TTL){ lat=c.lat;lon=c.lon;city=""; }
+      else if(navigator.geolocation){
         await new Promise(res=>{
-          navigator.geolocation.getCurrentPosition(
-            pos=>{
-              lat = pos.coords.latitude; lon = pos.coords.longitude; city = "";
-              localStorage.setItem(GEO_KEY, JSON.stringify({lat, lon, ts: Date.now()}));
-              res();
-            },
-            ()=>res(), {timeout:5000}
-          );
+          navigator.geolocation.getCurrentPosition(pos=>{
+            lat=pos.coords.latitude;lon=pos.coords.longitude;city="";
+            localStorage.setItem(GEO_KEY,JSON.stringify({lat,lon,ts:Date.now()}));
+            res();
+          },()=>res(),{timeout:5000});
         });
       }
     }catch(e){}
-
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode,windspeed_10m&timezone=Asia/Taipei`;
-    const r = await fetch(url);
-    if(!r.ok) throw 0;
-    const d = await r.json();
-    const cur = d.current;
-    const code = cur.weathercode;
-    const icon = WMO_ICON[code] ?? "🌡";
-    const desc = WMO_DESC[code] ?? "";
-    const temp = Math.round(cur.temperature_2m);
-    el.innerHTML = `${icon} <b>${temp}°C</b> ${desc}${city?" · "+city:""}`;
-  } catch(e){
-    el.textContent = "天氣載入失敗";
-  }
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode,windspeed_10m&timezone=Asia/Taipei`;
+    const r=await fetch(url); if(!r.ok) throw 0;
+    const d=await r.json();
+    const cur=d.current;
+    const code=cur.weathercode;
+    const icon=WMO_ICON[code]??"🌡";
+    const desc=WMO_DESC[code]??"";
+    const temp=Math.round(cur.temperature_2m);
+    el.innerHTML=`${icon} <b>${temp}°C</b> ${desc}${city?" · "+city:""}`;
+  }catch(e){ el.textContent="天氣載入失敗"; }
 }
 
-// ── CLOCK ───────────────────────────────────────────────────────
+// ── CLOCK ────────────────────────────────────────────────────────
 function tick(){
   const e=document.getElementById("clk"); if(!e) return;
   const now=new Date();
@@ -759,7 +789,7 @@ function tick(){
   const time=now.toLocaleTimeString("zh-TW",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"});
   e.innerHTML=`${time}<br>${date}`;
 }
-tick(); setInterval(tick,1000);
+tick();setInterval(tick,1000);
 renderLunar();
 fetchWeather();
 init();
