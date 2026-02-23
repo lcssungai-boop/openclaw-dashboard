@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-23T08:56:21Z",
+  "updated_at": "2026-02-23T10:25:45Z",
   "categories": [
     "才多多",
     "顧問",
@@ -9,65 +9,9 @@
   ],
   "items": [
     {
-      "category": "才多多",
-      "title": "才多多週會重點確認提醒",
-      "status": "待處理",
-      "next_action": "",
-      "role": "HR",
-      "block_reason": ""
-    },
-    {
-      "category": "才多多",
-      "title": "三年免招募費專案追蹤提醒",
-      "status": "待處理",
-      "next_action": "",
-      "role": "HR",
-      "block_reason": ""
-    },
-    {
-      "category": "系統",
-      "title": "OpenClaw 每週版本檢查",
-      "status": "已完成",
-      "next_action": "",
-      "role": "",
-      "block_reason": ""
-    },
-    {
-      "category": "系統",
-      "title": "郵件分類檢查-早上",
-      "status": "已完成",
-      "next_action": "",
-      "role": "",
-      "block_reason": ""
-    },
-    {
       "category": "系統",
       "title": "台積電J值追蹤提醒",
       "status": "已完成",
-      "next_action": "",
-      "role": "",
-      "block_reason": ""
-    },
-    {
-      "category": "系統",
-      "title": "0050 J值買點提醒",
-      "status": "待處理",
-      "next_action": "",
-      "role": "",
-      "block_reason": ""
-    },
-    {
-      "category": "系統",
-      "title": "郵件附件監看",
-      "status": "已完成",
-      "next_action": "",
-      "role": "",
-      "block_reason": ""
-    },
-    {
-      "category": "系統",
-      "title": "週一台積電零股掛單提醒",
-      "status": "待處理",
       "next_action": "",
       "role": "",
       "block_reason": ""
@@ -92,6 +36,14 @@
       "category": "系統",
       "title": "確認明晚行程",
       "status": "待處理",
+      "next_action": "",
+      "role": "",
+      "block_reason": ""
+    },
+    {
+      "category": "系統",
+      "title": "郵件附件監看",
+      "status": "已完成",
       "next_action": "",
       "role": "",
       "block_reason": ""
@@ -170,6 +122,22 @@
     },
     {
       "category": "系統",
+      "title": "郵件分類檢查-早上",
+      "status": "已完成",
+      "next_action": "",
+      "role": "",
+      "block_reason": ""
+    },
+    {
+      "category": "系統",
+      "title": "0050 J值買點提醒",
+      "status": "已完成",
+      "next_action": "",
+      "role": "",
+      "block_reason": ""
+    },
+    {
+      "category": "系統",
       "title": "BNI簡報與key單準備提醒",
       "status": "待處理",
       "next_action": "",
@@ -219,6 +187,30 @@
     {
       "category": "系統",
       "title": "工作流週一檢查_0840",
+      "status": "已完成",
+      "next_action": "",
+      "role": "",
+      "block_reason": ""
+    },
+    {
+      "category": "才多多",
+      "title": "才多多週會重點確認提醒",
+      "status": "已完成",
+      "next_action": "",
+      "role": "HR",
+      "block_reason": ""
+    },
+    {
+      "category": "才多多",
+      "title": "三年免招募費專案追蹤提醒",
+      "status": "已完成",
+      "next_action": "",
+      "role": "HR",
+      "block_reason": ""
+    },
+    {
+      "category": "系統",
+      "title": "OpenClaw 每週版本檢查",
       "status": "已完成",
       "next_action": "",
       "role": "",
