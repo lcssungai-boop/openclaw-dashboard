@@ -8,33 +8,36 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* Dark palette inspired by phone screenshots */
-  --bg:#1A1A1A;
-  --bg2:#222222;
-  --bg3:#2A2A2A;
-  --bg4:#303030;
-  --panel:#242424;
-  --panel2:#2E2E2E;
-  --border:#363636;
-  --border2:#424242;
-  --text:#E8E8E6;
-  --dim:#A8A8A6;
-  --muted:#686866;
+  --bg:#111111;
+  --bg2:#191919;
+  --bg3:#232323;
+  --bg4:#2B2B2B;
+  --panel:#161616;
+  --panel2:#1D1D1D;
+  --border:#2A2A2A;
+  --border2:#363636;
+  --text:#D4D4D2;
+  --dim:#8A8A88;
+  --muted:#505050;
   --bright:#F0F0EE;
 
-  /* Status colors — muted for dark bg */
-  --urgent-bg:#2A1E12;
-  --urgent-bd:#7A5830;
-  --urgent-text:#D4943A;
-  --blocked-bg:#1E1428;
-  --blocked-bd:#6040A0;
-  --blocked-text:#A880E0;
-  --remit-bg:#122030;
-  --remit-bd:#3060A0;
-  --remit-text:#60A0D8;
+  /* Accent 1 — Amber/Bronze : urgent, warnings */
+  --urgent-bg:#161008;
+  --urgent-bd:#5C3C18;
+  --urgent-text:#AE7838;
 
-  --green:#4A9C6A;
-  --green-dim:#1E3028;
+  /* Accent 1b — lighter amber : remittance */
+  --remit-bg:#141008;
+  --remit-bd:#504028;
+  --remit-text:#9A8050;
+
+  /* Accent 2 — Steel/Slate : blocked (replaces purple) */
+  --blocked-bg:#0A1418;
+  --blocked-bd:#1E3040;
+  --blocked-text:#5A7A90;
+
+  --green:#489A68;
+  --green-dim:#0C1E14;
 
   --radius:12px;
   --radius-sm:8px;
@@ -77,7 +80,7 @@ header{
 }
 .logo img{width:100%;height:100%;object-fit:cover;object-position:top center}
 .hdr-brand{}
-.hdr-name{font-size:14px;font-weight:700;color:var(--bright);letter-spacing:.3px}
+.hdr-name{font-size:16px;font-weight:700;color:var(--bright);letter-spacing:.3px}
 .hdr-sub{font-size:10px;color:var(--muted);font-weight:300;margin-top:1px}
 .hdr-r{display:flex;align-items:center;gap:14px}
 .hdr-clock{
@@ -142,7 +145,7 @@ main{max-width:900px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
 
 /* ── SECTION LABEL ── */
 .sec-lbl{
-  font-size:9px;letter-spacing:2px;font-weight:700;color:var(--muted);
+  font-size:10px;letter-spacing:1.5px;font-weight:700;color:var(--muted);
   text-transform:uppercase;margin-bottom:14px;
   display:flex;align-items:center;gap:12px;
   font-family:"JetBrains Mono",monospace;
@@ -164,9 +167,9 @@ main{max-width:900px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
 .warn-card.blocked{border-color:var(--blocked-bd);background:var(--blocked-bg)}
 .warn-card.remittance{border-color:var(--remit-bd);background:var(--remit-bg)}
 .wc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.wc-title{font-size:13px;font-weight:500;color:var(--bright);flex:1;line-height:1.45}
+.wc-title{font-size:15px;font-weight:500;color:var(--bright);flex:1;line-height:1.45}
 .wc-tags{display:flex;gap:5px;flex-shrink:0;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-.tag{font-size:9px;padding:2px 8px;border-radius:20px;white-space:nowrap;font-weight:500}
+.tag{font-size:10px;padding:3px 9px;border-radius:20px;white-space:nowrap;font-weight:500}
 .tag-area{background:var(--bg4);color:var(--dim);border:1px solid var(--border)}
 .tag-pri{border:1px solid var(--border);color:var(--dim);background:var(--bg3)}
 .tag-pri.urgent{border-color:var(--urgent-bd);color:var(--urgent-text);background:var(--urgent-bg)}
@@ -175,15 +178,15 @@ main{max-width:900px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
 .tag-status.blocked{border-color:var(--blocked-bd);color:var(--blocked-text);background:var(--blocked-bg)}
 .tag-type{background:var(--bg4);color:var(--dim);border:1px solid var(--border)}
 .tag-type.remittance{background:var(--remit-bg);color:var(--remit-text);border-color:var(--remit-bd)}
-.wc-meta{display:flex;gap:14px;font-size:10px;color:var(--dim)}
+.wc-meta{display:flex;gap:14px;font-size:12px;color:var(--dim)}
 .wc-meta-lbl{font-size:9px;color:var(--muted);margin-right:3px}
 .wc-next{
-  font-size:10px;color:var(--dim);
+  font-size:12px;color:var(--dim);
   background:var(--bg3);border-radius:var(--radius-xs);
   padding:5px 10px;border:1px solid var(--border);
 }
 .wc-blocked{
-  font-size:10px;color:var(--blocked-text);
+  font-size:12px;color:var(--blocked-text);
   background:var(--blocked-bg);border:1px solid var(--blocked-bd);
   border-radius:var(--radius-xs);padding:5px 10px;
 }
@@ -201,11 +204,11 @@ main{max-width:900px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
   color:var(--muted);margin-bottom:4px;font-family:"JetBrains Mono",monospace;
 }
 .brief-line{
-  font-size:12px;color:var(--dim);font-weight:400;line-height:1.8;
+  font-size:14px;color:var(--dim);font-weight:400;line-height:1.8;
   display:flex;align-items:baseline;gap:8px;
 }
 .brief-time{
-  font-size:10px;font-weight:600;color:var(--muted);
+  font-size:12px;font-weight:600;color:var(--muted);
   min-width:40px;flex-shrink:0;font-family:"JetBrains Mono",monospace;
 }
 .brief-text{flex:1;color:var(--text)}
@@ -217,7 +220,7 @@ main{max-width:900px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
 
 /* ── SCHEDULE STATUS BADGE ── */
 .sched-status{font-size:9px;padding:2px 7px;border-radius:20px;font-weight:600;flex-shrink:0;margin-left:4px}
-.sched-status.ok{background:#1E3028;color:var(--green);border:1px solid #2A4A2A}
+.sched-status.ok{background:var(--green-dim);color:var(--green);border:1px solid #183C24}
 .sched-status.warn{background:var(--urgent-bg);color:var(--urgent-text);border:1px solid var(--urgent-bd)}
 
 /* ── ENTRY CARDS ── */
@@ -232,8 +235,8 @@ main{max-width:900px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
 .entry-card.hot{border-color:var(--blocked-bd)}
 .entry-icon{font-size:22px;flex-shrink:0;width:34px;text-align:center}
 .entry-info{flex:1;min-width:0}
-.entry-name{font-size:14px;font-weight:600;color:var(--bright)}
-.entry-role{font-size:10px;color:var(--muted);margin-top:2px}
+.entry-name{font-size:16px;font-weight:600;color:var(--bright)}
+.entry-role{font-size:11px;color:var(--muted);margin-top:2px}
 .entry-upd{font-size:9px;color:var(--muted);margin-top:3px;font-family:"JetBrains Mono",monospace}
 .entry-arrow{font-size:18px;color:var(--muted);flex-shrink:0;font-family:"JetBrains Mono",monospace}
 @media(max-width:640px){.entry-card .entry-counts{display:none}}
@@ -293,7 +296,7 @@ main{max-width:900px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
 .t-pri.urgent{border-color:var(--urgent-bd);color:var(--urgent-text);background:var(--urgent-bg)}
 .t-pri.important{border-color:var(--border2);color:var(--text);background:var(--bg4)}
 .t-type{font-size:9px;padding:2px 8px;background:var(--bg4);color:var(--dim);border-radius:20px;white-space:nowrap;border:1px solid var(--border)}
-.t-type.alert{background:#1A2E1A;color:var(--green);border-color:#2A4A2A}
+.t-type.alert{background:var(--green-dim);color:var(--green);border-color:#183C24}
 .t-type.remittance{background:var(--remit-bg);color:var(--remit-text);border-color:var(--remit-bd)}
 .t-status{font-size:9px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);color:var(--dim);white-space:nowrap;background:var(--bg3)}
 .t-status.blocked{border-color:var(--blocked-bd);color:var(--blocked-text);background:var(--blocked-bg)}
@@ -310,10 +313,10 @@ main{max-width:900px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
 .pfin-col+.pfin-col{border-left:1px solid var(--border)}
 .pfin-lbl{font-size:9px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px}
 .pfin-val{font-size:14px;font-weight:700;font-family:"JetBrains Mono",monospace}
-.pfin-val.inc{color:#6AC48A}
-.pfin-val.exp{color:#E06060}
-.pfin-val.pos{color:#6AC48A}
-.pfin-val.neg{color:#E06060}
+.pfin-val.inc{color:var(--green)}
+.pfin-val.exp{color:#B06060}
+.pfin-val.pos{color:var(--green)}
+.pfin-val.neg{color:#B06060}
 .pfin-val.dim{color:var(--dim)}
 .pfin-tx{padding:0 14px 10px;font-size:11px;color:var(--dim)}
 .pfin-tx-row{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)}
@@ -333,24 +336,24 @@ footer{
 
 /* ── RESPONSIVE: tablet ── */
 @media(max-width:1024px){
-  .hdr-name{font-size:17px}
+  .hdr-name{font-size:19px}
   .hdr-sub{font-size:13px}
   .hdr-clock{font-size:14px}
   .a-lbl{font-size:13px;letter-spacing:.8px}
   .a-chip{font-size:14px;padding:4px 12px 4px 8px}
   .a-none{font-size:14px}
   .sec-lbl{font-size:12px}
-  .wc-title{font-size:17px;line-height:1.5}
-  .wc-meta{font-size:14px}
-  .wc-meta-lbl{font-size:12px}
-  .wc-next,.wc-blocked{font-size:14px;line-height:1.7}
-  .tag{font-size:13px;padding:3px 10px}
-  .brief-date{font-size:15px}
-  .brief-lbl{font-size:12px}
-  .brief-line{font-size:16px;line-height:2;font-weight:400}
-  .brief-time{font-size:14px}
-  .acc-name{font-size:18px}
-  .acc-role{font-size:13px}
+  .wc-title{font-size:19px;line-height:1.5}
+  .wc-meta{font-size:15px}
+  .wc-meta-lbl{font-size:13px}
+  .wc-next,.wc-blocked{font-size:15px;line-height:1.7}
+  .tag{font-size:14px;padding:3px 10px}
+  .brief-date{font-size:16px}
+  .brief-lbl{font-size:13px}
+  .brief-line{font-size:17px;line-height:2;font-weight:400}
+  .brief-time{font-size:15px}
+  .acc-name{font-size:19px}
+  .acc-role{font-size:14px}
   .cnt-val{font-size:22px}
   .cnt-lbl{font-size:11px}
   .acc-tbl td{font-size:15px;padding:10px 14px}
@@ -693,7 +696,7 @@ function buildPfinBlock(){
     return `<div class="pfin-tx-row">
       <span class="pfin-tx-date">${t.date.slice(5)} ${WDAY[d.getDay()]}</span>
       <span class="pfin-tx-item">${t.item}</span>
-      <span class="pfin-tx-amt" style="color:${isInc?"#6AC48A":"#E06060"}">${isInc?"+":"−"}${fmt(isInc?t.income:t.expense)}</span>
+      <span class="pfin-tx-amt" style="color:${isInc?"#489A68":"#B06060"}">${isInc?"+":"−"}${fmt(isInc?t.income:t.expense)}</span>
     </div>`;
   }).join("");
   return `
