@@ -359,7 +359,7 @@
     },
     {
       "title": "散熱族群股價追蹤(早)",
-      "status": "待處理",
+      "status": "已完成",
       "next_step": "",
       "owner_role": "",
       "blocked_reason": "-",
@@ -368,7 +368,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-23T14:32:09Z",
+      "updated_at": "2026-02-23T09:20:00Z",
       "source": "auto"
     },
     {
@@ -387,16 +387,16 @@
     },
     {
       "title": "散熱族群股價追蹤",
-      "status": "阻塞",
+      "status": "已完成",
       "next_step": "",
       "owner_role": "",
-      "blocked_reason": "cron announce delivery failed",
+      "blocked_reason": "-",
       "priority": "normal",
       "type": "task",
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-23T14:32:09Z",
+      "updated_at": "2026-02-23T09:20:00Z",
       "source": "auto"
     },
     {
