@@ -3,83 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>理財分析師</title>
+<title>理財分析師 · Open Claw</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@200;300;400;500;700&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
+
 :root{
-  --bg:#111111;--bg2:#191919;--bg3:#232323;--bg4:#2B2B2B;
-  --panel:#161616;--border:#2A2A2A;--border2:#363636;
-  --text:#D4D4D2;--dim:#8A8A88;--muted:#505050;--bright:#F0F0EE;
-  --urgent-bg:#161008;--urgent-bd:#5C3C18;--urgent-text:#AE7838;
-  --remit-bg:#141008;--remit-bd:#504028;--remit-text:#9A8050;
-  --blocked-bg:#0A1418;--blocked-bd:#1E3040;--blocked-text:#5A7A90;
-  --green:#489A68;--green-dim:#0C1E14;--radius:12px;--radius-xs:6px;
+  --bg:#0C0C0C;--bg2:#111111;--bg3:#171717;--bg4:#1E1E1E;
+  --panel:#111111;--border:#222222;--border2:#2E2E2E;
+  --text:#C0C0BE;--dim:#787876;--muted:#404040;--bright:#E8E8E6;
+  --urgent-bg:#0F0A04;--urgent-bd:#4A2E08;--urgent-text:#A87030;
+  --blocked-bg:#060C12;--blocked-bd:#1A2E44;--blocked-text:#4A7090;
+  --remit-bg:#0C0A06;--remit-bd:#3A3020;--remit-text:#807060;
+  --inc:#3A8A58;--inc-bg:#081408;--inc-bd:#1A3A1A;
+  --exp:#8A4040;--exp-bg:#140808;--exp-bd:#3A1818;
+  --green:#3A8A58;--green-dim:#081408;
+  --radius:10px;--radius-xs:5px;
 }
+
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:400;min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
-::-webkit-scrollbar{width:3px;height:3px}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;
+  font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased;letter-spacing:.01em}
+::-webkit-scrollbar{width:2px;height:2px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-header{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:58px;background:var(--panel);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
-.hdr-l{display:flex;align-items:center;gap:12px}
-.back-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);text-decoration:none;padding:5px 10px;border-radius:6px;transition:background .12s,color .12s}
-.back-btn:hover{background:var(--bg3);color:var(--text)}
-.hdr-div{width:1px;height:20px;background:var(--border);margin:0 4px}
-.logo{width:34px;height:34px;border-radius:50%;overflow:hidden;border:1.5px solid var(--border2);flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:1px}
+
+header{display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:52px;
+  background:rgba(12,12,12,.92);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:200;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.hdr-l{display:flex;align-items:center;gap:14px}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);
+  text-decoration:none;padding:5px 10px;border:1px solid transparent;
+  transition:border-color .15s,color .15s;letter-spacing:.05em}
+.back-btn:hover{border-color:var(--border);color:var(--dim)}
+.hdr-div{width:1px;height:18px;background:var(--border)}
+.logo{width:26px;height:26px;border-radius:50%;overflow:hidden;border:1px solid var(--border2);
+  flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:11px}
 .logo img{width:100%;height:100%;object-fit:cover;object-position:top center}
-.hdr-name{font-size:14px;font-weight:700;color:var(--bright);letter-spacing:.3px}
-.hdr-sub{font-size:10px;color:var(--muted);font-weight:300;margin-top:1px}
-.hdr-clock{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--dim);text-align:right;line-height:1.7}
-.sum-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:36px;display:flex;align-items:center;gap:12px;position:sticky;top:58px;z-index:190;font-size:10px;color:var(--dim);}
-.sum-bdg{display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:20px;border:1px solid var(--border);font-size:10px;background:var(--bg3);color:var(--dim);}
-.sum-bdg.blocked{border-color:var(--blocked-bd);color:var(--blocked-text);background:var(--blocked-bg)}
-.sum-bdg.urgent{border-color:var(--urgent-bd);color:var(--urgent-text);background:var(--urgent-bg)}
-.sum-bdg.done{color:var(--muted);opacity:.7}
-.sum-ts{margin-left:auto;font-size:9px;color:var(--muted);font-family:"JetBrains Mono",monospace}
-main{max-width:860px;margin:0 auto;padding:22px 24px;display:flex;flex-direction:column;gap:10px}
-.sec-lbl{font-size:10px;letter-spacing:1.5px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:12px;font-family:"JetBrains Mono",monospace;}
+.hdr-name{font-size:13px;font-weight:500;color:var(--bright);letter-spacing:.04em}
+.hdr-sub{font-size:9px;color:var(--muted);font-weight:300;margin-top:1px;letter-spacing:.1em;text-transform:uppercase}
+.hdr-clock{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);
+  text-align:right;line-height:1.9;font-weight:300}
+
+.sum-bar{background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:0 32px;height:30px;display:flex;align-items:center;gap:10px;
+  position:sticky;top:52px;z-index:190;font-size:10px;color:var(--muted)}
+.sum-bdg{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;
+  border:1px solid var(--border);font-size:9px;font-weight:400;
+  letter-spacing:.06em;color:var(--muted);border-radius:1px}
+.sum-bdg.blocked{border-color:var(--blocked-bd);color:var(--blocked-text)}
+.sum-bdg.pending{border-color:var(--border2);color:var(--dim)}
+.sum-bdg.done{opacity:.5}
+.sum-ts{margin-left:auto;font-size:9px;color:var(--muted);
+  font-family:"JetBrains Mono",monospace;font-weight:300}
+
+main{max-width:860px;margin:0 auto;padding:40px 32px;display:flex;flex-direction:column;gap:36px}
+.sec-lbl{font-size:8px;letter-spacing:.2em;font-weight:400;color:var(--muted);
+  text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:14px;
+  font-family:"JetBrains Mono",monospace}
 .sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
-.task-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;flex-direction:column;gap:8px;transition:border-color .15s;}
-.task-card:hover{border-color:var(--border2)}
-.task-card.urgent-card{border-color:var(--urgent-bd);background:var(--urgent-bg)}
-.task-card.blocked-card{border-color:var(--blocked-bd);background:var(--blocked-bg)}
-.tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.tc-title{font-size:15px;font-weight:500;color:var(--bright);line-height:1.45;flex:1}
-.tc-tags{display:flex;gap:5px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
-.tag{font-size:10px;padding:3px 9px;border-radius:20px;white-space:nowrap;font-weight:500}
-.tag-pri{border:1px solid var(--border);color:var(--dim);background:var(--bg3)}
-.tag-pri.urgent{border-color:var(--urgent-bd);color:var(--urgent-text);background:var(--urgent-bg)}
-.tag-pri.important{border-color:var(--border2);color:var(--text);background:var(--bg4)}
-.tag-type{background:var(--bg4);color:var(--dim);border:1px solid var(--border)}
-.tag-type.alert{background:var(--green-dim);color:var(--green);border-color:#183C24}
-.tag-type.remittance{background:var(--remit-bg);color:var(--remit-text);border-color:var(--remit-bd)}
-.tag-status{border:1px solid var(--border);color:var(--dim);background:var(--bg3)}
-.tag-status.blocked{border-color:var(--blocked-bd);color:var(--blocked-text);background:var(--blocked-bg)}
-.tag-status.done{color:var(--muted);opacity:.6}
-.tc-meta{display:flex;gap:16px;font-size:12px;color:var(--dim)}
-.tc-meta-item{display:flex;align-items:center;gap:4px}
-.tc-meta-lbl{font-size:10px;color:var(--muted)}
-.tc-blocked{font-size:12px;color:var(--blocked-text);background:var(--blocked-bg);border:1px solid var(--blocked-bd);border-radius:var(--radius-xs);padding:5px 10px;}
-.tc-next{font-size:12px;color:var(--dim);background:var(--bg3);border-radius:var(--radius-xs);padding:5px 10px;border:1px solid var(--border);}
-.grp{margin-bottom:8px}
-.loading-wrap{text-align:center;padding:60px 0;font-size:13px;color:var(--muted)}
+
+.task-list{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.task-card{background:var(--panel);padding:18px 24px;
+  display:flex;flex-direction:column;gap:9px;
+  border-bottom:1px solid var(--border);
+  position:relative;transition:background .13s}
+.task-card:last-child{border-bottom:none}
+.task-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--border)}
+.task-card.urgent-card::before{background:var(--urgent-text)}
+.task-card.blocked-card::before{background:var(--blocked-text)}
+.task-card.done-card{opacity:.4}
+.task-card:hover{background:var(--bg3)}
+.tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.tc-title{font-size:14px;font-weight:400;color:var(--bright);line-height:1.6;flex:1;letter-spacing:.02em}
+.tc-tags{display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.tag{font-size:8px;padding:2px 7px;border:1px solid var(--border);color:var(--muted);
+  white-space:nowrap;font-weight:400;letter-spacing:.08em;text-transform:uppercase;border-radius:1px}
+.tag.urgent{border-color:var(--urgent-bd);color:var(--urgent-text)}
+.tag.important{border-color:var(--border2);color:var(--dim)}
+.tag.blocked-tag{border-color:var(--blocked-bd);color:var(--blocked-text)}
+.tag.remittance{border-color:var(--remit-bd);color:var(--remit-text)}
+.tag.alert-tag{border-color:#1E3A1E;color:var(--green)}
+.tc-meta{display:flex;gap:18px;font-size:10px;color:var(--muted);
+  font-family:"JetBrains Mono",monospace;font-weight:300}
+.tc-meta-lbl{font-size:8px;opacity:.6;margin-right:3px}
+.tc-next{font-size:11px;color:var(--dim);padding-top:8px;
+  border-top:1px solid var(--border);font-weight:300;letter-spacing:.02em}
+.tc-blocked{font-size:11px;color:var(--blocked-text);padding-top:8px;
+  border-top:1px solid var(--blocked-bd);font-weight:300}
+.loading-wrap{text-align:center;padding:60px;font-size:12px;color:var(--muted);letter-spacing:.06em}
 
 @media(max-width:1024px){
-  .hdr-name{font-size:18px}.hdr-sub{font-size:14px}.hdr-clock{font-size:15px}
-  .back-btn{font-size:16px}.sum-bar{font-size:15px}.sec-lbl{font-size:13px;letter-spacing:1.5px}
-  .tc-title{font-size:19px}.tc-meta{font-size:15px}.tc-meta-lbl{font-size:13px}
-  .tc-next,.tc-blocked{font-size:15px;line-height:1.7}.tag{font-size:14px;padding:3px 10px}
-  .loading-wrap{font-size:16px}
+  main{padding:32px 24px;gap:28px}
+  .hdr-name{font-size:17px}.hdr-clock{font-size:14px}.back-btn{font-size:15px}
+  .sum-bar{height:38px;font-size:14px}
+  .tc-title{font-size:18px}.tc-meta{font-size:14px}.tag{font-size:12px;padding:3px 9px}
+  .tc-next,.tc-blocked{font-size:15px}
 }
 @media(max-width:640px){
-  header{padding:0 16px}.sum-bar{padding:0 16px}.main{padding:14px 16px}
-  .tc-top{flex-direction:column;gap:6px}.tc-tags{justify-content:flex-start}
-  .tc-title{font-size:20px;line-height:1.5}.tc-meta{font-size:16px}
-  .tc-meta-lbl{font-size:14px}.tc-next,.tc-blocked{font-size:16px;line-height:1.8}
-  .tag{font-size:15px;padding:4px 11px}
+  header{padding:0 20px}.sum-bar{padding:0 20px}
+  main{padding:24px 18px;gap:24px}
+  .tc-top{flex-direction:column;gap:8px}.tc-tags{justify-content:flex-start}
+  .tc-title{font-size:18px}.tag{font-size:13px;padding:3px 9px}
 }
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+main>div{animation:fadeUp .4s ease both}
+main>div:nth-child(2){animation-delay:.08s}
+main>div:nth-child(3){animation-delay:.16s}
+main>div:nth-child(4){animation-delay:.24s}
 </style>
 </head>
 <body>
@@ -88,127 +123,101 @@ main{max-width:860px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
   <div class="hdr-l">
     <a class="back-btn" href="../">‹ 返回</a>
     <div class="hdr-div"></div>
-    <div class="logo"><img src="../assets/avatar.png" alt="logo" onerror="this.style.display='none';this.parentElement.innerHTML='🦅'"></div>
+    <div class="logo"><img src="../assets/avatar.png" alt="OC" onerror="this.style.display='none';this.parentElement.textContent='📊'"></div>
     <div>
       <div class="hdr-name">理財分析師</div>
-      <div class="hdr-sub">股票・帳務・投資</div>
+      <div class="hdr-sub">股票 · 帳務 · KDJ</div>
     </div>
   </div>
   <div id="clk" class="hdr-clock"></div>
 </header>
-
-<div class="sum-bar" id="sum-bar">
+<div class="sum-bar">
   <span id="sum-content">載入中…</span>
   <span class="sum-ts" id="sum-ts"></span>
 </div>
-
-<main id="main">
-  <div class="loading-wrap">載入任務中…</div>
-</main>
-
+<main id="main"><div class="loading-wrap">載入中…</div></main>
 <script>
-const CFG = {
-  name: "理財分析師",
-  role: "股票・帳務・投資",
-  dataPath: "../data/finance/tasks.json"
-};
 
-const PRI_ORDER = {urgent:0, important:1, normal:2};
-const PRI_LBL   = {urgent:"急件", important:"重要", normal:"一般"};
-const TYPE_LBL  = {remittance:"💳 匯款", alert:"🔔 提醒", task:"任務"};
-const STATUS_CLS= {"阻塞":"blocked","已完成":"done"};
+function tick(){
+  const e=document.getElementById("clk");if(!e)return;
+  const n=new Date();const days=["日","一","二","三","四","五","六"];
+  e.innerHTML=n.toLocaleTimeString("zh-TW",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"})
+    +"<br>"+String(n.getMonth()+1).padStart(2,"0")+"/"+String(n.getDate()).padStart(2,"0")+" 週"+days[n.getDay()];
+}
+tick();setInterval(tick,1000);
 
 function fmtTs(iso){
   if(!iso||iso==="-") return "-";
-  const d=new Date(iso); if(isNaN(d)) return iso;
+  const d=new Date(iso);if(isNaN(d)) return iso;
   const now=new Date();
-  if(d.toDateString()===now.toDateString())
-    return "今日 "+d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
-  return d.toLocaleDateString("zh-TW",{month:"2-digit",day:"2-digit"})+" "+
-         d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
+  if(d.toDateString()===now.toDateString()) return d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
+  return d.toLocaleDateString("zh-TW",{month:"2-digit",day:"2-digit"});
 }
 
-function renderSummary(tasks, ts){
+const PRI_LBL={urgent:"急件",important:"重要",normal:"一般"};
+const TYPE_LBL={remittance:"匯款",alert:"提醒",task:"任務"};
+
+function renderSummary(tasks,ts,barId="sum-bar"){
   const c={pending:0,blocked:0,done:0};
-  tasks.forEach(t=>{
-    if(t.status==="已完成") c.done++;
-    else if(t.status==="阻塞") c.blocked++;
-    else c.pending++;
-  });
-  const parts=[];
-  if(c.blocked) parts.push(`<span class="sum-bdg blocked">🚫 阻塞 ${c.blocked}</span>`);
-  parts.push(`<span class="sum-bdg urgent">待處理 ${c.pending}</span>`);
-  parts.push(`<span class="sum-bdg done">已完成 ${c.done}</span>`);
-  document.getElementById("sum-content").innerHTML = parts.join("");
-  document.getElementById("sum-ts").textContent = "更新 " + fmtTs(ts);
+  tasks.forEach(t=>{if(t.status==="已完成")c.done++;else if(t.status==="阻塞")c.blocked++;else c.pending++;});
+  let html="";
+  if(c.blocked) html+=`<span class="sum-bdg blocked">阻塞 ${c.blocked}</span>`;
+  html+=`<span class="sum-bdg pending">待處理 ${c.pending}</span>`;
+  html+=`<span class="sum-bdg done">已完成 ${c.done}</span>`;
+  document.getElementById("sum-content").innerHTML=html;
+  document.getElementById("sum-ts").textContent="更新 "+fmtTs(ts);
 }
 
 function taskCard(t){
-  const priCls = t.priority||"normal";
-  const typeCls= t.type||"task";
-  const stCls  = STATUS_CLS[t.status]||"";
-  const isBlk  = t.status==="阻塞";
-  const isUrg  = t.priority==="urgent";
-  const cardCls= isBlk?"task-card blocked-card":isUrg?"task-card urgent-card":"task-card";
+  const isBlk=t.status==="阻塞",isUrg=t.priority==="urgent",isDone=t.status==="已完成";
+  const cardCls=isBlk?"task-card blocked-card":isUrg?"task-card urgent-card":isDone?"task-card done-card":"task-card";
+  const tags=[];
+  if(isUrg) tags.push(`<span class="tag urgent">急件</span>`);
+  else if(t.priority==="important") tags.push(`<span class="tag important">重要</span>`);
+  if(t.type==="remittance") tags.push(`<span class="tag remittance">匯款</span>`);
+  else if(t.type==="alert") tags.push(`<span class="tag alert-tag">提醒</span>`);
+  if(isBlk) tags.push(`<span class="tag blocked-tag">阻塞</span>`);
+  if(isDone) tags.push(`<span class="tag" style="opacity:.4">完成</span>`);
   const meta=[];
-  if(t.time&&t.time!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">排程</span> ${t.time}</span>`);
-  if(t.due&&t.due!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">到期</span> ${t.due}</span>`);
-  if(t.owner_role&&t.owner_role!=="-") meta.push(`<span class="tc-meta-item"><span class="tc-meta-lbl">負責</span> ${t.owner_role}</span>`);
+  if(t.time&&t.time!=="-") meta.push(`<span><span class="tc-meta-lbl">排程 </span>${t.time}</span>`);
+  if(t.due&&t.due!=="-") meta.push(`<span><span class="tc-meta-lbl">截止 </span>${t.due}</span>`);
+  if(t.owner_role&&t.owner_role!=="-") meta.push(`<span><span class="tc-meta-lbl">負責 </span>${t.owner_role}</span>`);
   return `<div class="${cardCls}">
     <div class="tc-top">
       <div class="tc-title">${t.title}</div>
-      <div class="tc-tags">
-        <span class="tag tag-pri ${priCls}">${PRI_LBL[t.priority]||t.priority}</span>
-        <span class="tag tag-type ${typeCls}">${TYPE_LBL[t.type]||t.type}</span>
-        <span class="tag tag-status ${stCls}">${t.status}</span>
-      </div>
+      ${tags.length?`<div class="tc-tags">${tags.join("")}</div>`:""}
     </div>
     ${meta.length?`<div class="tc-meta">${meta.join("")}</div>`:""}
     ${t.next_step&&t.next_step!=="-"?`<div class="tc-next">→ ${t.next_step}</div>`:""}
-    ${t.blocked_reason&&t.blocked_reason!=="-"?`<div class="tc-blocked">🚫 ${t.blocked_reason}</div>`:""}
+    ${t.blocked_reason&&t.blocked_reason!=="-"?`<div class="tc-blocked">阻塞 — ${t.blocked_reason}</div>`:""}
   </div>`;
 }
 
-function renderTasks(tasks, containerId){
-  const main=document.getElementById(containerId||"main");
-  if(!tasks.length){ main.innerHTML=`<div class="loading-wrap">目前無任務資料</div>`; return; }
+function renderTaskGroups(tasks,containerId){
+  const el=document.getElementById(containerId||"main");
   const groups=[
-    {label:"阻塞中",          filter:t=>t.status==="阻塞"},
-    {label:"待處理 · 急件",   filter:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="urgent"},
-    {label:"待處理 · 重要",   filter:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="important"},
-    {label:"待處理 · 一般",   filter:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="normal"},
-    {label:"已完成",           filter:t=>t.status==="已完成"},
+    {label:"阻塞中",    fn:t=>t.status==="阻塞"},
+    {label:"急件",      fn:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="urgent"},
+    {label:"重要",      fn:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="important"},
+    {label:"待處理",    fn:t=>t.status!=="阻塞"&&t.status!=="已完成"&&(!t.priority||t.priority==="normal")},
+    {label:"已完成",    fn:t=>t.status==="已完成"},
   ];
-  main.innerHTML=groups.map(g=>{
-    const items=tasks.filter(g.filter);
+  const html=groups.map(g=>{
+    const items=tasks.filter(g.fn);
     if(!items.length) return "";
-    return `<div class="grp"><div class="sec-lbl">${g.label}</div>${items.map(taskCard).join("")}</div>`;
+    return `<div><div class="sec-lbl">${g.label}</div><div class="task-list">${items.map(taskCard).join("")}</div></div>`;
   }).join("");
+  el.innerHTML=html||`<div class="loading-wrap">— 目前無任務 —</div>`;
 }
-
-
-
 async function init(){
   try{
-    const r=await fetch(CFG.dataPath+"?_="+Date.now());
+    const r=await fetch("../data/finance/tasks.json?_="+Date.now());
     if(!r.ok) throw 0;
-    const data=await r.json();
-    renderSummary(data.tasks||[], data.updated_at);
-    renderTasks(data.tasks||[]);
-  }catch(e){
-    document.getElementById("main").innerHTML=`<div class="loading-wrap">無法載入資料</div>`;
-  }
+    const d=await r.json();
+    renderSummary(d.tasks||[],d.updated_at);
+    renderTaskGroups(d.tasks||[]);
+  }catch(e){document.getElementById("main").innerHTML=`<div class="loading-wrap">無法載入資料</div>`;}
 }
-
-function tick(){
-  const e=document.getElementById("clk"); if(!e) return;
-  const now=new Date();
-  const days=["日","一","二","三","四","五","六"];
-  const date=`${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")} 週${days[now.getDay()]}`;
-  const time=now.toLocaleTimeString("zh-TW",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"});
-  e.innerHTML=`${time}<br>${date}`;
-}
-tick(); setInterval(tick,1000);
 init();
 </script>
 </body>

@@ -3,191 +3,156 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>個人財務</title>
+<title>個人財務 · Open Claw</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@200;300;400;500;700&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
+
 :root{
-  --bg:#111111;--bg2:#191919;--bg3:#232323;--bg4:#2B2B2B;
-  --panel:#161616;--border:#2A2A2A;--border2:#363636;
-  --text:#D4D4D2;--dim:#8A8A88;--muted:#505050;--bright:#F0F0EE;
-  /* Financial colors */
-  --inc:#489A68;--inc-bg:#0C1E14;--inc-bd:#1C4028;
-  --exp:#B86060;--exp-bg:#1A0C0C;--exp-bd:#3A1818;
-  --steel:#5A7A90;--steel-bg:#0A1418;--steel-bd:#1E3040;
-  --urgent-text:#AE7838;--urgent-bg:#161008;--urgent-bd:#5C3C18;
-  --radius:12px;--radius-xs:6px;
+  --bg:#0C0C0C;--bg2:#111111;--bg3:#171717;--bg4:#1E1E1E;
+  --panel:#111111;--border:#222222;--border2:#2E2E2E;
+  --text:#C0C0BE;--dim:#787876;--muted:#404040;--bright:#E8E8E6;
+  --urgent-bg:#0F0A04;--urgent-bd:#4A2E08;--urgent-text:#A87030;
+  --blocked-bg:#060C12;--blocked-bd:#1A2E44;--blocked-text:#4A7090;
+  --remit-bg:#0C0A06;--remit-bd:#3A3020;--remit-text:#807060;
+  --inc:#3A8A58;--inc-bg:#081408;--inc-bd:#1A3A1A;
+  --exp:#8A4040;--exp-bg:#140808;--exp-bd:#3A1818;
+  --green:#3A8A58;--green-dim:#081408;
+  --radius:10px;--radius-xs:5px;
 }
+
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;font-weight:400;min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
-::-webkit-scrollbar{width:3px;height:3px}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;
+  font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased;letter-spacing:.01em}
+::-webkit-scrollbar{width:2px;height:2px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:1px}
 
-/* ── HEADER ── */
-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;height:58px;
-  background:var(--panel);border-bottom:1px solid var(--border);
+header{display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:52px;
+  background:rgba(12,12,12,.92);border-bottom:1px solid var(--border);
   position:sticky;top:0;z-index:200;
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-}
-.hdr-l{display:flex;align-items:center;gap:11px}
-.back-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);text-decoration:none;padding:5px 10px;border-radius:6px;transition:background .12s,color .12s}
-.back-btn:hover{background:var(--bg3);color:var(--text)}
-.hdr-div{width:1px;height:20px;background:var(--border);margin:0 4px}
-.logo{width:36px;height:36px;border-radius:50%;overflow:hidden;border:1.5px solid var(--border2);flex-shrink:0;background:var(--bg3)}
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.hdr-l{display:flex;align-items:center;gap:14px}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);
+  text-decoration:none;padding:5px 10px;border:1px solid transparent;
+  transition:border-color .15s,color .15s;letter-spacing:.05em}
+.back-btn:hover{border-color:var(--border);color:var(--dim)}
+.hdr-div{width:1px;height:18px;background:var(--border)}
+.logo{width:26px;height:26px;border-radius:50%;overflow:hidden;border:1px solid var(--border2);
+  flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:11px}
 .logo img{width:100%;height:100%;object-fit:cover;object-position:top center}
-.hdr-name{font-size:16px;font-weight:700;color:var(--bright)}
-.hdr-sub{font-size:10px;color:var(--muted);font-weight:300}
-.hdr-clock{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--dim);text-align:right;line-height:1.7}
+.hdr-name{font-size:13px;font-weight:500;color:var(--bright);letter-spacing:.04em}
+.hdr-sub{font-size:9px;color:var(--muted);font-weight:300;margin-top:1px;letter-spacing:.1em;text-transform:uppercase}
+.hdr-clock{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);
+  text-align:right;line-height:1.9;font-weight:300}
 
-/* ── HERO ── */
-.hero{
-  background:linear-gradient(135deg,#141414,#1E1E22);
-  border-bottom:1px solid var(--border);
-  color:var(--text);padding:20px 28px;
-  display:flex;align-items:center;justify-content:space-between;gap:16px;
-  flex-wrap:wrap;
-}
-.hero-main .label{font-size:10px;opacity:.6;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;color:var(--muted)}
-.hero-main .amount{font-size:36px;font-weight:700;letter-spacing:-1px;color:var(--bright);font-family:"JetBrains Mono",monospace}
-.hero-main .sub{font-size:11px;opacity:.55;margin-top:5px;color:var(--dim)}
-.hero-kpis{display:flex;gap:16px;flex-wrap:wrap}
+.hero{border-bottom:1px solid var(--border);padding:24px 32px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  background:linear-gradient(135deg,#0C0C0C,#111118)}
+.hero-main .label{font-size:8px;opacity:.6;letter-spacing:.15em;text-transform:uppercase;
+  margin-bottom:6px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.hero-main .amount{font-size:32px;font-weight:300;letter-spacing:-.5px;
+  color:var(--bright);font-family:"JetBrains Mono",monospace}
+.hero-main .sub{font-size:10px;opacity:.4;margin-top:5px;color:var(--dim);letter-spacing:.04em}
+.hero-kpis{display:flex;gap:20px;flex-wrap:wrap}
 .hero-kpi{text-align:center}
-.hero-kpi .k-val{font-size:18px;font-weight:600;font-family:"JetBrains Mono",monospace;color:var(--bright)}
-.hero-kpi .k-lbl{font-size:9px;opacity:.5;margin-top:2px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+.hero-kpi .k-val{font-size:16px;font-weight:400;font-family:"JetBrains Mono",monospace;color:var(--bright)}
+.hero-kpi .k-lbl{font-size:8px;opacity:.5;margin-top:3px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .hero-kpi.green .k-val{color:var(--inc)}
-.hero-kpi.steel .k-val{color:var(--steel)}
 
-/* ── MAIN ── */
-main{max-width:880px;margin:0 auto;padding:22px 24px;display:flex;flex-direction:column;gap:16px}
-
-/* ── SEC LABEL ── */
-.sec-lbl{font-size:10px;letter-spacing:1.5px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px;font-family:"JetBrains Mono",monospace}
-.sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
-
-/* ── GRID & CARDS ── */
+main{max-width:880px;margin:0 auto;padding:40px 32px;display:flex;flex-direction:column;gap:36px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px}
-.card-title{font-size:12px;font-weight:600;color:var(--dim);letter-spacing:.5px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px}
+.card-title{font-size:8px;font-weight:400;color:var(--muted);letter-spacing:.18em;
+  text-transform:uppercase;margin-bottom:14px;padding-bottom:10px;
+  border-bottom:1px solid var(--border);font-family:"JetBrains Mono",monospace}
 
-/* ── ROWS ── */
-.row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.row{display:flex;justify-content:space-between;align-items:center;
+  padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
 .row:last-child{border-bottom:none}
-.row.total{border-top:1px solid var(--border2);margin-top:4px;padding-top:10px;font-weight:600}
-.row-name{color:var(--text)}
-.row-val{font-weight:500;font-family:"JetBrains Mono",monospace;font-size:13px}
-.row-val.pos{color:var(--inc)}
-.row-val.neg{color:var(--exp)}
-.row-val.neutral{color:var(--dim)}
-.row-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.row.total{border-top:1px solid var(--border2);margin-top:6px;padding-top:12px;font-weight:400}
+.row-name{color:var(--text);font-weight:300}
+.row-val{font-weight:300;font-family:"JetBrains Mono",monospace;font-size:13px}
+.row-val.pos{color:var(--inc)}.row-val.neg{color:var(--exp)}.row-val.neutral{color:var(--dim)}
+.row-sub{font-size:9px;color:var(--muted);margin-top:2px;letter-spacing:.04em}
 
-/* ── AVAILABLE CASH ── */
-.avail-box{
-  background:var(--inc-bg);border:1px solid var(--inc-bd);
-  border-radius:8px;padding:10px 14px;margin-top:10px;
-  display:flex;justify-content:space-between;align-items:center;
-}
-.avail-box .lbl{font-size:12px;color:var(--inc);font-weight:600}
-.avail-box .val{font-size:20px;font-weight:700;color:var(--bright);font-family:"JetBrains Mono",monospace}
-.avail-note{font-size:10px;color:var(--muted);margin-top:5px}
+.avail-box{border:1px solid var(--inc-bd);border-radius:var(--radius-xs);
+  padding:12px 16px;margin-top:12px;display:flex;justify-content:space-between;align-items:center}
+.avail-box .lbl{font-size:10px;color:var(--inc);font-weight:400;letter-spacing:.06em}
+.avail-box .val{font-size:20px;font-weight:300;color:var(--bright);font-family:"JetBrains Mono",monospace}
+.avail-note{font-size:9px;color:var(--muted);margin-top:4px;letter-spacing:.04em}
 
-/* ── STOCKS ── */
-.stock-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.stock-row{display:flex;justify-content:space-between;align-items:center;
+  padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
 .stock-row:last-child{border-bottom:none}
-.s-name{font-weight:500;color:var(--bright)}
-.s-code{font-size:10px;color:var(--muted)}
-.s-profit{font-weight:600;font-family:"JetBrains Mono",monospace}
-.s-profit.pos{color:var(--exp)}   /* 台灣：漲=紅 */
-.s-profit.neg{color:var(--inc)}   /* 台灣：跌=綠 */
+.s-name{font-weight:400;color:var(--bright)}.s-code{font-size:9px;color:var(--muted);margin-top:2px}
+.s-profit{font-weight:400;font-family:"JetBrains Mono",monospace}
+.s-profit.pos{color:var(--exp)}.s-profit.neg{color:var(--inc)}
 
-/* ── PENSION ── */
-.pension-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.p-box{background:var(--bg3);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--border)}
-.p-val{font-size:18px;font-weight:700;color:var(--steel);font-family:"JetBrains Mono",monospace}
-.p-lbl{font-size:9px;color:var(--muted);margin-bottom:3px}
+.pension-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.p-box{background:var(--bg3);border-radius:var(--radius-xs);padding:12px;
+  text-align:center;border:1px solid var(--border)}
+.p-val{font-size:16px;font-weight:300;color:var(--blocked-text);font-family:"JetBrains Mono",monospace}
+.p-lbl{font-size:8px;color:var(--muted);margin-bottom:4px;letter-spacing:.1em;text-transform:uppercase}
 
-/* ── REMINDERS ── */
-.reminder-row{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:flex-start}
-.reminder-row:last-child{border-bottom:none}
-.r-date{font-size:11px;font-weight:700;color:var(--dim);min-width:40px;flex-shrink:0}
-.r-date.urgent{color:var(--urgent-text)}
-.r-text{color:var(--text);line-height:1.5}
-.r-badge{font-size:9px;padding:1px 7px;border-radius:20px;margin-left:6px;white-space:nowrap}
-.r-badge.remittance{background:var(--steel-bg);color:var(--steel);border:1px solid var(--steel-bd)}
-
-/* ── TRANSACTION SUMMARY ── */
-.tx-summary{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  background:var(--bg2);border-bottom:1px solid var(--border2);
-  margin:-16px -16px 8px -16px;border-radius:10px 10px 0 0;
-}
+.tx-summary{display:grid;grid-template-columns:repeat(4,1fr);
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  margin:-20px -24px 12px -24px}
 .tx-sum-item{padding:12px 6px;text-align:center}
 .tx-sum-item+.tx-sum-item{border-left:1px solid var(--border)}
-.tx-sum-lbl{font-size:9px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
-.tx-sum-val{font-size:15px;font-weight:700;font-family:"JetBrains Mono",monospace}
-.tx-sum-val.income{color:var(--inc)}
-.tx-sum-val.expense{color:var(--exp)}
-.tx-sum-val.pos{color:var(--inc)}
-.tx-sum-val.neg{color:var(--exp)}
-.tx-sum-val.neutral{color:var(--dim)}
+.tx-sum-lbl{font-size:8px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.tx-sum-val{font-size:14px;font-weight:300;font-family:"JetBrains Mono",monospace}
+.tx-sum-val.income{color:var(--inc)}.tx-sum-val.expense{color:var(--exp)}
+.tx-sum-val.pos{color:var(--inc)}.tx-sum-val.neg{color:var(--exp)}.tx-sum-val.neutral{color:var(--dim)}
 
-/* ── TRANSACTION ROWS ── */
-.tx-list{margin-top:4px}
-.tx-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+.tx-row{display:flex;align-items:center;gap:10px;padding:9px 0;
+  border-bottom:1px solid var(--border);font-size:12px}
 .tx-row:last-child{border-bottom:none}
-.tx-date{font-size:10px;color:var(--muted);min-width:68px;flex-shrink:0;font-family:"JetBrains Mono",monospace}
-.tx-cat{font-size:9px;background:var(--bg3);color:var(--dim);padding:1px 7px;border-radius:20px;flex-shrink:0;border:1px solid var(--border)}
-.tx-item{flex:1;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tx-note{font-size:10px;color:var(--muted);flex-shrink:0;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tx-amount{font-family:"JetBrains Mono",monospace;font-weight:600;flex-shrink:0}
-.tx-amount.tx-income{color:var(--inc)}
-.tx-amount.tx-expense{color:var(--exp)}
+.tx-date{font-size:9px;color:var(--muted);min-width:60px;flex-shrink:0;font-family:"JetBrains Mono",monospace}
+.tx-cat{font-size:8px;background:var(--bg3);color:var(--dim);padding:1px 7px;
+  border-radius:1px;flex-shrink:0;border:1px solid var(--border);letter-spacing:.06em}
+.tx-item{flex:1;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:300}
+.tx-note{font-size:9px;color:var(--muted);flex-shrink:0;max-width:80px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-amount{font-family:"JetBrains Mono",monospace;font-weight:400;flex-shrink:0}
+.tx-amount.tx-income{color:var(--inc)}.tx-amount.tx-expense{color:var(--exp)}
 
-/* ── RESPONSIVE ── */
 @media(max-width:1024px){
-  .hdr-name{font-size:18px}.hdr-sub{font-size:14px}.hdr-clock{font-size:15px}
-  .back-btn{font-size:16px}
-  .hero-main .amount{font-size:34px}
-  .hero-kpi .k-val{font-size:22px}
-  .row{font-size:16px;line-height:1.7}.row-val{font-size:16px}
-  .stock-row{font-size:16px}
-  .s-profit{font-size:16px}
-  .p-val{font-size:22px}
-  .reminder-row{font-size:16px}
+  main,header{padding-left:24px;padding-right:24px}
+  .hero{padding:20px 24px}
+  .hero-main .amount{font-size:28px}
+  .hero-kpi .k-val{font-size:20px}
+  .grid2{gap:10px}
+  .row,.stock-row,.tx-row{font-size:15px}
   .tx-sum-val{font-size:17px}
-  .tx-sum-lbl{font-size:11px}
-  .tx-row{font-size:15px;line-height:1.6}.tx-date{font-size:14px}
-  .avail-box .val{font-size:26px}
-  .avail-box .lbl{font-size:15px}
+  .avail-box .val{font-size:24px}
 }
 @media(max-width:640px){
-  header{padding:0 16px}
-  .hero{padding:16px}
-  main{padding:16px}
+  header{padding:0 20px}
+  .hero{padding:16px 20px;flex-direction:column;gap:16px}
+  main{padding:24px 18px;gap:28px}
   .grid2{grid-template-columns:1fr}
-  .hero-main .amount{font-size:30px}
-  .hero-kpis{gap:12px}
-  .row{font-size:17px;line-height:1.8}.row-val{font-size:17px}
-  .stock-row{font-size:17px}
-  .s-profit{font-size:17px}
-  .reminder-row{font-size:17px}
-  .tx-sum-val{font-size:18px}
   .tx-summary{grid-template-columns:repeat(2,1fr)}
-  .tx-row{font-size:16px;line-height:1.7}.tx-date{font-size:15px}
-  .avail-box .val{font-size:28px}
 }
+.sec-lbl{font-size:8px;letter-spacing:.2em;font-weight:400;color:var(--muted);text-transform:uppercase;
+  margin-bottom:16px;display:flex;align-items:center;gap:14px;font-family:"JetBrains Mono",monospace}
+.sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+main>div{animation:fadeUp .4s ease both}
+main>div:nth-child(2){animation-delay:.08s}
+main>div:nth-child(3){animation-delay:.16s}
+main>div:nth-child(4){animation-delay:.24s}
 </style>
 </head>
 <body>
-
 <header>
   <div class="hdr-l">
     <a class="back-btn" href="../">‹ 返回</a>
     <div class="hdr-div"></div>
-    <div class="logo"><img src="../assets/avatar.png" alt="大總管" onerror="this.style.display='none'"></div>
+    <div class="logo"><img src="../assets/avatar.png" alt="OC" onerror="this.style.display='none';this.parentElement.textContent='💰'"></div>
     <div>
       <div class="hdr-name">個人財務</div>
       <div class="hdr-sub">大總管</div>
@@ -203,207 +168,106 @@ main{max-width:880px;margin:0 auto;padding:22px 24px;display:flex;flex-direction
     <div class="sub" id="h-sub">—</div>
   </div>
   <div class="hero-kpis">
-    <div class="hero-kpi green">
-      <div class="k-val" id="h-cash">—</div>
-      <div class="k-lbl">可用資金</div>
-    </div>
-    <div class="hero-kpi">
-      <div class="k-val" id="h-stocks">—</div>
-      <div class="k-lbl">股票市值</div>
-    </div>
-    <div class="hero-kpi steel">
-      <div class="k-val" id="h-pension">—</div>
-      <div class="k-lbl">退休金</div>
-    </div>
+    <div class="hero-kpi green"><div class="k-val" id="h-cash">—</div><div class="k-lbl">可用資金</div></div>
+    <div class="hero-kpi"><div class="k-val" id="h-stocks">—</div><div class="k-lbl">股票市值</div></div>
+    <div class="hero-kpi"><div class="k-val" id="h-pension">—</div><div class="k-lbl">退休金</div></div>
   </div>
 </div>
 
-<main id="main">
-  <div style="text-align:center;padding:40px;font-size:13px;color:var(--muted)">載入中…</div>
-</main>
+<main id="main"><div style="text-align:center;padding:60px;font-size:12px;color:var(--muted)">載入中…</div></main>
 
 <script>
-const FIN_PATH  = "../data/personal/finance.json";
-const TASK_PATH = "../data/personal/tasks.json";
-
-function fmt(n){ return Number(n).toLocaleString("zh-TW"); }
-function fmtSign(n){ return (n>=0?"+":"")+fmt(n); }
-
-function render(fin){
-  // hero
-  document.getElementById("h-net").textContent    = fmt(fin.net_worth);
-  document.getElementById("h-cash").textContent   = fmt(fin.available_cash);
-  document.getElementById("h-stocks").textContent = fmt(fin.stocks_value);
-  document.getElementById("h-pension").textContent= fmt(fin.pension_value);
-  document.getElementById("h-sub").textContent    =
-    `可用 ${fmt(fin.available_cash)} + 股票 ${fmt(fin.stocks_value)} + 退休金 ${fmt(fin.pension_value)}`;
-  document.getElementById("hero").style.display = "";
-
-  const ts = fin.updated_at ? new Date(fin.updated_at).toLocaleDateString("zh-TW") : "-";
-
-  // accounts
-  const acctTotal = fin.accounts.reduce((s,a)=>s+a.balance, 0);
-  const acctRows  = fin.accounts.map(a=>`
-    <div class="row">
-      <span class="row-name">${a.name}</span>
-      <span class="row-val">${fmt(a.balance)}</span>
-    </div>`).join("");
-  const deductList = fin.deductions.filter(d=>d.type!=="custody").map(d=>`${d.name} $${fmt(d.amount)}`).join(" + ");
-  const custodyAmt = fin.deductions.filter(d=>d.type==="custody").reduce((s,d)=>s+d.amount,0);
-
-  const acctCard = `<div class="card">
-    <div class="card-title">🏦 銀行帳戶與現金</div>
-    ${acctRows}
-    <div class="row total">
-      <span class="row-name">存款合計</span>
-      <span class="row-val">${fmt(acctTotal)}</span>
-    </div>
-    <div class="avail-box">
-      <div>
-        <div class="lbl">真實可用資金</div>
-        <div class="avail-note">已扣：${deductList}${custodyAmt?` + 代保管 $${fmt(custodyAmt)}`:""}</div>
-      </div>
-      <div class="val">${fmt(fin.available_cash)}</div>
-    </div>
-  </div>`;
-
-  // stocks
-  const stockRows = fin.stocks.map(s=>`
-    <div class="stock-row">
-      <div>
-        <div class="s-name">${s.name}</div>
-        <div class="s-code">${s.code} | ${fmt(s.shares)} 股</div>
-      </div>
-      <span class="s-profit ${s.profit>=0?"pos":"neg"}">${fmtSign(s.profit)}</span>
-    </div>`).join("");
-  const totalProfit = fin.stocks.reduce((s,x)=>s+x.profit, 0);
-
-  const stockCard = `<div class="card">
-    <div class="card-title">📈 股票投資組合</div>
-    ${stockRows}
-    <div class="row total">
-      <div>
-        <div style="font-weight:600">總計</div>
-        <div class="row-sub">現值 $${fmt(fin.stocks_value)}｜${fin.stocks_note||""}</div>
-      </div>
-      <span class="s-profit ${totalProfit>=0?"pos":"neg"}">${fmtSign(totalProfit)}</span>
-    </div>
-  </div>`;
-
-  // debts
-  const debtRows = fin.deductions.filter(d=>d.type!=="custody").map(d=>`
-    <div class="row">
-      <div>
-        <div class="row-name">${d.name}</div>
-        ${d.due&&d.due!=="-"?`<div class="row-sub">到期 ${d.due}</div>`:""}
-      </div>
-      <span class="row-val neg">-${fmt(d.amount)}</span>
-    </div>`).join("");
-  const debtTotal = fin.deductions.filter(d=>d.type!=="custody").reduce((s,d)=>s+d.amount,0);
-
-  const debtCard = `<div class="card">
-    <div class="card-title">⚠️ 負債明細</div>
-    ${debtRows}
-    <div class="row total">
-      <span class="row-name">負債合計</span>
-      <span class="row-val neg">-${fmt(debtTotal)}</span>
-    </div>
-    ${custodyAmt?`<div style="margin-top:10px;font-size:10px;color:var(--muted)">代保管 $${fmt(custodyAmt)}（才多多公司零用金，非個人資產）</div>`:""}
-  </div>`;
-
-  // pension
-  const p = fin.pension;
-  const pensionCard = `<div class="card">
-    <div class="card-title">🏢 退休金準備</div>
-    <div class="pension-grid">
-      <div class="p-box"><div class="p-lbl">勞退專戶累積</div><div class="p-val">${fmt(p.accumulated)}</div></div>
-      <div class="p-box"><div class="p-lbl">勞保預估月領</div><div class="p-val">${fmt(p.monthly_estimate)}</div></div>
-    </div>
-    <div style="font-size:11px;color:var(--muted);text-align:center">預計退休：${p.retire_age} 歲（${p.retire_year}）</div>
-  </div>`;
-
-  // transactions (近30天)
-  const WDAY = ["日","一","二","三","四","五","六"];
-  const today30 = new Date(); today30.setHours(0,0,0,0);
-  const cutoff = new Date(today30.getTime() - 30*24*60*60*1000);
-  const allTx = (fin.transactions||[])
-    .filter(t => new Date(t.date) >= cutoff)
-    .sort((a,b) => b.date > a.date ? 1 : b.date < a.date ? -1 : 0);
-  let txIncome=0, txExpense=0;
-  allTx.forEach(t=>{ txIncome+=(t.income||0); txExpense+=(t.expense||0); });
-  const txNet = txIncome - txExpense;
-
-  const txSummary = `
-    <div class="tx-summary">
-      <div class="tx-sum-item">
-        <div class="tx-sum-lbl">收入</div>
-        <div class="tx-sum-val income">+${fmt(txIncome)}</div>
-      </div>
-      <div class="tx-sum-item">
-        <div class="tx-sum-lbl">支出</div>
-        <div class="tx-sum-val expense">-${fmt(txExpense)}</div>
-      </div>
-      <div class="tx-sum-item">
-        <div class="tx-sum-lbl">淨額</div>
-        <div class="tx-sum-val ${txNet>=0?"pos":"neg"}">${txNet>=0?"+":""}${fmt(txNet)}</div>
-      </div>
-      <div class="tx-sum-item">
-        <div class="tx-sum-lbl">筆數</div>
-        <div class="tx-sum-val neutral">${allTx.length}</div>
-      </div>
-    </div>`;
-
-  const txRows = allTx.length
-    ? allTx.map(t=>{
-        const d = new Date(t.date);
-        const dateStr = t.date.slice(5) + " " + WDAY[d.getDay()];
-        const amtHTML = t.income>0
-          ? `<span class="tx-amount tx-income">+${fmt(t.income)}</span>`
-          : `<span class="tx-amount tx-expense">-${fmt(t.expense)}</span>`;
-        return `
-          <div class="tx-row">
-            <span class="tx-date">${dateStr}</span>
-            <span class="tx-cat">${t.category}</span>
-            <span class="tx-item" title="${t.note||''}">${t.item}</span>
-            <span class="tx-note">${t.payment}</span>
-            ${amtHTML}
-          </div>`;
-      }).join("")
-    : `<div style="font-size:13px;color:var(--muted);padding:12px 0">近30天無記錄</div>`;
-
-  document.getElementById("main").innerHTML = `
-    <div class="sec-lbl">資產分佈</div>
-    <div class="grid2">${acctCard}${stockCard}</div>
-
-    <div class="sec-lbl">負債與退休</div>
-    <div class="grid2">${debtCard}${pensionCard}</div>
-
-    <div class="sec-lbl">流水帳明細（近30天）</div>
-    <div class="card">${txSummary}<div class="tx-list">${txRows}</div></div>
-
-    <div style="font-size:10px;color:var(--muted);text-align:right;margin-top:-8px">資料截至 ${ts}</div>
-  `;
-}
-
-async function init(){
-  try{
-    const r = await fetch(FIN_PATH+"?_="+Date.now());
-    if(!r.ok) throw 0;
-    render(await r.json());
-  }catch(e){
-    document.getElementById("main").innerHTML='<div style="text-align:center;padding:40px;font-size:13px;color:var(--muted)">無法載入財務資料</div>';
-  }
-}
 
 function tick(){
-  const e=document.getElementById("clk"); if(!e) return;
-  const now=new Date();
-  const days=["日","一","二","三","四","五","六"];
-  const date=`${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")} 週${days[now.getDay()]}`;
-  const time=now.toLocaleTimeString("zh-TW",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"});
-  e.innerHTML=`${time}<br>${date}`;
+  const e=document.getElementById("clk");if(!e)return;
+  const n=new Date();const days=["日","一","二","三","四","五","六"];
+  e.innerHTML=n.toLocaleTimeString("zh-TW",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"})
+    +"<br>"+String(n.getMonth()+1).padStart(2,"0")+"/"+String(n.getDate()).padStart(2,"0")+" 週"+days[n.getDay()];
 }
-tick(); setInterval(tick,1000);
+tick();setInterval(tick,1000);
+
+function fmtTs(iso){
+  if(!iso||iso==="-") return "-";
+  const d=new Date(iso);if(isNaN(d)) return iso;
+  const now=new Date();
+  if(d.toDateString()===now.toDateString()) return d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
+  return d.toLocaleDateString("zh-TW",{month:"2-digit",day:"2-digit"});
+}
+
+const FIN_PATH="../data/personal/finance.json";
+function fmt(n){return Number(n||0).toLocaleString("zh-TW");}
+function fmtSign(n){return (n>=0?"+":"")+fmt(n);}
+function render(fin){
+  document.getElementById("h-net").textContent=fmt(fin.net_worth);
+  document.getElementById("h-cash").textContent=fmt(fin.available_cash);
+  document.getElementById("h-stocks").textContent=fmt(fin.stocks_value);
+  document.getElementById("h-pension").textContent=fmt(fin.pension_value);
+  document.getElementById("h-sub").textContent=
+    `可用 ${fmt(fin.available_cash)} · 股票 ${fmt(fin.stocks_value)} · 退休金 ${fmt(fin.pension_value)}`;
+  document.getElementById("hero").style.display="";
+  const ts=fin.updated_at?new Date(fin.updated_at).toLocaleDateString("zh-TW"):"-";
+  const acctTotal=fin.accounts.reduce((s,a)=>s+a.balance,0);
+  const deductList=fin.deductions.filter(d=>d.type!=="custody").map(d=>`${d.name} $${fmt(d.amount)}`).join(" + ");
+  const custodyAmt=fin.deductions.filter(d=>d.type==="custody").reduce((s,d)=>s+d.amount,0);
+  const acctCard=`<div class="card">
+    <div class="card-title">銀行帳戶與現金</div>
+    ${fin.accounts.map(a=>`<div class="row"><span class="row-name">${a.name}</span><span class="row-val">${fmt(a.balance)}</span></div>`).join("")}
+    <div class="row total"><span class="row-name">存款合計</span><span class="row-val">${fmt(acctTotal)}</span></div>
+    <div class="avail-box">
+      <div><div class="lbl">真實可用資金</div><div class="avail-note">已扣：${deductList}${custodyAmt?` · 代保管 $${fmt(custodyAmt)}`:""}</div></div>
+      <div class="val">${fmt(fin.available_cash)}</div>
+    </div></div>`;
+  const totalProfit=fin.stocks.reduce((s,x)=>s+x.profit,0);
+  const stockCard=`<div class="card">
+    <div class="card-title">股票投資組合</div>
+    ${fin.stocks.map(s=>`<div class="stock-row"><div><div class="s-name">${s.name}</div><div class="s-code">${s.code} · ${fmt(s.shares)} 股</div></div><span class="s-profit ${s.profit>=0?"pos":"neg"}">${fmtSign(s.profit)}</span></div>`).join("")}
+    <div class="row total"><div><div style="font-weight:400">總計</div><div class="row-sub">現值 $${fmt(fin.stocks_value)} · ${fin.stocks_note||""}</div></div><span class="s-profit ${totalProfit>=0?"pos":"neg"}">${fmtSign(totalProfit)}</span></div>
+    </div>`;
+  const debtTotal=fin.deductions.filter(d=>d.type!=="custody").reduce((s,d)=>s+d.amount,0);
+  const debtCard=`<div class="card">
+    <div class="card-title">負債明細</div>
+    ${fin.deductions.filter(d=>d.type!=="custody").map(d=>`<div class="row"><div><div class="row-name">${d.name}</div>${d.due&&d.due!=="-"?`<div class="row-sub">到期 ${d.due}</div>`:""}</div><span class="row-val neg">-${fmt(d.amount)}</span></div>`).join("")}
+    <div class="row total"><span class="row-name">負債合計</span><span class="row-val neg">-${fmt(debtTotal)}</span></div>
+    ${custodyAmt?`<div style="margin-top:10px;font-size:9px;color:var(--muted)">代保管 $${fmt(custodyAmt)}（才多多公司零用金）</div>`:""}
+    </div>`;
+  const p=fin.pension;
+  const pensionCard=`<div class="card">
+    <div class="card-title">退休金準備</div>
+    <div class="pension-grid">
+      <div class="p-box"><div class="p-lbl">勞退累積</div><div class="p-val">${fmt(p.accumulated)}</div></div>
+      <div class="p-box"><div class="p-lbl">勞保月領預估</div><div class="p-val">${fmt(p.monthly_estimate)}</div></div>
+    </div>
+    <div style="font-size:10px;color:var(--muted);text-align:center;letter-spacing:.06em">預計退休：${p.retire_age} 歲（${p.retire_year}）</div>
+    </div>`;
+  const WDAY=["日","一","二","三","四","五","六"];
+  const cutoff=new Date(Date.now()-30*24*60*60*1000);
+  const allTx=(fin.transactions||[]).filter(t=>new Date(t.date)>=cutoff)
+    .sort((a,b)=>b.date>a.date?1:b.date<a.date?-1:0);
+  let txInc=0,txExp=0;allTx.forEach(t=>{txInc+=(t.income||0);txExp+=(t.expense||0);});
+  const txNet=txInc-txExp;
+  const txCard=`<div class="card">
+    <div class="tx-summary">
+      <div class="tx-sum-item"><div class="tx-sum-lbl">收入</div><div class="tx-sum-val income">+${fmt(txInc)}</div></div>
+      <div class="tx-sum-item"><div class="tx-sum-lbl">支出</div><div class="tx-sum-val expense">-${fmt(txExp)}</div></div>
+      <div class="tx-sum-item"><div class="tx-sum-lbl">淨額</div><div class="tx-sum-val ${txNet>=0?"pos":"neg"}">${txNet>=0?"+":""}${fmt(txNet)}</div></div>
+      <div class="tx-sum-item"><div class="tx-sum-lbl">筆數</div><div class="tx-sum-val neutral">${allTx.length}</div></div>
+    </div>
+    ${allTx.map(t=>{
+      const d=new Date(t.date);
+      const amtHTML=t.income>0?`<span class="tx-amount tx-income">+${fmt(t.income)}</span>`:`<span class="tx-amount tx-expense">-${fmt(t.expense)}</span>`;
+      return `<div class="tx-row"><span class="tx-date">${t.date.slice(5)} ${WDAY[d.getDay()]}</span><span class="tx-cat">${t.category}</span><span class="tx-item">${t.item}</span><span class="tx-note">${t.payment||""}</span>${amtHTML}</div>`;
+    }).join("")||`<div style="font-size:12px;color:var(--muted);padding:12px 0">近30天無記錄</div>`}
+    </div>`;
+  document.getElementById("main").innerHTML=`
+    <div><div class="sec-lbl">資產分佈</div><div class="grid2">${acctCard}${stockCard}</div></div>
+    <div><div class="sec-lbl">負債與退休</div><div class="grid2">${debtCard}${pensionCard}</div></div>
+    <div><div class="sec-lbl">流水帳明細（近 30 天）</div>${txCard}</div>
+    <div style="font-size:9px;color:var(--muted);text-align:right;letter-spacing:.08em">資料截至 ${ts}</div>`;
+}
+async function init(){
+  try{const r=await fetch(FIN_PATH+"?_="+Date.now());if(!r.ok)throw 0;render(await r.json());}
+  catch(e){document.getElementById("main").innerHTML=`<div style="text-align:center;padding:40px;font-size:12px;color:var(--muted)">無法載入財務資料</div>`;}
+}
 init();
 </script>
 </body>
