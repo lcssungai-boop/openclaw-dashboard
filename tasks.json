@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-23T10:55:33Z",
+  "updated_at": "2026-02-23T14:04:11Z",
   "categories": [
     "才多多",
     "顧問",
@@ -18,24 +18,16 @@
     },
     {
       "category": "系統",
-      "title": "Mac備忘錄AI轉運分析處理",
-      "status": "待處理",
-      "next_action": "",
-      "role": "",
-      "block_reason": ""
-    },
-    {
-      "category": "系統",
-      "title": "郵件分類檢查-下午",
-      "status": "已完成",
-      "next_action": "",
-      "role": "",
-      "block_reason": ""
-    },
-    {
-      "category": "系統",
       "title": "確認明晚行程",
       "status": "待處理",
+      "next_action": "",
+      "role": "",
+      "block_reason": ""
+    },
+    {
+      "category": "系統",
+      "title": "Mac備忘錄AI轉運分析處理",
+      "status": "已完成",
       "next_action": "",
       "role": "",
       "block_reason": ""
@@ -138,6 +130,22 @@
     },
     {
       "category": "系統",
+      "title": "國泰信用卡-LinePay點數扣點提醒",
+      "status": "待處理",
+      "next_action": "",
+      "role": "",
+      "block_reason": ""
+    },
+    {
+      "category": "系統",
+      "title": "郵件分類檢查-下午",
+      "status": "已完成",
+      "next_action": "",
+      "role": "",
+      "block_reason": ""
+    },
+    {
+      "category": "系統",
       "title": "BNI簡報與key單準備提醒",
       "status": "待處理",
       "next_action": "",
@@ -212,6 +220,14 @@
       "category": "系統",
       "title": "OpenClaw 每週版本檢查",
       "status": "已完成",
+      "next_action": "",
+      "role": "",
+      "block_reason": ""
+    },
+    {
+      "category": "系統",
+      "title": "咖啡提貨券到期進度提醒",
+      "status": "待處理",
       "next_action": "",
       "role": "",
       "block_reason": ""
