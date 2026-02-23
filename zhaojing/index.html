@@ -104,7 +104,7 @@ main{max-width:860px;margin:0 auto;padding:40px 32px;display:flex;flex-direction
   transition:color .15s,border-color .15s,background .15s;font-size:11px;letter-spacing:.06em}
 .tab-btn:hover{color:var(--dim);background:var(--bg3)}
 .tab-btn.active{color:var(--bright);border-bottom-color:var(--urgent-text);background:var(--bg3)}
-.tab-icon{font-size:16px;line-height:1}
+.tab-icon{font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center}
 .tab-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;font-weight:400}
 .tab-badge{font-size:9px;font-weight:400;background:var(--bg4);color:var(--muted);
   border:1px solid var(--border);border-radius:1px;padding:1px 6px;
@@ -179,17 +179,17 @@ main>div:nth-child(4){animation-delay:.24s}
 <nav class="tab-nav">
   <a class="tab-btn active" onclick="switchTab('tasks')" id="tab-tasks">
     <span class="tab-badge" id="badge-tasks">—</span>
-    <span class="tab-icon">📋</span>
+    <span class="tab-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
     <span class="tab-label">工作任務</span>
   </a>
   <a class="tab-btn" onclick="switchTab('props')" id="tab-props">
     <span class="tab-badge" id="badge-props">—</span>
-    <span class="tab-icon">🏠</span>
+    <span class="tab-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
     <span class="tab-label">物件資料</span>
   </a>
   <a class="tab-btn" onclick="switchTab('tenants')" id="tab-tenants">
     <span class="tab-badge" id="badge-tenants">—</span>
-    <span class="tab-icon">👤</span>
+    <span class="tab-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
     <span class="tab-label">房客資料</span>
   </a>
 </nav>
