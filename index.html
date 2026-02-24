@@ -756,7 +756,7 @@ async function fetchWeather(){
     if(!r.ok)throw 0;
     const d=await r.json();
     const cur=d.current;const w=WMO[cur.weathercode]||{i:"🌡",d:""};
-    el.innerHTML=`${w.i} <b>${Math.round(cur.temperature_2m)}°</b> ${w.d}${city?" · "+city:""}`;
+    el.innerHTML=`<span style="font-size:15px;color:#E8E8E6;filter:brightness(1.3)">${w.i}</span> <b>${Math.round(cur.temperature_2m)}°</b> <span style="color:var(--text)">${w.d}${city?" · "+city:""}</span>`;
   }catch(e){el.textContent="—";}
 }
 
