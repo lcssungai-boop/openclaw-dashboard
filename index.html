@@ -231,12 +231,19 @@ main{
 .brief-header{
   padding:18px 24px 14px;
   border-bottom:1px solid var(--border);
-  display:flex;align-items:baseline;justify-content:space-between;
+  display:flex;flex-direction:column;gap:9px;
 }
 .brief-date{
   font-size:11px;font-weight:400;color:var(--bright);
   letter-spacing:.06em;font-family:"JetBrains Mono",monospace;
 }
+.brief-luck{display:flex;align-items:center;gap:12px}
+.luck-lbl{font-size:8px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);font-family:"JetBrains Mono",monospace;flex-shrink:0}
+.luck-item{display:inline-flex;align-items:center;gap:5px;
+  font-size:9px;color:var(--dim);letter-spacing:.06em}
+.luck-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;
+  box-shadow:0 0 4px currentColor}
 .brief-body{padding:0}
 .brief-block{display:flex;flex-direction:column}
 .brief-block-hdr{
@@ -596,6 +603,17 @@ function renderWarnings(){
   }).join("");
 }
 
+// ── LUCKY COLORS ─────────────────────────────────────────────────
+const LUCKY=[
+  [{name:"紅色",hex:"#C0392B"},{name:"橙色",hex:"#E67E22"}],  // 週日
+  [{name:"白色",hex:"#C8C8C6"},{name:"金色",hex:"#D4AF37"}],  // 週一
+  [{name:"粉紅",hex:"#D4608A"},{name:"白色",hex:"#C0C0BE"}],  // 週二
+  [{name:"黑色",hex:"#606060"},{name:"藍色",hex:"#4A7090"}],  // 週三
+  [{name:"綠色",hex:"#3A8A58"},{name:"青色",hex:"#1A9080"}],  // 週四
+  [{name:"金色",hex:"#D4AF37"},{name:"白色",hex:"#C8C8C6"}],  // 週五
+  [{name:"黃色",hex:"#C8A830"},{name:"棕色",hex:"#8A6A40"}],  // 週六
+];
+
 // ── DAILY BRIEF ──────────────────────────────────────────────────
 function renderBrief(){
   const wrap=document.getElementById("brief-wrap");
@@ -603,6 +621,8 @@ function renderBrief(){
   const days=["日","一","二","三","四","五","六"];
   const dateStr=`${now.getFullYear()} / ${String(now.getMonth()+1).padStart(2,"0")} / ${String(now.getDate()).padStart(2,"0")} &nbsp;週${days[now.getDay()]}`;
   const isMonday=now.getDay()===1;
+  const lc=LUCKY[now.getDay()];
+  const luckHtml=`<div class="brief-luck"><span class="luck-lbl">財神開運色</span>${lc.map(c=>`<span class="luck-item"><span class="luck-dot" style="background:${c.hex}"></span>${c.name}</span>`).join("")}</div>`;
 
   // 排程
   const schedItems=[];
@@ -665,6 +685,7 @@ function renderBrief(){
   wrap.innerHTML=`
     <div class="brief-header">
       <span class="brief-date">${dateStr}</span>
+      ${luckHtml}
     </div>
     <div class="brief-body">${schedBlock}${workBlock}</div>`;
 }
