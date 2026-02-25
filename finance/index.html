@@ -56,7 +56,7 @@ header{display:flex;align-items:center;justify-content:space-between;
   letter-spacing:.06em;color:var(--muted);border-radius:1px}
 .sum-bdg.blocked{border-color:var(--blocked-bd);color:var(--blocked-text)}
 .sum-bdg.pending{border-color:var(--border2);color:var(--dim)}
-.sum-bdg.done{opacity:.5}
+.sum-bdg.done{background:var(--bg3);border-color:var(--border2);color:var(--text)}
 .sum-ts{margin-left:auto;font-size:9px;color:var(--muted);
   font-family:"JetBrains Mono",monospace;font-weight:300}
 
@@ -87,8 +87,8 @@ main{max-width:860px;margin:0 auto;padding:40px 32px;display:flex;flex-direction
 .tag.blocked-tag{border-color:var(--blocked-bd);color:var(--blocked-text)}
 .tag.remittance{border-color:var(--remit-bd);color:var(--remit-text)}
 .tag.alert-tag{border-color:#1E3A1E;color:var(--green)}
-.tc-meta{display:flex;gap:18px;font-size:10px;color:var(--muted);
-  font-family:"JetBrains Mono",monospace;font-weight:300}
+.tc-meta{display:flex;gap:18px;font-size:11px;color:var(--dim);
+  font-family:"JetBrains Mono",monospace;font-weight:400}
 .tc-meta-lbl{font-size:8px;opacity:.6;margin-right:3px}
 .tc-next{font-size:11px;color:var(--dim);padding-top:8px;
   border-top:1px solid var(--border);font-weight:300;letter-spacing:.02em}
@@ -168,6 +168,15 @@ function renderSummary(tasks,ts,barId="sum-bar"){
   document.getElementById("sum-ts").textContent="更新 "+fmtTs(ts);
 }
 
+function formatBlockedReason(reason) {
+  if (!reason || reason === "-") return "";
+  // 隱藏技術錯誤訊息，改顯示使用者友好的訊息
+  if (reason.includes("cron") || reason.includes("failed") || reason.includes("error")) {
+    return "系統排程異常，請稍後重試";
+  }
+  return reason;
+}
+
 function taskCard(t){
   const isBlk=t.status==="阻塞",isUrg=t.priority==="urgent",isDone=t.status==="已完成";
   const cardCls=isBlk?"task-card blocked-card":isUrg?"task-card urgent-card":isDone?"task-card done-card":"task-card";
@@ -182,6 +191,7 @@ function taskCard(t){
   if(t.time&&t.time!=="-") meta.push(`<span><span class="tc-meta-lbl">排程 </span>${t.time}</span>`);
   if(t.due&&t.due!=="-") meta.push(`<span><span class="tc-meta-lbl">截止 </span>${t.due}</span>`);
   if(t.owner_role&&t.owner_role!=="-") meta.push(`<span><span class="tc-meta-lbl">負責 </span>${t.owner_role}</span>`);
+  const blockedMsg = formatBlockedReason(t.blocked_reason);
   return `<div class="${cardCls}">
     <div class="tc-top">
       <div class="tc-title">${t.title}</div>
@@ -189,7 +199,7 @@ function taskCard(t){
     </div>
     ${meta.length?`<div class="tc-meta">${meta.join("")}</div>`:""}
     ${t.next_step&&t.next_step!=="-"?`<div class="tc-next">→ ${t.next_step}</div>`:""}
-    ${t.blocked_reason&&t.blocked_reason!=="-"?`<div class="tc-blocked">阻塞 — ${t.blocked_reason}</div>`:""}
+    ${blockedMsg?`<div class="tc-blocked">阻塞 — ${blockedMsg}</div>`:""}
   </div>`;
 }
 
