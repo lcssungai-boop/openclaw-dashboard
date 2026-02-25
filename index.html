@@ -172,11 +172,11 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
 }
 .kpi-card.kpi-hot .kpi-icon{background:var(--urgent-bg);border-color:var(--urgent-bd);color:var(--urgent-text)}
 .kpi-card.kpi-blocked .kpi-icon{background:var(--blocked-bg);border-color:var(--blocked-bd);color:var(--blocked-text)}
-.kpi-lbl{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-family:"JetBrains Mono",monospace}
-.kpi-val{font-size:26px;font-weight:700;color:var(--bright);font-family:"JetBrains Mono",monospace;line-height:1.1}
+.kpi-lbl{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.kpi-val{font-size:34px;font-weight:700;color:var(--bright);font-family:"JetBrains Mono",monospace;line-height:1.1}
 .kpi-card.kpi-hot .kpi-val{color:var(--urgent-text)}
 .kpi-card.kpi-blocked .kpi-val{color:var(--blocked-text)}
-.kpi-sub{font-size:11px;color:var(--dim);margin-top:1px}
+.kpi-sub{font-size:12px;color:var(--dim);margin-top:1px}
 
 /* ── BRIEF ── */
 .brief-wrap{
@@ -378,44 +378,50 @@ main>section:nth-child(4){animation-delay:.26s}
 
 /* ── PHONE (≤640px) ── */
 @media(max-width:640px){
-  :root{--hdr-h:52px;--info-h:26px;--strip-h:34px}
+  :root{--hdr-h:52px;--info-h:26px;--strip-h:36px}
   header{padding:0 16px}
   #info-bar,#alert-strip{padding:0 16px}
-  main{padding:16px 16px;gap:16px}
-  .hdr-name{font-size:15px}
-  .hdr-sub{font-size:11px}
-  .hdr-clock{font-size:11px}
+  main{padding:16px 16px;gap:18px}
+  .hdr-name{font-size:16px}
+  .hdr-sub{font-size:12px}
+  .hdr-clock{font-size:12px}
   .ib-lunar{display:none}
-  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:8px}
-  .kpi-card{padding:12px 14px}
-  .kpi-val{font-size:24px}
-  .kpi-lbl{font-size:9px}
-  .kpi-sub{font-size:11px}
-  .kpi-icon{width:22px;height:22px;margin-bottom:4px}
-  .wc-title{font-size:15px}
-  .wc-meta{font-size:12px;gap:8px}
-  .wc-meta-lbl{font-size:11px}
-  .tag{font-size:11px;padding:2px 8px}
-  .brief-header{flex-direction:column;align-items:flex-start;gap:8px;padding:12px 16px 10px}
-  .brief-block-hdr{padding:8px 16px 6px}
-  .brief-line{font-size:14px;padding:10px 16px}
-  .brief-time{font-size:12px;min-width:24px}
-  .b-blk,.b-urg,.b-due,.b-area{font-size:10px}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .kpi-card{padding:14px 16px}
+  .kpi-val{font-size:32px}
+  .kpi-lbl{font-size:11px}
+  .kpi-sub{font-size:13px}
+  .kpi-icon{width:24px;height:24px;margin-bottom:6px}
+  .wc-title{font-size:17px}
+  .wc-meta{font-size:14px;gap:10px}
+  .wc-meta-lbl{font-size:12px}
+  .wc-next,.wc-blocked{font-size:14px}
+  .tag{font-size:13px;padding:3px 10px}
+  .brief-header{flex-direction:column;align-items:flex-start;gap:8px;padding:14px 16px 12px}
+  .brief-block-hdr{padding:10px 16px 8px;font-size:11px}
+  .brief-line{font-size:16px;padding:12px 16px}
+  .brief-time{font-size:14px;min-width:28px}
+  .brief-date{font-size:14px}
+  .b-blk,.b-urg,.b-due,.b-area{font-size:12px}
   .acc-counts{display:none}
   .acc-icon-col{display:none}
-  .acc-toggle{width:36px;height:48px}
-  .acc-info{padding:10px 0}
-  .acc-name{font-size:15px}
-  .acc-role{font-size:11px}
-  .acc-link{width:36px;height:48px}
-  .acc-tbl td{font-size:12px;padding:8px 12px}
-  .t-pri,.t-type,.t-status{font-size:11px;padding:2px 8px}
-  .t-due{font-size:11px}
-  .ov-ttl{max-width:160px}
-  .a-chip{font-size:11px;padding:3px 8px 3px 6px}
-  .a-lbl{font-size:10px}
-  .warn-card{padding:12px 14px}
-  .sec-lbl{font-size:10px;letter-spacing:1.5px}
+  .acc-toggle{width:40px;height:52px}
+  .acc-info{padding:12px 0}
+  .acc-name{font-size:17px}
+  .acc-role{font-size:13px}
+  .acc-link{width:40px;height:52px}
+  .acc-tbl td{font-size:14px;padding:10px 12px}
+  .t-pri,.t-type,.t-status{font-size:13px;padding:3px 9px}
+  .t-due{font-size:13px}
+  .ov-ttl{max-width:none;white-space:normal}
+  .a-chip{font-size:13px;padding:4px 10px 4px 7px}
+  .a-lbl{font-size:12px}
+  .a-none{font-size:13px}
+  .warn-card{padding:14px 16px}
+  .sec-lbl{font-size:11px;letter-spacing:1.5px}
+  .luck-lbl{font-size:11px}
+  .luck-item{font-size:12px}
+  .sched-status{font-size:11px;padding:3px 9px}
 }
 </style>
 </head>
