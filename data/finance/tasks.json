@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-24T06:00:57Z",
+  "updated_at": "2026-02-25T14:09:21Z",
   "tasks": [
     {
       "title": "每日美股台股匯報",
@@ -83,8 +83,8 @@
     },
     {
       "title": "散熱族群股價追蹤(早)",
-      "status": "待處理",
-      "next_step": "",
+      "status": "已完成",
+      "next_step": "取消",
       "owner_role": "",
       "blocked_reason": "-",
       "priority": "normal",
@@ -92,21 +92,21 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-24T06:00:57Z",
+      "updated_at": "2026-02-25T14:08:35Z",
       "source": "auto"
     },
     {
       "title": "散熱族群股價追蹤",
-      "status": "阻塞",
-      "next_step": "",
+      "status": "已完成",
+      "next_step": "取消",
       "owner_role": "",
-      "blocked_reason": "系統排程異常，請稍後重試",
+      "blocked_reason": "-",
       "priority": "normal",
       "type": "task",
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-24T06:00:57Z",
+      "updated_at": "2026-02-25T14:09:21Z",
       "source": "auto"
     },
     {
