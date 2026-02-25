@@ -1,6 +1,62 @@
 {
-  "updated_at": "2026-02-24T06:00:57Z",
+  "updated_at": "2026-02-25T05:35:26Z",
   "tasks": [
+    {
+      "title": "OpenClaw 設定與資料備份",
+      "status": "已完成",
+      "next_step": "備份輸出於 /Users/sunglin/Documents/openclaw-ops/backups/latest",
+      "owner_role": "開發優化師",
+      "blocked_reason": "-",
+      "priority": "important",
+      "type": "task",
+      "due": "-",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-25T05:35:26Z",
+      "source": "auto"
+    },
+    {
+      "title": "OpenClaw 記憶與效能優化設定",
+      "status": "已完成",
+      "next_step": "ttl=30m, maxHistoryShare=0.7, maxConcurrent=3, subagents=4",
+      "owner_role": "開發優化師",
+      "blocked_reason": "-",
+      "priority": "important",
+      "type": "task",
+      "due": "-",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-25T05:35:26Z",
+      "source": "auto"
+    },
+    {
+      "title": "OpenClaw 模型與授權狀態",
+      "status": "已完成",
+      "next_step": "model=openai-codex/gpt-5.2；授權到期=2026-03-04 01:39:31 CST",
+      "owner_role": "開發優化師",
+      "blocked_reason": "-",
+      "priority": "important",
+      "type": "task",
+      "due": "-",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-25T05:35:26Z",
+      "source": "auto"
+    },
+    {
+      "title": "OpenClaw 連線健康檢查",
+      "status": "已完成",
+      "next_step": "正常（2026-02-25T13:35:19+0800）",
+      "owner_role": "開發優化師",
+      "blocked_reason": "-",
+      "priority": "important",
+      "type": "task",
+      "due": "-",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-25T05:35:26Z",
+      "source": "auto"
+    },
     {
       "title": "cron 每日任務自動化（重設狀態）",
       "status": "已完成",
