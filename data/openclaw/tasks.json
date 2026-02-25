@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-25T13:00:50Z",
+  "updated_at": "2026-02-25T13:31:52Z",
   "tasks": [
     {
       "title": "OpenClaw 設定與資料備份",
@@ -72,7 +72,7 @@
     },
     {
       "title": "NotebookLM Skill 開發",
-      "status": "待處理",
+      "status": "已完成",
       "next_step": "規劃草稿在 dev/notebooklm-skill.md",
       "owner_role": "開發優化師",
       "blocked_reason": "-",
@@ -81,7 +81,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-22T15:15:00Z"
+      "updated_at": "2026-02-25T13:31:52Z"
     },
     {
       "title": "儀表板視覺老花優化",
@@ -163,8 +163,8 @@
     },
     {
       "title": "確認明晚行程",
-      "status": "待處理",
-      "next_step": "",
+      "status": "已完成",
+      "next_step": "取消",
       "owner_role": "",
       "blocked_reason": "-",
       "priority": "normal",
@@ -172,7 +172,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-23T14:32:09Z",
+      "updated_at": "2026-02-25T13:31:52Z",
       "source": "auto"
     },
     {
@@ -359,8 +359,8 @@
     },
     {
       "title": "兆鯨明天任務提醒",
-      "status": "待處理",
-      "next_step": "",
+      "status": "已完成",
+      "next_step": "取消",
       "owner_role": "",
       "blocked_reason": "-",
       "priority": "normal",
@@ -368,13 +368,13 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-24T06:00:57Z",
+      "updated_at": "2026-02-25T13:31:52Z",
       "source": "auto"
     },
     {
       "title": "可成科技_面試結果確認",
-      "status": "待處理",
-      "next_step": "",
+      "status": "已完成",
+      "next_step": "-",
       "owner_role": "",
       "blocked_reason": "-",
       "priority": "normal",
@@ -382,7 +382,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-24T06:00:57Z",
+      "updated_at": "2026-02-25T13:31:52Z",
       "source": "auto"
     },
     {
@@ -401,8 +401,8 @@
     },
     {
       "title": "確認澤于OpenClaw安裝時間",
-      "status": "待處理",
-      "next_step": "",
+      "status": "已完成",
+      "next_step": "-",
       "owner_role": "",
       "blocked_reason": "-",
       "priority": "normal",
@@ -410,7 +410,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-24T06:00:57Z",
+      "updated_at": "2026-02-25T13:31:52Z",
       "source": "auto"
     },
     {
@@ -457,16 +457,16 @@
     },
     {
       "title": "iCloud整理檢測_0310",
-      "status": "阻塞",
-      "next_step": "",
+      "status": "已完成",
+      "next_step": "取消",
       "owner_role": "",
-      "blocked_reason": "cron announce delivery failed",
+      "blocked_reason": "-",
       "priority": "normal",
       "type": "task",
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-24T06:00:57Z",
+      "updated_at": "2026-02-25T13:31:52Z",
       "source": "auto"
     },
     {
@@ -485,8 +485,8 @@
     },
     {
       "title": "聖發_3名入職建檔提醒",
-      "status": "待處理",
-      "next_step": "",
+      "status": "已完成",
+      "next_step": "取消",
       "owner_role": "",
       "blocked_reason": "-",
       "priority": "normal",
@@ -494,13 +494,13 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-24T06:00:57Z",
+      "updated_at": "2026-02-25T13:31:52Z",
       "source": "auto"
     },
     {
       "title": "散熱族群股價追蹤(早)",
-      "status": "待處理",
-      "next_step": "",
+      "status": "已完成",
+      "next_step": "取消",
       "owner_role": "",
       "blocked_reason": "-",
       "priority": "normal",
@@ -508,7 +508,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-24T06:00:57Z",
+      "updated_at": "2026-02-25T13:31:52Z",
       "source": "auto"
     },
     {
@@ -527,16 +527,16 @@
     },
     {
       "title": "散熱族群股價追蹤",
-      "status": "阻塞",
-      "next_step": "",
+      "status": "已完成",
+      "next_step": "取消",
       "owner_role": "",
-      "blocked_reason": "cron announce delivery failed",
+      "blocked_reason": "-",
       "priority": "normal",
       "type": "task",
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-24T06:00:57Z",
+      "updated_at": "2026-02-25T13:31:52Z",
       "source": "auto"
     },
     {
