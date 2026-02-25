@@ -100,7 +100,7 @@
       "status": "阻塞",
       "next_step": "",
       "owner_role": "",
-      "blocked_reason": "cron announce delivery failed",
+      "blocked_reason": "系統排程異常，請稍後重試",
       "priority": "normal",
       "type": "task",
       "due": "-",
