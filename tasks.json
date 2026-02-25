@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-24T06:00:57Z",
+  "updated_at": "2026-02-25T07:54:37Z",
   "categories": [
     "才多多",
     "顧問",
@@ -107,16 +107,16 @@
     {
       "category": "系統",
       "title": "兆鯨明天任務提醒",
-      "status": "待處理",
-      "next_action": "",
+      "status": "已完成",
+      "next_action": "取消",
       "role": "",
       "block_reason": ""
     },
     {
       "category": "系統",
       "title": "可成科技_面試結果確認",
-      "status": "待處理",
-      "next_action": "",
+      "status": "已完成",
+      "next_action": "已完成",
       "role": "",
       "block_reason": ""
     },
@@ -131,8 +131,8 @@
     {
       "category": "系統",
       "title": "確認澤于OpenClaw安裝時間",
-      "status": "待處理",
-      "next_action": "",
+      "status": "已完成",
+      "next_action": "已完成",
       "role": "",
       "block_reason": ""
     },
@@ -163,8 +163,8 @@
     {
       "category": "系統",
       "title": "iCloud整理檢測_0310",
-      "status": "阻塞",
-      "next_action": "",
+      "status": "已完成",
+      "next_action": "取消",
       "role": "",
       "block_reason": ""
     },
@@ -179,16 +179,16 @@
     {
       "category": "系統",
       "title": "聖發_3名入職建檔提醒",
-      "status": "待處理",
-      "next_action": "",
+      "status": "已完成",
+      "next_action": "取消",
       "role": "",
       "block_reason": ""
     },
     {
       "category": "系統",
       "title": "散熱族群股價追蹤(早)",
-      "status": "待處理",
-      "next_action": "",
+      "status": "已完成",
+      "next_action": "取消",
       "role": "",
       "block_reason": ""
     },
@@ -203,8 +203,8 @@
     {
       "category": "系統",
       "title": "散熱族群股價追蹤",
-      "status": "阻塞",
-      "next_action": "",
+      "status": "已完成",
+      "next_action": "取消",
       "role": "",
       "block_reason": ""
     },
