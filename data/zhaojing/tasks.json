@@ -1,94 +1,23 @@
 {
-  "updated_at": "2026-02-25T16:11:40Z",
+  "updated_at": "2026-02-26T06:00:00Z",
   "tasks": [
     {
-      "title": "兆鯨：肚肚系統導入／安裝（2 小時）",
-      "status": "待處理",
-      "next_step": "3/3（二）10:00-12:00；確認權限分級/硬體保固/報表清單",
-      "owner_role": "兆鯨顧問",
-      "blocked_reason": "-",
-      "priority": "urgent",
-      "type": "alert",
-      "due": "2026/3/3",
-      "time": "10:00",
-      "freq": "-",
-      "updated_at": "2026-02-25T13:59:30Z",
-      "source": "manual"
-    },
-    {
-      "title": "兆鯨：整合貸款／2026 還款表（資料缺口清單＋試算）",
-      "status": "待處理",
-      "next_step": "補齊餘額/期數/扣款日/月付→產出 2026 還款表與2-7月高峰說明",
-      "owner_role": "兆鯨顧問",
-      "blocked_reason": "-",
-      "priority": "important",
-      "type": "task",
-      "due": "-",
-      "time": "-",
-      "freq": "-",
-      "updated_at": "2026-02-25T13:59:30Z",
-      "source": "manual"
-    },
-    {
-      "title": "兆鯨：1111 人力銀行刊登市場門市職缺",
-      "status": "待處理",
-      "next_step": "完成刊登並回報連結/截圖",
-      "owner_role": "兆鯨顧問",
-      "blocked_reason": "-",
-      "priority": "urgent",
-      "type": "alert",
-      "due": "2026/2/25",
-      "time": "-",
-      "freq": "-",
-      "updated_at": "2026-02-25T13:59:30Z",
-      "source": "manual"
-    },
-    {
-      "title": "兆鯨：勞工局調解 25 萬處理",
-      "status": "已完成",
-      "next_step": "任務結束",
-      "owner_role": "兆鯨顧問",
-      "blocked_reason": "-",
-      "priority": "important",
-      "type": "task",
-      "due": "-",
-      "time": "-",
-      "freq": "-",
-      "updated_at": "2026-02-25T13:59:30Z",
-      "source": "manual"
-    },
-    {
-      "title": "兆鯨：Google下載資料整理→摘要MD（方案3上雲）",
-      "status": "待處理",
-      "next_step": "等小C產出摘要MD→同步 Drive（不全量上傳）",
-      "owner_role": "兆鯨顧問",
-      "blocked_reason": "-",
-      "priority": "important",
-      "type": "task",
-      "due": "-",
-      "time": "-",
-      "freq": "-",
-      "updated_at": "2026-02-25T13:59:30Z",
-      "source": "manual"
-    },
-    {
-      "title": "兆鯨：建立/維護客戶主檔（資訊資料庫 index.md）",
-      "status": "待處理",
-      "next_step": "補齊統編/地址/窗口/來源資訊；維持每週更新 Top3/決策",
-      "owner_role": "兆鯨顧問",
-      "blocked_reason": "-",
-      "priority": "normal",
-      "type": "task",
-      "due": "-",
-      "time": "-",
-      "freq": "-",
-      "updated_at": "2026-02-25T13:59:30Z",
-      "source": "manual"
-    },
-    {
       "title": "王原浦 2-1-1 合約到期催簽",
-      "status": "待處理",
-      "next_step": "2/26(四) 08:30 出門再確認；若仍未回覆→改採書面通知/限期簽約",
+      "status": "阻塞",
+      "next_step": "協商缺口：開25K/底22K/對方出20K",
+      "owner_role": "兆鯨顧問",
+      "blocked_reason": "缺口尚未達成共識",
+      "priority": "urgent",
+      "type": "alert",
+      "due": "2026/2/28",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-22T05:41:14Z"
+    },
+    {
+      "title": "謝瑾君 2-2 合約到期催簽",
+      "status": "已完成",
+      "next_step": "2/23 已簽約",
       "owner_role": "兆鯨顧問",
       "blocked_reason": "-",
       "priority": "urgent",
@@ -96,7 +25,7 @@
       "due": "2026/2/28",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-25T14:28:45Z"
+      "updated_at": "2026-02-22T15:36:44Z"
     },
     {
       "title": "程進龍 永二街8-2 欠租追繳",
@@ -204,8 +133,8 @@
     },
     {
       "title": "兆鯨明天任務提醒",
-      "status": "已完成",
-      "next_step": "取消",
+      "status": "待處理",
+      "next_step": "",
       "owner_role": "",
       "blocked_reason": "-",
       "priority": "normal",
@@ -213,7 +142,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-25T13:59:30Z",
+      "updated_at": "2026-02-24T06:00:57Z",
       "source": "auto"
     },
     {
@@ -230,7 +159,5 @@
       "updated_at": "2026-02-24T06:00:57Z",
       "source": "auto"
     }
-  ],
-  "source": "dashboard:/Users/sunglin/Documents/線上儀表板",
-  "schema_version": "2026-02"
+  ]
 }
