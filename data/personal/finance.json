@@ -1,12 +1,12 @@
 {
-  "updated_at": "2026-02-22T00:00:00Z",
+  "updated_at": "2026-02-25T05:45:00Z",
   "net_worth": 1327831,
   "available_cash": 150264,
   "stocks_value": 429514,
   "pension_value": 685440,
   "accounts": [
     { "name": "國泰銀行",   "balance": 166779, "type": "bank" },
-    { "name": "上海銀行",   "balance": 175362, "type": "bank" },
+    { "name": "上海銀行",   "balance": 136780, "type": "bank" },
     { "name": "LINE Bank",  "balance": 2014,   "type": "bank" },
     { "name": "LINE Pay",   "balance": 1289,   "type": "ewallet" },
     { "name": "手邊現金",   "balance": 8103,   "type": "cash" }
