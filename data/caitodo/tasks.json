@@ -1,6 +1,62 @@
 {
-  "updated_at": "2026-02-24T06:00:57Z",
+  "updated_at": "2026-02-25T14:24:51Z",
   "tasks": [
+    {
+      "title": "可成科技：職缺停止招募",
+      "status": "待處理",
+      "next_step": "待確認：職缺是否正式停止/是否需通知候選人",
+      "owner_role": "才多多",
+      "blocked_reason": "-",
+      "priority": "important",
+      "type": "alert",
+      "due": "2026/2/26",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-25T14:24:51Z",
+      "source": "sync"
+    },
+    {
+      "title": "新南向人力銀行：進度追蹤",
+      "status": "待處理",
+      "next_step": "追蹤測試→上線；已排 3/3（二）14:00-16:00 會議",
+      "owner_role": "才多多",
+      "blocked_reason": "-",
+      "priority": "important",
+      "type": "task",
+      "due": "2026/3/3",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-25T14:24:51Z",
+      "source": "sync"
+    },
+    {
+      "title": "全立祥：內部薪酬規劃討論",
+      "status": "待處理",
+      "next_step": "整理薪酬方案選項/成本，安排內部討論",
+      "owner_role": "才多多",
+      "blocked_reason": "-",
+      "priority": "normal",
+      "type": "task",
+      "due": "-",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-25T14:24:51Z",
+      "source": "sync"
+    },
+    {
+      "title": "聖發：3名入職建檔（3/2入職）",
+      "status": "待處理",
+      "next_step": "入職前完成建檔/文件備齊",
+      "owner_role": "才多多",
+      "blocked_reason": "-",
+      "priority": "urgent",
+      "type": "alert",
+      "due": "2026/3/2",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-25T14:24:51Z",
+      "source": "sync"
+    },
     {
       "title": "BNI簡報與key單準備提醒",
       "status": "待處理",
