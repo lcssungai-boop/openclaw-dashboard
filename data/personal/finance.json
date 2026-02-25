@@ -1,29 +1,104 @@
 {
-  "updated_at": "2026-02-25T05:45:00Z",
-  "net_worth": 1327831,
-  "available_cash": 150264,
+  "updated_at": "2026-02-25T13:00:50Z",
+  "net_worth": 1276644,
+  "available_cash": 161690,
   "stocks_value": 429514,
   "pension_value": 685440,
   "accounts": [
-    { "name": "國泰銀行",   "balance": 166779, "type": "bank" },
-    { "name": "上海銀行",   "balance": 136780, "type": "bank" },
-    { "name": "LINE Bank",  "balance": 2014,   "type": "bank" },
-    { "name": "LINE Pay",   "balance": 1289,   "type": "ewallet" },
-    { "name": "手邊現金",   "balance": 8103,   "type": "cash" }
+    {
+      "name": "國泰銀行",
+      "balance": 166779,
+      "type": "bank"
+    },
+    {
+      "name": "上海銀行",
+      "balance": 136780,
+      "type": "bank"
+    },
+    {
+      "name": "LINE Bank",
+      "balance": 2014,
+      "type": "bank"
+    },
+    {
+      "name": "LINE Pay",
+      "balance": 1289,
+      "type": "ewallet"
+    },
+    {
+      "name": "手邊現金",
+      "balance": 930,
+      "type": "cash"
+    },
+    {
+      "name": "國泰數位證券戶",
+      "balance": 19585,
+      "type": "broker"
+    }
   ],
   "deductions": [
-    { "name": "上海信用卡",                    "amount": 125744, "type": "credit_card", "due": "2026/2/28" },
-    { "name": "國泰信用卡（3/6繳）",           "amount": 2618,   "type": "credit_card", "due": "2026/3/6"  },
-    { "name": "兆鯨往來（欠款）",              "amount": 5434,   "type": "debt",        "due": "-"         },
-    { "name": "才多多公司零用金（代保管）",    "amount": 57179,  "type": "custody",     "due": "-"        }
+    {
+      "name": "上海信用卡",
+      "amount": 125744,
+      "type": "credit_card",
+      "due": "2026/2/28"
+    },
+    {
+      "name": "國泰信用卡（3/6繳）",
+      "amount": 2618,
+      "type": "credit_card",
+      "due": "2026/3/6"
+    },
+    {
+      "name": "兆鯨往來（欠款）",
+      "amount": 5434,
+      "type": "debt",
+      "due": "-"
+    },
+    {
+      "name": "才多多公司零用金（代保管）",
+      "amount": 18591,
+      "type": "custody",
+      "due": "-"
+    },
+    {
+      "name": "上海信用卡（待入帳）",
+      "amount": 13300,
+      "type": "credit_card",
+      "due": "-"
+    }
   ],
   "stocks": [
-    { "name": "台積電",         "code": "2330",  "shares": 170,  "current": 301410, "profit": 125000 },
-    { "name": "中信金",         "code": "2891",  "shares": 1000, "current": 44000,  "profit": 20000  },
-    { "name": "國泰永續高股息", "code": "00878", "shares": 1000, "current": 39100,  "profit": 3410   },
-    { "name": "台泥",           "code": "1101",  "shares": 1099, "current": 18000,  "profit": -20090 }
+    {
+      "name": "台積電",
+      "code": "2330",
+      "shares": 170,
+      "current": 301410,
+      "profit": 125000
+    },
+    {
+      "name": "中信金",
+      "code": "2891",
+      "shares": 1000,
+      "current": 44000,
+      "profit": 20000
+    },
+    {
+      "name": "國泰永續高股息",
+      "code": "00878",
+      "shares": 1000,
+      "current": 39100,
+      "profit": 3410
+    },
+    {
+      "name": "台泥",
+      "code": "1101",
+      "shares": 1099,
+      "current": 18000,
+      "profit": -20090
+    }
   ],
-  "stocks_note": "股票資料更新：2026-02-11",
+  "stocks_note": "股票資料更新：2026-02-24（交易筆數 2）",
   "pension": {
     "accumulated": 685440,
     "monthly_estimate": 22666,
@@ -31,30 +106,194 @@
     "retire_year": "民國122年11月"
   },
   "custody": [
-    { "name": "才多多公司零用金", "amount": 57179, "note": "暫存於個人帳戶，非個人資產" }
+    {
+      "name": "才多多公司零用金",
+      "amount": 18591,
+      "note": "暫存於個人帳戶，非個人資產"
+    }
   ],
   "transactions": [
-    { "date": "2026-02-22", "category": "訂閱",   "item": "Cloudflare changsung.uk 網域",    "income": 0,      "expense": 175,   "payment": "上海2358", "note": "$5.48 USD" },
-    { "date": "2026-02-21", "category": "餐飲",   "item": "新東陽",                           "income": 0,      "expense": 127,   "payment": "國泰0585", "note": "Line Pay" },
-    { "date": "2026-02-21", "category": "訂閱",   "item": "YouTube Premium",                  "income": 0,      "expense": 479,   "payment": "上海5757", "note": "" },
-    { "date": "2026-02-20", "category": "訂閱",   "item": "ChatGPT Plus",                     "income": 0,      "expense": 632,   "payment": "上海5757", "note": "OPENAI*CHATGPT SUBSCR" },
-    { "date": "2026-02-20", "category": "薪資",   "item": "才多多 2月薪資",                   "income": 80000,  "expense": 0,     "payment": "國泰銀行", "note": "扣勞健保後實領" },
-    { "date": "2026-02-18", "category": "交通",   "item": "加油 中油",                        "income": 0,      "expense": 1200,  "payment": "上海5757", "note": "" },
-    { "date": "2026-02-16", "category": "民生",   "item": "全聯採購",                         "income": 0,      "expense": 862,   "payment": "LINE Pay", "note": "" },
-    { "date": "2026-02-15", "category": "帳單",   "item": "台灣大哥大電信費",                 "income": 0,      "expense": 599,   "payment": "上海5757", "note": "二月帳單" },
-    { "date": "2026-02-14", "category": "餐飲",   "item": "聚餐 爭鮮",                        "income": 0,      "expense": 490,   "payment": "國泰0585", "note": "" },
-    { "date": "2026-02-12", "category": "帳單",   "item": "台電電費",                         "income": 0,      "expense": 1890,  "payment": "上海5757", "note": "1月用電" },
-    { "date": "2026-02-10", "category": "薪資",   "item": "才多多 春節獎金",                  "income": 15000,  "expense": 0,     "payment": "國泰銀行", "note": "年終獎金" },
-    { "date": "2026-02-09", "category": "民生",   "item": "家樂福 年貨",                      "income": 0,      "expense": 2340,  "payment": "上海5757", "note": "農曆年前採購" },
-    { "date": "2026-02-06", "category": "健康",   "item": "診所掛號",                         "income": 0,      "expense": 150,   "payment": "現金",     "note": "" },
-    { "date": "2026-02-04", "category": "訂閱",   "item": "Claude Pro",                       "income": 0,      "expense": 634,   "payment": "上海5757", "note": "$19.99 USD" },
-    { "date": "2026-02-03", "category": "保險",   "item": "南山人壽 保費",                    "income": 0,      "expense": 4200,  "payment": "上海5757", "note": "年繳保費" },
-    { "date": "2026-02-01", "category": "帳單",   "item": "水費",                             "income": 0,      "expense": 280,   "payment": "現金",     "note": "" },
-    { "date": "2026-01-31", "category": "帳單",   "item": "瓦斯費",                           "income": 0,      "expense": 420,   "payment": "現金",     "note": "" },
-    { "date": "2026-01-28", "category": "收入",   "item": "才多多 1月獎金補發",               "income": 5000,   "expense": 0,     "payment": "國泰銀行", "note": "" },
-    { "date": "2026-01-27", "category": "餐飲",   "item": "便當 自強市場",                    "income": 0,      "expense": 95,    "payment": "現金",     "note": "" },
-    { "date": "2026-01-26", "category": "民生",   "item": "全聯採購",                         "income": 0,      "expense": 543,   "payment": "LINE Pay", "note": "" },
-    { "date": "2026-01-25", "category": "訂閱",   "item": "Cursor Pro",                       "income": 0,      "expense": 634,   "payment": "上海5757", "note": "$19.99 USD" },
-    { "date": "2026-01-25", "category": "交通",   "item": "高鐵 台南→台北",                  "income": 0,      "expense": 1530,  "payment": "國泰0585", "note": "業務出差" }
-  ]
+    {
+      "date": "2026-02-25",
+      "category": "餐飲",
+      "item": "中餐(中山)",
+      "income": 0,
+      "expense": 70,
+      "payment": "現金",
+      "note": "中餐；現金修正後剩餘930"
+    },
+    {
+      "date": "2026-02-25",
+      "category": "餐飲",
+      "item": "晚餐-鱔魚意麵",
+      "income": 0,
+      "expense": 135,
+      "payment": "未指定",
+      "note": "待補付款方式"
+    },
+    {
+      "date": "2026-02-25",
+      "category": "3C/設備",
+      "item": "預訂 Mac mini Pro 24GB/512GB",
+      "income": 0,
+      "expense": 13300,
+      "payment": "上海商銀信用卡6802",
+      "note": "金額為簡訊約額；待入帳確認；暫掛個人；教育價預估約42000+"
+    },
+    {
+      "date": "2026-02-25",
+      "category": "投資",
+      "item": "台積電賣出入帳",
+      "income": 19585,
+      "expense": 0,
+      "payment": "國泰數位證券戶",
+      "note": "成交價1965；10股；手續費65；實領19585"
+    },
+    {
+      "date": "2026-02-24",
+      "category": "支出",
+      "item": "公司勞健保",
+      "income": 0,
+      "expense": 0,
+      "payment": "台灣Pay(上海帳戶)",
+      "note": "公司零用金；待確認金額；待確認金額"
+    },
+    {
+      "date": "2026-02-24",
+      "category": "初期餘額",
+      "item": "公司零用金",
+      "income": 18591,
+      "expense": 0,
+      "payment": "台灣Pay",
+      "note": "餘額更新"
+    },
+    {
+      "date": "2026-02-24",
+      "category": "交通",
+      "item": "停車費",
+      "income": 0,
+      "expense": 45,
+      "payment": "現金",
+      "note": ""
+    },
+    {
+      "date": "2026-02-24",
+      "category": "飲食",
+      "item": "麥當勞",
+      "income": 0,
+      "expense": 69,
+      "payment": "LinePay",
+      "note": ""
+    },
+    {
+      "date": "2026-02-23",
+      "category": "捐款",
+      "item": "家扶基金會每月捐款",
+      "income": 0,
+      "expense": 500,
+      "payment": "國泰世華信用卡0585",
+      "note": "Line Pay (家扶基金會台南縣分)"
+    },
+    {
+      "date": "2026-02-23",
+      "category": "餐飲",
+      "item": "統一超商(午餐)",
+      "income": 0,
+      "expense": 99,
+      "payment": "Line Pay",
+      "note": "7-11 午餐"
+    },
+    {
+      "date": "2026-02-22",
+      "category": "訂閱",
+      "item": "Cloudflare changsung.uk 網域",
+      "income": 0,
+      "expense": 175,
+      "payment": "上海商銀信用卡2358",
+      "note": "$5.48 USD（~NT$175）；儀表板：dashboard.changsung.uk"
+    },
+    {
+      "date": "2026-02-22",
+      "category": "支出",
+      "item": "信用卡繳款(怡君代繳)",
+      "income": 0,
+      "expense": 1189,
+      "payment": "中信信用卡",
+      "note": "個人"
+    },
+    {
+      "date": "2026-02-21",
+      "category": "餐飲",
+      "item": "飲料（烏梅青三杯）",
+      "income": 0,
+      "expense": 135,
+      "payment": "未指定",
+      "note": ""
+    },
+    {
+      "date": "2026-02-21",
+      "category": "訂閱",
+      "item": "YouTube Premium",
+      "income": 0,
+      "expense": 479,
+      "payment": "上海商銀信用卡5757",
+      "note": "簡訊通知時間16:22:48"
+    },
+    {
+      "date": "2026-02-21",
+      "category": "餐飲",
+      "item": "新東陽",
+      "income": 0,
+      "expense": 127,
+      "payment": "國泰世華信用卡0585",
+      "note": "連加電子支付（Line Pay）"
+    },
+    {
+      "date": "2026-02-20",
+      "category": "訂閱",
+      "item": "ChatGPT Plus",
+      "income": 0,
+      "expense": 632,
+      "payment": "上海商銀信用卡5757",
+      "note": "OPENAI*CHATGPT SUBSCR；簡訊通知時間21:47:19"
+    }
+  ],
+  "stock_trades": [
+    {
+      "date": "2026-02-24",
+      "name": "台積電",
+      "code": "2330",
+      "side": "買",
+      "shares": 10,
+      "price": "1965",
+      "fee": 0,
+      "tax": 0,
+      "total": 19650,
+      "account": "",
+      "tag": "",
+      "reason": "",
+      "note": "成交"
+    },
+    {
+      "date": "2026-02-24",
+      "name": "台積電",
+      "code": "2330",
+      "side": "賣",
+      "shares": 10,
+      "price": "1965",
+      "fee": 65,
+      "tax": 0,
+      "total": 19585,
+      "account": "國泰數位證券戶",
+      "tag": "",
+      "reason": "",
+      "note": "依「實領19585、手續費65」記錄"
+    }
+  ],
+  "stocks_base_shares": {
+    "2330": 170,
+    "2891": 1000,
+    "00878": 1000,
+    "1101": 1099
+  }
 }

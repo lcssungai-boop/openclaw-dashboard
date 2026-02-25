@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-25T07:54:37Z",
+  "updated_at": "2026-02-25T13:00:50Z",
   "tasks": [
     {
       "title": "OpenClaw 設定與資料備份",
@@ -12,7 +12,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-25T05:35:26Z",
+      "updated_at": "2026-02-25T13:00:50Z",
       "source": "auto"
     },
     {
@@ -26,7 +26,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-25T05:35:26Z",
+      "updated_at": "2026-02-25T13:00:50Z",
       "source": "auto"
     },
     {
@@ -40,7 +40,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-25T05:35:26Z",
+      "updated_at": "2026-02-25T13:00:50Z",
       "source": "auto"
     },
     {
@@ -54,7 +54,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-25T05:35:26Z",
+      "updated_at": "2026-02-25T13:00:50Z",
       "source": "auto"
     },
     {
@@ -72,8 +72,8 @@
     },
     {
       "title": "NotebookLM Skill 開發",
-      "status": "已完成",
-      "next_step": "-",
+      "status": "待處理",
+      "next_step": "規劃草稿在 dev/notebooklm-skill.md",
       "owner_role": "開發優化師",
       "blocked_reason": "-",
       "priority": "normal",
@@ -81,7 +81,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-25T07:54:37Z"
+      "updated_at": "2026-02-22T15:15:00Z"
     },
     {
       "title": "儀表板視覺老花優化",
@@ -163,8 +163,8 @@
     },
     {
       "title": "確認明晚行程",
-      "status": "已完成",
-      "next_step": "取消",
+      "status": "待處理",
+      "next_step": "",
       "owner_role": "",
       "blocked_reason": "-",
       "priority": "normal",
@@ -172,7 +172,7 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-25T07:54:37Z",
+      "updated_at": "2026-02-23T14:32:09Z",
       "source": "auto"
     },
     {
