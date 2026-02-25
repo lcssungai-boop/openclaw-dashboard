@@ -1,8 +1,44 @@
 {
-  "updated_at": "2026-02-22T15:05:00Z",
+  "updated_at": "2026-02-25T14:45:34Z",
   "tasks": [
-    { "title": "上海信用卡扣款 $125,744",        "status": "待處理", "next_step": "確認上海銀行餘額足夠", "owner_role": "大總管", "blocked_reason": "-", "priority": "urgent",    "type": "remittance", "due": "2026/2/28", "time": "-", "freq": "-", "updated_at": "2026-02-22T00:00:00Z" },
-    { "title": "國泰信用卡繳款 $2,618",          "status": "待處理", "next_step": "-",                   "owner_role": "大總管", "blocked_reason": "-", "priority": "important", "type": "remittance", "due": "2026/3/6",  "time": "-", "freq": "-", "updated_at": "2026-02-22T00:00:00Z" },
-    { "title": "中信信用卡繳款 $1,189（怡君代繳）","status": "已完成", "next_step": "-",                   "owner_role": "大總管", "blocked_reason": "-", "priority": "normal",    "type": "remittance", "due": "2026/3/10", "time": "-", "freq": "-", "updated_at": "2026-02-22T15:05:00Z" }
+    {
+      "title": "上海信用卡扣款 $125,744",
+      "status": "已完成",
+      "next_step": "上海銀行餘額足夠（136,780）已覆蓋應繳（125,744）",
+      "owner_role": "大總管",
+      "blocked_reason": "-",
+      "priority": "normal",
+      "type": "remittance",
+      "due": "2026/2/28",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-25T14:45:34Z"
+    },
+    {
+      "title": "國泰信用卡繳款 $2,618",
+      "status": "待處理",
+      "next_step": "-",
+      "owner_role": "大總管",
+      "blocked_reason": "-",
+      "priority": "important",
+      "type": "remittance",
+      "due": "2026/3/6",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-22T00:00:00Z"
+    },
+    {
+      "title": "中信信用卡繳款 $1,189（怡君代繳）",
+      "status": "已完成",
+      "next_step": "-",
+      "owner_role": "大總管",
+      "blocked_reason": "-",
+      "priority": "normal",
+      "type": "remittance",
+      "due": "2026/3/10",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-02-22T15:05:00Z"
+    }
   ]
 }

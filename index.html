@@ -170,6 +170,7 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
 .kpi-card.kpi-hot .kpi-val{color:var(--urgent-text)}
 .kpi-card.kpi-blocked .kpi-val{color:var(--blocked-text)}
 .kpi-sub{font-size:12px;color:var(--dim);margin-top:1px}
+.kpi-hint{display:none}
 
 /* ── BRIEF ── */
 .brief-wrap{
@@ -319,6 +320,71 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
 .t-due{font-size:10px;color:var(--muted);white-space:nowrap;font-family:"JetBrains Mono",monospace}
 .acc-empty{padding:14px 18px;font-size:11px;color:var(--muted)}
 
+/* ── 2K DESKTOP (≥1400px) ── */
+@media(min-width:1400px){
+  :root{--hdr-h:64px;--info-h:32px;--strip-h:40px}
+
+  header{padding:0 56px}
+  #info-bar,#alert-strip{padding:0 56px}
+  .hdr-name{font-size:17px}
+  .hdr-clock{font-size:12px}
+  #info-bar{font-size:12px}
+  .ib-lunar{font-size:11px}
+  .a-lbl{font-size:10px}
+  .a-chip{font-size:11px}
+
+  main{
+    max-width:1760px;
+    padding:32px 56px;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,3.5fr);
+    gap:28px 36px;
+    align-items:start;
+  }
+  main>section:nth-child(1){grid-column:1;grid-row:1/span 3}
+  main>section:nth-child(2){grid-column:2;grid-row:1}
+  main>section:nth-child(3){grid-column:2;grid-row:2}
+  main>section:nth-child(4){grid-column:2;grid-row:3}
+
+  .kpi-grid{grid-template-columns:1fr;gap:8px}
+  .kpi-card{padding:12px 14px}
+  .kpi-val{font-size:28px}
+  .kpi-sub{font-size:11px}
+  .kpi-icon{width:22px;height:22px;margin-bottom:5px}
+  .kpi-lbl{font-size:10px}
+  .kpi-hint{
+    display:block;margin-top:8px;padding-top:8px;
+    border-top:1px solid var(--border);
+    font-size:10px;color:var(--muted);line-height:1.5;
+    overflow:hidden;
+  }
+  .kpi-hint span{
+    display:block;white-space:nowrap;overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .kpi-card.kpi-hot .kpi-hint{border-top-color:var(--urgent-bd);color:var(--urgent-text);opacity:.75}
+  .kpi-card.kpi-blocked .kpi-hint{border-top-color:var(--blocked-bd);color:var(--blocked-text);opacity:.75}
+
+  .sec-lbl{margin-bottom:16px}
+
+  .brief-line{font-size:14px;padding:12px 20px}
+  .brief-time{font-size:12px}
+  .brief-date{font-size:13px}
+  .brief-block-hdr{padding:10px 20px 8px}
+
+  .wc-title{font-size:16px}
+  .wc-meta{font-size:13px}
+  .wc-next,.wc-blocked{font-size:13px}
+
+  .acc-name{font-size:15px}
+  .acc-role{font-size:11px}
+  .cnt-val{font-size:20px}
+  .acc-tbl td{font-size:12px;padding:10px 16px}
+  .ov-ttl{max-width:500px}
+  .t-pri,.t-type,.t-status{font-size:10px}
+  .t-due{font-size:11px}
+}
+
 /* ── FOOTER ── */
 footer{
   text-align:center;padding:20px 24px;
@@ -457,24 +523,28 @@ main>section:nth-child(4){animation-delay:.26s}
         <div class="kpi-lbl">今日排程</div>
         <div class="kpi-val" id="kpi-sched">—</div>
         <div class="kpi-sub" id="kpi-sched-sub">載入中</div>
+        <div class="kpi-hint" id="kpi-sched-hint"></div>
       </div>
       <div class="kpi-card" id="kpi-card-pending">
         <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
         <div class="kpi-lbl">待處理</div>
         <div class="kpi-val" id="kpi-pending">—</div>
         <div class="kpi-sub">所有區域合計</div>
+        <div class="kpi-hint" id="kpi-pending-hint"></div>
       </div>
       <div class="kpi-card" id="kpi-card-blocked">
         <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
         <div class="kpi-lbl">阻塞</div>
         <div class="kpi-val" id="kpi-blocked">—</div>
         <div class="kpi-sub">需立即處理</div>
+        <div class="kpi-hint" id="kpi-blocked-hint"></div>
       </div>
       <div class="kpi-card" id="kpi-card-urgent">
         <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
         <div class="kpi-lbl">急件</div>
         <div class="kpi-val" id="kpi-urgent">—</div>
         <div class="kpi-sub">urgent 優先度</div>
+        <div class="kpi-hint" id="kpi-urgent-hint"></div>
       </div>
     </div>
   </section>
@@ -633,26 +703,38 @@ function renderWarnings(){
 }
 
 // ── KPIs ──────────────────────────────────────────────────────────
+function hint(items,max=3){
+  if(!items.length) return "";
+  return items.slice(0,max).map(({t,area})=>`<span>${t.title}<span style="opacity:.5"> [${area.name}]</span></span>`).join("");
+}
 function renderKPIs(){
   const isMonday=new Date().getDay()===1;
   let totalPending=0,totalBlocked=0,totalUrgent=0,totalSched=0;
+  const schedList=[],pendingList=[],blockedList=[],urgentList=[];
   AREAS.forEach(area=>{
     (DATA[area.key]?.tasks||[]).forEach(t=>{
       if(t.status==="已完成") return;
-      if(t.status==="阻塞") totalBlocked++;
-      else totalPending++;
-      if(t.priority==="urgent") totalUrgent++;
+      if(t.status==="阻塞"){totalBlocked++;blockedList.push({t,area});}
+      else{totalPending++;pendingList.push({t,area});}
+      if(t.priority==="urgent"){totalUrgent++;urgentList.push({t,area});}
       if(isSched(t)){
         const f=t.freq;
-        if(f==="daily"||(f==="weekly-mon"&&isMonday)||f==="weekly") totalSched++;
+        if(f==="daily"||(f==="weekly-mon"&&isMonday)||f==="weekly"){totalSched++;schedList.push({t,area});}
       }
     });
   });
+  schedList.sort((a,b)=>a.t.time.localeCompare(b.t.time));
+  pendingList.sort((a,b)=>{const p={urgent:0,important:1,normal:2};return (p[a.t.priority]??2)-(p[b.t.priority]??2);});
+
   document.getElementById("kpi-sched").textContent=totalSched;
   document.getElementById("kpi-sched-sub").textContent=totalSched?"項排程任務":"今日無排程";
+  document.getElementById("kpi-sched-hint").innerHTML=hint(schedList.map(({t,area})=>({t:{...t,title:t.time+" "+t.title},area})));
   document.getElementById("kpi-pending").textContent=totalPending;
+  document.getElementById("kpi-pending-hint").innerHTML=hint(pendingList);
   document.getElementById("kpi-blocked").textContent=totalBlocked;
+  document.getElementById("kpi-blocked-hint").innerHTML=hint(blockedList);
   document.getElementById("kpi-urgent").textContent=totalUrgent;
+  document.getElementById("kpi-urgent-hint").innerHTML=hint(urgentList);
   if(totalBlocked>0) document.getElementById("kpi-card-blocked").className="kpi-card kpi-blocked";
   if(totalUrgent>0) document.getElementById("kpi-card-urgent").className="kpi-card kpi-hot";
 }
