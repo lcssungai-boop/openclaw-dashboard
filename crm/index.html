@@ -97,6 +97,9 @@ main{
   padding:28px 28px;
   display:flex;flex-direction:column;gap:28px;
 }
+.col-full{grid-column:1 / -1}
+.col-2{grid-column:1 / -1}
+.col-1{grid-column:auto}
 
 /* ── SECTION LABEL ── */
 .sec-lbl{
@@ -129,6 +132,43 @@ main{
 .kpi-card.hot .kpi-val{color:var(--urgent-text)}
 .kpi-card.blk .kpi-val{color:var(--blocked-text)}
 .kpi-hint{font-size:10px;color:var(--dim);margin-top:4px}
+
+/* ── OVERVIEW MATRIX ── */
+.mx-wrap{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--panel)}
+.mx-tbl{width:100%;border-collapse:collapse}
+.mx-tbl thead th{
+  padding:8px 10px;font-size:8px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);text-align:left;background:var(--bg);
+  border-bottom:1px solid var(--border);font-family:"JetBrains Mono",monospace;white-space:nowrap;
+}
+.mx-tbl tbody td{
+  padding:10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--dim);
+  font-family:"JetBrains Mono",monospace;white-space:nowrap;
+}
+.mx-tbl tbody tr:last-child td{border-bottom:none}
+.mx-name{font-family:"Noto Sans TC",sans-serif;font-size:12px;color:var(--bright);font-weight:600}
+.mx-role{font-size:9px;color:var(--muted);margin-top:2px;font-family:"Noto Sans TC",sans-serif}
+.mx-num{font-size:15px;color:var(--bright);font-weight:700}
+.mx-num.hot{color:var(--urgent-text)}
+.mx-num.blk{color:var(--blocked-text)}
+
+/* ── PROPERTY OPS DETAIL ── */
+.prop-wrap{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--panel)}
+.prop-tbl{width:100%;border-collapse:collapse}
+.prop-tbl thead th{
+  padding:8px 11px;font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);text-align:left;background:var(--bg);border-bottom:1px solid var(--border);
+  font-family:"JetBrains Mono",monospace;white-space:nowrap;
+}
+.prop-tbl tbody td{
+  padding:10px 11px;border-bottom:1px solid var(--border);font-size:11px;color:var(--dim);vertical-align:top;
+}
+.prop-tbl tbody tr:last-child td{border-bottom:none}
+.prop-tbl tbody tr:hover td{background:var(--bg3)}
+.prop-asset{color:var(--bright);font-weight:500}
+.prop-next{font-size:10px;color:var(--dim);max-width:260px}
+.prop-note{font-size:10px;color:var(--muted);max-width:220px}
+.prop-money{font-family:"JetBrains Mono",monospace}
 
 /* ── CRM TABLE ── */
 .crm-wrap{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
@@ -239,9 +279,17 @@ main{
     grid-template-columns:minmax(0,1fr) minmax(0,1fr);
     gap:24px 28px;
   }
-  .col-full{grid-column:1 / -1}
-  .col-half{grid-column:auto}
   .kpi-grid{grid-template-columns:repeat(5,1fr)}
+}
+
+@media(min-width:1500px){
+  main{
+    max-width:1900px;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:24px 26px;
+  }
+  .col-2{grid-column:span 2}
+  .col-1{grid-column:span 1}
 }
 
 /* ── TABLET ── */
@@ -262,6 +310,13 @@ main{
     font-size:8px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-right:4px;
   }
   .crm-tbl tbody tr{border-bottom:1px solid var(--border);display:block;padding:6px 0}
+  .mx-tbl thead,.prop-tbl thead{display:none}
+  .mx-tbl tbody td,.prop-tbl tbody td{display:block;padding:6px 12px;border-bottom:none}
+  .mx-tbl tbody tr,.prop-tbl tbody tr{display:block;border-bottom:1px solid var(--border);padding:6px 0}
+  .mx-tbl tbody td::before,.prop-tbl tbody td::before{
+    content:attr(data-label)" ";
+    font-size:8px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-right:4px;
+  }
 }
 
 /* ── PAGE SECTIONS (tab visibility) ── */
@@ -452,6 +507,70 @@ function renderPropertyOps(propertyOps){
   return renderTaskSection(items);
 }
 
+function areaStats(area){
+  const tasks=DATA[area.key]?.tasks||[];
+  const active=tasks.filter(t=>t.status!=="已完成");
+  return {
+    pending:active.filter(t=>t.status!=="阻塞").length,
+    blocked:active.filter(t=>t.status==="阻塞").length,
+    urgent:active.filter(t=>t.priority==="urgent").length,
+    important:active.filter(t=>t.priority==="important").length,
+    remittance:active.filter(t=>t.type==="remittance").length,
+    alert:active.filter(t=>t.type==="alert").length,
+    scheduled:active.filter(t=>t.time&&t.time!=="-"&&t.freq&&t.freq!=="-").length,
+    updated:DATA[area.key]?.updated_at||null
+  };
+}
+
+function renderAreaMatrix(){
+  const rows=AREAS.map(a=>{
+    const s=areaStats(a);
+    return `<tr>
+      <td data-label="區域"><div class="mx-name">${escHtml(a.name)}</div><div class="mx-role">${escHtml(a.role||"-")}</div></td>
+      <td data-label="待處理"><span class="mx-num">${s.pending}</span></td>
+      <td data-label="阻塞"><span class="mx-num ${s.blocked?"blk":""}">${s.blocked}</span></td>
+      <td data-label="急件"><span class="mx-num ${s.urgent?"hot":""}">${s.urgent}</span></td>
+      <td data-label="重要">${s.important}</td>
+      <td data-label="提醒">${s.alert}</td>
+      <td data-label="匯款">${s.remittance}</td>
+      <td data-label="排程">${s.scheduled}</td>
+      <td data-label="更新">${escHtml(fmtTs(s.updated))}</td>
+    </tr>`;
+  }).join("");
+  return `<div class="mx-wrap">
+    <table class="mx-tbl">
+      <thead><tr><th>區域</th><th>待處理</th><th>阻塞</th><th>急件</th><th>重要</th><th>提醒</th><th>匯款</th><th>排程</th><th>更新</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
+}
+
+function renderPropertyOpsTable(propertyOps){
+  const properties=propertyOps?.properties||[];
+  const rows=properties.flatMap(p=>(p.items||[]).map(it=>{
+    const st=it.done?"完成":(it.status||"-");
+    return `<tr>
+      <td class="prop-asset" data-label="物件">${escHtml(p.property||"-")}</td>
+      <td data-label="房客">${escHtml(it.tenant||"-")}</td>
+      <td data-label="事件">${escHtml(it.event||it.service||"-")}</td>
+      <td data-label="狀態"><span class="t-stat ${statCls(st)}">${escHtml(st)}</span></td>
+      <td class="prop-money" data-label="金額">${it.amount?`$${Number(it.amount).toLocaleString("en-US")}`:"-"}</td>
+      <td class="${it.overdue?"crm-due overdue":"crm-due"}" data-label="截止">${escHtml(it.due||"-")}</td>
+      <td class="prop-next" data-label="下一步">${escHtml(it.next_step||"-")}</td>
+      <td class="prop-note" data-label="備註">${escHtml(it.note||"-")}</td>
+    </tr>`;
+  })).join("");
+  if(!rows){
+    return `<div class="prop-wrap"><div class="crm-empty">目前無物業台帳事件。</div></div>`;
+  }
+  return `<div class="prop-wrap">
+    <table class="prop-tbl">
+      <thead><tr><th>物件</th><th>房客</th><th>事件</th><th>狀態</th><th>金額</th><th>截止</th><th>下一步</th><th>備註</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
+}
+
 // ── CRM SECTION ───────────────────────────────────────────────────
 function statCls(s){
   const m={"進行中":"進行中","完成":"完成","已完成":"完成","待處理":"待處理","延遲":"延遲"};
@@ -628,24 +747,28 @@ function renderAll(){
   const overviewHtml=`
     ${renderOverviewKPIs()}
     <div class="col-full">
+      <div class="sec-lbl">跨區分類矩陣</div>
+      ${renderAreaMatrix()}
+    </div>
+    <div class="col-2">
       <div class="sec-lbl">今日重點 · 急件 &amp; 阻塞</div>
       ${renderOverviewHighlights()}
     </div>
-    <div>
+    <div class="col-1">
       <div class="sec-lbl">才多多 · 待處理概況</div>
-      ${renderTaskSection((DATA.caitodo?.tasks||[]).filter(t=>t.status!=="已完成").slice(0,5))}
+      ${renderTaskSection((DATA.caitodo?.tasks||[]).filter(t=>t.status!=="已完成"))}
     </div>
-    <div>
+    <div class="col-1">
       <div class="sec-lbl">兆鯨 · 物業概況</div>
-      ${renderTaskSection((DATA.zhaojing?.tasks||[]).filter(t=>t.status!=="已完成").slice(0,5))}
+      ${renderTaskSection((DATA.zhaojing?.tasks||[]).filter(t=>t.status!=="已完成"))}
     </div>
-    <div>
+    <div class="col-1">
       <div class="sec-lbl">理財 · 市場與帳務</div>
-      ${renderTaskSection((DATA.finance?.tasks||[]).filter(t=>t.status!=="已完成").slice(0,5))}
+      ${renderTaskSection((DATA.finance?.tasks||[]).filter(t=>t.status!=="已完成"))}
     </div>
-    <div>
+    <div class="col-1">
       <div class="sec-lbl">個人財務 · 近期任務</div>
-      ${renderTaskSection((DATA.personal?.tasks||[]).filter(t=>t.status!=="已完成").slice(0,5))}
+      ${renderTaskSection((DATA.personal?.tasks||[]).filter(t=>t.status!=="已完成"))}
     </div>
   `;
 
@@ -672,8 +795,8 @@ function renderAll(){
       ${renderTaskSection(DATA.zhaojing?.tasks||[])}
     </div>
     <div class="col-full">
-      <div class="sec-lbl">兆鯨物業 · 台帳事件</div>
-      ${renderPropertyOps(DATA.propertyOps)}
+      <div class="sec-lbl">兆鯨物業 · 台帳明細</div>
+      ${renderPropertyOpsTable(DATA.propertyOps)}
     </div>
   `;
 
