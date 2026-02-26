@@ -95,7 +95,6 @@ header{
 main{
   max-width:1600px;margin:0 auto;
   padding:28px 28px;
-  display:flex;flex-direction:column;gap:28px;
 }
 .col-full{grid-column:1 / -1}
 .col-2{grid-column:1 / -1}
@@ -274,22 +273,14 @@ main{
 
 /* ── DESKTOP WIDE ── */
 @media(min-width:1200px){
-  main{
-    display:grid;
-    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  .page-section.active{
+    grid-template-columns:minmax(0,1.25fr) minmax(0,.95fr);
     gap:24px 28px;
+    align-content:start;
   }
+  .col-2{grid-column:1 / -1}
+  .col-1{grid-column:auto}
   .kpi-grid{grid-template-columns:repeat(5,1fr)}
-}
-
-@media(min-width:1500px){
-  main{
-    max-width:1900px;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:24px 26px;
-  }
-  .col-2{grid-column:span 2}
-  .col-1{grid-column:span 1}
 }
 
 /* ── TABLET ── */
@@ -300,7 +291,8 @@ main{
 /* ── PHONE ── */
 @media(max-width:640px){
   header,#sum-bar,#nav-tabs{padding-left:16px;padding-right:16px}
-  main{padding:16px 16px;gap:20px}
+  main{padding:16px 16px}
+  .page-section.active{gap:18px}
   .kpi-grid{grid-template-columns:repeat(2,1fr);gap:8px}
   .kpi-val{font-size:26px}
   .crm-tbl thead{display:none}
@@ -321,11 +313,11 @@ main{
 
 /* ── PAGE SECTIONS (tab visibility) ── */
 .page-section{display:none}
-.page-section.active{display:block}
+.page-section.active{display:grid;grid-template-columns:minmax(0,1fr);gap:22px}
 
 /* ── ANIMATIONS ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-main>*{animation:fadeUp .35s ease both}
+.page-section.active>*{animation:fadeUp .35s ease both}
 
 /* ── SKELETON / LOADING ── */
 .loading-row{padding:24px;font-size:11px;color:var(--muted);text-align:center;letter-spacing:.05em}
