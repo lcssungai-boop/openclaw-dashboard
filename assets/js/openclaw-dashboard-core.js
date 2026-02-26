@@ -79,11 +79,18 @@
     }
 
     async function loadCRM(){
-      data.crm = await fetchJson(withBase(basePath, "data/openclaw/client_projects.json"));
+      // 優先讀 crm.json（完整 CRM），fallback 至舊版 client_projects.json
+      let d = await fetchJson(withBase(basePath, "data/caitodo/crm.json"));
+      if(!d) d = await fetchJson(withBase(basePath, "data/openclaw/client_projects.json"));
+      data.crm = d;
     }
 
     async function loadPropertyOps(){
       data.propertyOps = await fetchJson(withBase(basePath, "data/zhaojing/property_ops.json"));
+    }
+
+    async function loadJobs(){
+      data.jobs = await fetchJson(withBase(basePath, "data/openclaw/jobs.json"));
     }
 
     async function loadAll(flags){
@@ -91,6 +98,7 @@
       const jobs = [loadAreas()];
       if(f.crm) jobs.push(loadCRM());
       if(f.propertyOps) jobs.push(loadPropertyOps());
+      if(f.jobs) jobs.push(loadJobs());
       await Promise.all(jobs);
       return data;
     }

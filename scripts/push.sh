@@ -10,6 +10,9 @@ MSG="${1:-OpenClaw 自動同步 $(date '+%Y-%m-%d %H:%M')}"
 cd "$REPO"
 
 # 只 commit data/ 和 index/子頁面（不含本機草稿）
+# 先匯出最新 cron jobs 狀態
+python3 "$(dirname "$0")/export_jobs.py" 2>/dev/null || true
+
 git add data/ index.html openclaw/ caitodo/ zhaojing/ finance/ personal/ assets/ scripts/ crm/ .gitignore 2>/dev/null
 
 # 有變更才 commit

@@ -287,6 +287,99 @@ main{
 .tag.done{opacity:.5}
 .task-empty{padding:20px;font-size:11px;color:var(--muted);text-align:center}
 
+/* ── JOBS TABLE ── */
+.jobs-wrap{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.jobs-group-hdr{
+  padding:8px 16px;font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);background:var(--bg);border-bottom:1px solid var(--border);
+  font-family:"JetBrains Mono",monospace;display:flex;align-items:center;gap:8px;
+}
+.jobs-tbl{width:100%;border-collapse:collapse}
+.jobs-tbl thead th{
+  padding:7px 10px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);text-align:left;background:var(--bg2);border-bottom:1px solid var(--border);
+  font-family:"JetBrains Mono",monospace;white-space:nowrap;
+}
+.jobs-tbl tbody td{
+  padding:9px 10px;font-size:10px;border-bottom:1px solid var(--border);
+  vertical-align:middle;color:var(--dim);font-family:"JetBrains Mono",monospace;
+}
+.jobs-tbl tbody tr:last-child td{border-bottom:none}
+.jobs-tbl tbody tr:hover td{background:var(--bg3)}
+.jobs-tbl tbody tr.job-off td{opacity:.4}
+.job-name{font-family:"Noto Sans TC",sans-serif;font-size:11px;color:var(--bright);font-weight:500}
+.job-cat{font-size:8px;color:var(--muted);margin-top:2px;font-family:"JetBrains Mono",monospace;letter-spacing:.04em}
+.job-ok{color:var(--green)}
+.job-err{color:var(--urgent-text)}
+.job-warn{color:var(--remit-text)}
+.job-off{color:var(--muted)}
+.job-dur{white-space:nowrap}
+.job-dur.slow{color:var(--urgent-text)}
+
+/* ── SYSTEM HEALTH ── */
+.health-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.health-card{
+  border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);
+  padding:14px 16px;display:flex;flex-direction:column;gap:6px;
+}
+.health-card.warn{border-color:var(--urgent-bd)}
+.health-card.err{border-color:var(--blocked-bd)}
+.health-card.ok{border-color:#2A5030}
+.health-card.info{border-color:var(--border2)}
+.health-icon{
+  width:22px;height:22px;border-radius:5px;border:1px solid var(--border);
+  background:var(--bg2);display:flex;align-items:center;justify-content:center;
+  color:var(--dim);margin-bottom:2px;align-self:flex-start;flex-shrink:0;
+}
+.health-card.warn .health-icon{border-color:var(--urgent-bd);color:var(--urgent-text)}
+.health-card.err  .health-icon{border-color:var(--blocked-bd);color:var(--blocked-text)}
+.health-card.ok   .health-icon{border-color:#2A5030;color:var(--green)}
+.health-title{font-size:12px;font-weight:600;color:var(--bright);line-height:1.4}
+.health-card.warn .health-title{color:var(--urgent-text)}
+.health-card.err  .health-title{color:var(--blocked-text)}
+.health-card.ok   .health-title{color:var(--green)}
+.health-detail{font-size:10px;color:var(--dim);line-height:1.5}
+.health-action{font-size:9px;color:var(--muted);padding-top:4px;border-top:1px solid var(--border);letter-spacing:.03em}
+
+/* ── CRM DEV PROGRESS ── */
+.dev-wrap{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.dev-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--border);gap:16px;
+}
+.dev-hdr-title{font-size:13px;font-weight:600;color:var(--bright)}
+.dev-progress-bar{flex:1;height:4px;background:var(--border);border-radius:2px;max-width:200px}
+.dev-progress-fill{height:100%;border-radius:2px;background:var(--green);transition:width .4s}
+.dev-progress-txt{font-size:10px;color:var(--muted);white-space:nowrap;font-family:"JetBrains Mono",monospace}
+.dev-row{
+  display:flex;align-items:flex-start;gap:12px;padding:11px 16px;
+  border-bottom:1px solid var(--border);position:relative;transition:background .12s;
+}
+.dev-row:last-child{border-bottom:none}
+.dev-row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--border2)}
+.dev-row.dev-done::before{background:var(--green)}
+.dev-row.dev-inprogress::before{background:var(--urgent-text)}
+.dev-row:hover{background:var(--bg3)}
+.dev-idx{font-size:10px;color:var(--muted);font-family:"JetBrains Mono",monospace;min-width:18px;flex-shrink:0;padding-top:1px}
+.dev-body{flex:1;min-width:0}
+.dev-name{font-size:12px;font-weight:500;color:var(--bright);line-height:1.4}
+.dev-desc{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.5}
+.dev-stat-badge{font-size:8px;padding:2px 8px;border:1px solid var(--border);border-radius:20px;color:var(--muted);white-space:nowrap;flex-shrink:0}
+.dev-stat-badge.done{border-color:#2A5030;color:var(--green)}
+.dev-stat-badge.in_progress{border-color:var(--urgent-bd);color:var(--urgent-text)}
+.dev-stat-badge.pending{color:var(--muted)}
+.pri-badge{font-size:8px;padding:1px 6px;border:1px solid var(--border);border-radius:20px;color:var(--muted);margin-left:6px}
+.pri-badge.high{border-color:var(--urgent-bd);color:var(--urgent-text)}
+
+@media(max-width:1199px){.health-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){
+  .health-grid{grid-template-columns:1fr}
+  .jobs-tbl thead{display:none}
+  .jobs-tbl tbody td{display:block;padding:5px 10px;border-bottom:none}
+  .jobs-tbl tbody td::before{content:attr(data-label)" ";font-size:8px;color:var(--muted);text-transform:uppercase;margin-right:4px}
+  .jobs-tbl tbody tr{display:block;border-bottom:1px solid var(--border);padding:4px 0}
+}
+
 /* ── DESKTOP WIDE ── */
 @media(min-width:1200px){
   .page-section.active{
@@ -377,6 +470,7 @@ main{
   <div class="nav-tab" data-tab="finance">理財</div>
   <div class="nav-tab" data-tab="personal">個人財務</div>
   <div class="nav-tab" data-tab="openclaw">OpenClaw</div>
+  <div class="nav-tab" data-tab="jobs">排程中心</div>
 </div>
 
 <main id="main-content">
@@ -793,6 +887,120 @@ function renderOverviewHighlights(){
   return parts.join("");
 }
 
+// ── CRM DEV PROGRESS ──────────────────────────────────────────────
+function renderCRMDev(crm){
+  const dp=crm?.dev_progress;
+  if(!dp) return `<div class="dev-wrap"><div class="crm-empty">尚未載入 CRM 開發資料</div></div>`;
+  const total=dp.total_modules||0;
+  const done=dp.completed_modules||0;
+  const pct=total?Math.round(done/total*100):0;
+  const statusMap={"待開發":"pending","進行中":"in_progress","已完成":"done"};
+  const rows=(dp.modules||[]).map((m,i)=>{
+    const st=statusMap[m.status]||"pending";
+    return `<div class="dev-row dev-${st}">
+      <div class="dev-idx">${String(i+1).padStart(2,"0")}</div>
+      <div class="dev-body">
+        <div class="dev-name">${escHtml(m.name)}
+          ${m.priority==="high"?`<span class="pri-badge high">優先</span>`:""}
+        </div>
+        ${m.description?`<div class="dev-desc">${escHtml(m.description)}</div>`:""}
+        ${m.notes?`<div class="dev-desc" style="color:var(--blocked-text)">→ ${escHtml(m.notes)}</div>`:""}
+      </div>
+      <span class="dev-stat-badge ${st}">${escHtml(m.status)}</span>
+    </div>`;
+  }).join("");
+  return `<div class="dev-wrap">
+    <div class="dev-hdr">
+      <div class="dev-hdr-title">${escHtml(dp.project||"CRM 系統")}</div>
+      <div class="dev-progress-bar"><div class="dev-progress-fill" style="width:${pct}%"></div></div>
+      <div class="dev-progress-txt">${done}/${total} 完成</div>
+    </div>
+    ${rows}
+  </div>`;
+}
+
+// ── SYSTEM HEALTH ─────────────────────────────────────────────────
+const HEALTH_ICONS={
+  warn:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+  err:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>`,
+  ok:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+  info:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+};
+function renderSystemHealth(jobs){
+  const warnings=jobs?.health?.warnings||[];
+  if(!warnings.length){
+    return `<div class="health-grid"><div class="health-card ok">
+      <div class="health-icon">${HEALTH_ICONS.ok}</div>
+      <div class="health-title">系統正常</div>
+      <div class="health-detail">無已知警告或錯誤</div>
+    </div></div>`;
+  }
+  const cards=warnings.map(w=>`<div class="health-card ${w.level||"info"}">
+    <div class="health-icon">${HEALTH_ICONS[w.level]||HEALTH_ICONS.info}</div>
+    <div class="health-title">${escHtml(w.title)}</div>
+    <div class="health-detail">${escHtml(w.detail)}</div>
+    ${w.action?`<div class="health-action">→ ${escHtml(w.action)}</div>`:""}
+  </div>`).join("");
+  return `<div class="health-grid">${cards}</div>`;
+}
+
+// ── JOBS ──────────────────────────────────────────────────────────
+function fmtDur(ms){
+  if(!ms) return "-";
+  if(ms<1000) return ms+"ms";
+  return (ms/1000).toFixed(0)+"s";
+}
+function fmtNextRun(iso){
+  if(!iso) return "-";
+  const d=new Date(iso),now=new Date();
+  const diff=d-now;
+  if(diff<0) return "即將";
+  if(diff<3600000) return Math.round(diff/60000)+"分後";
+  if(diff<86400000) return Math.round(diff/3600000)+"時後";
+  return d.toLocaleDateString("zh-TW",{month:"2-digit",day:"2-digit"})+" "+d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
+}
+function jobStatusHtml(j){
+  if(!j.enabled) return `<span class="job-off">停用</span>`;
+  if(j.is_timeout) return `<span class="job-err">逾時</span>`;
+  if(j.consecutive_errors>0) return `<span class="job-err">錯誤×${j.consecutive_errors}</span>`;
+  if(j.last_status==="ok") return `<span class="job-ok">正常</span>`;
+  if(!j.last_status||j.last_status==="-") return `<span class="job-warn">待執行</span>`;
+  return `<span class="job-warn">${escHtml(j.last_status)}</span>`;
+}
+function renderJobsTable(jobsList){
+  if(!jobsList.length) return "";
+  return `<table class="jobs-tbl"><thead><tr>
+    <th>任務名稱</th><th>排程</th><th>下次執行</th><th>上次執行</th><th>狀態</th><th>時長</th><th>傳送</th>
+  </tr></thead><tbody>`+jobsList.map(j=>`<tr class="${j.enabled?"":"job-off"}">
+    <td data-label="任務"><div class="job-name">${escHtml(j.name)}</div><div class="job-cat">${escHtml(j.category)}</div></td>
+    <td data-label="排程" class="job-dur">${escHtml(j.schedule_human||j.schedule_expr||"-")}</td>
+    <td data-label="下次" class="job-dur">${j.enabled?fmtNextRun(j.next_run_at):"-"}</td>
+    <td data-label="上次" class="job-dur">${fmtTs(j.last_run_at)}</td>
+    <td data-label="狀態">${jobStatusHtml(j)}</td>
+    <td data-label="時長" class="job-dur ${j.is_timeout?"slow":""}">${fmtDur(j.last_duration_ms)}</td>
+    <td data-label="傳送">${escHtml(j.delivery_channel&&j.delivery_channel!=="none"?j.delivery_channel:"-")}</td>
+  </tr>`).join("")+`</tbody></table>`;
+}
+function renderJobs(jobsData){
+  if(!jobsData) return `<div class="crm-empty">尚未載入排程資料<br><small style="opacity:.6">請執行 scripts/export_jobs.py</small></div>`;
+  const all=jobsData.jobs||[];
+  const enabled=all.filter(j=>j.enabled);
+  const disabled=all.filter(j=>!j.enabled);
+  const cats=[...new Set(enabled.map(j=>j.category))].sort();
+  let html=`<div class="jobs-wrap">`;
+  cats.forEach(cat=>{
+    const items=enabled.filter(j=>j.category===cat);
+    html+=`<div class="jobs-group-hdr">${escHtml(cat)} <span class="tg-count">${items.length}</span></div>`;
+    html+=renderJobsTable(items);
+  });
+  if(disabled.length){
+    html+=`<div class="jobs-group-hdr" style="opacity:.5">停用 <span class="tg-count">${disabled.length}</span></div>`;
+    html+=renderJobsTable(disabled);
+  }
+  html+=`</div>`;
+  return html;
+}
+
 // ── RENDER PAGE ───────────────────────────────────────────────────
 function renderAll(){
   const mc=document.getElementById("main-content");
@@ -881,8 +1089,28 @@ function renderAll(){
   // TAB: OpenClaw
   const oclawHtml=`
     <div class="col-full">
-      <div class="sec-lbl">OpenClaw · 開發優化師</div>
+      <div class="sec-lbl">OpenClaw · 開發優化師 任務</div>
       ${renderTaskSection(DATA.openclaw?.tasks||[])}
+    </div>
+    <div class="col-full">
+      <div class="sec-lbl">才多多 CRM 系統開發進度 <span class="sec-count">${(DATA.crm?.dev_progress?.completed_modules||0)}/${(DATA.crm?.dev_progress?.total_modules||9)} 模組</span></div>
+      ${renderCRMDev(DATA.crm)}
+    </div>
+    <div class="col-full">
+      <div class="sec-lbl">系統健康</div>
+      ${renderSystemHealth(DATA.jobs)}
+    </div>
+  `;
+
+  // TAB: 排程中心
+  const jobsHtml=`
+    <div class="col-full">
+      <div class="sec-lbl">系統健康 <span class="sec-count">${DATA.jobs?.summary?.errors||0} 異常</span></div>
+      ${renderSystemHealth(DATA.jobs)}
+    </div>
+    <div class="col-full">
+      <div class="sec-lbl">OpenClaw 排程任務 <span class="sec-count">${DATA.jobs?.summary?.enabled||0} 啟用 · ${DATA.jobs?.summary?.disabled||0} 停用</span></div>
+      ${renderJobs(DATA.jobs)}
     </div>
   `;
 
@@ -894,6 +1122,7 @@ function renderAll(){
     <div class="page-section" id="tab-finance">${financeHtml}</div>
     <div class="page-section" id="tab-personal">${personalHtml}</div>
     <div class="page-section" id="tab-openclaw">${oclawHtml}</div>
+    <div class="page-section" id="tab-jobs">${jobsHtml}</div>
   `;
 }
 
@@ -910,7 +1139,7 @@ document.querySelectorAll(".nav-tab").forEach(tab=>{
 
 // ── LOAD DATA ─────────────────────────────────────────────────────
 async function loadAll(){
-  await CORE.loadAll({crm:true,propertyOps:true});
+  await CORE.loadAll({crm:true,propertyOps:true,jobs:true});
   renderSummary();
   renderAll();
 }

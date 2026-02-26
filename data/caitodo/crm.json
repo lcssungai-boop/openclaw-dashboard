@@ -1,0 +1,108 @@
+{
+  "updated_at": "2026-02-26T12:00:00Z",
+  "version": 1,
+  "dev_progress": {
+    "project": "才多多 CRM 系統建立",
+    "status": "in_progress",
+    "total_modules": 9,
+    "completed_modules": 0,
+    "modules": [
+      {
+        "id": "lead-104",
+        "name": "Lead 來源：104 擷取流程",
+        "status": "待開發",
+        "priority": "high",
+        "description": "人工開頁/登入＋Attach tab → 自動擷取公司/職缺清單、抓明細、規則篩選、補聯絡方式、輸出 CSV+JSON",
+        "notes": ""
+      },
+      {
+        "id": "lead-1111",
+        "name": "Lead 來源：1111 擷取流程",
+        "status": "待開發",
+        "priority": "high",
+        "description": "將 104 流程擴充到 1111，欄位/反爬/翻頁策略可能不同",
+        "notes": ""
+      },
+      {
+        "id": "lead-jobfair",
+        "name": "就業博覽會參展企業名單",
+        "status": "待開發",
+        "priority": "normal",
+        "description": "蒐集/匯入僑外生就業博覽會參展企業，標註來源與日期",
+        "notes": ""
+      },
+      {
+        "id": "job-analysis",
+        "name": "職缺對應分析記錄格式",
+        "status": "待開發",
+        "priority": "normal",
+        "description": "定義「需求標籤/條件」與職缺媒合記錄欄位（職缺→人選需求）",
+        "notes": ""
+      },
+      {
+        "id": "followup",
+        "name": "回訪紀錄建檔與查詢",
+        "status": "待開發",
+        "priority": "high",
+        "description": "從 Email 回溯到雲端 Excel/月表的對應規則，以年月日建檔，未來可在系統內查",
+        "notes": ""
+      },
+      {
+        "id": "declined",
+        "name": "婉拒客戶清單",
+        "status": "待開發",
+        "priority": "normal",
+        "description": "獨立表格/模組：婉拒日期、原因、下次可聯絡日、備註，避免重複撥打",
+        "notes": ""
+      },
+      {
+        "id": "match-records",
+        "name": "人才↔企業媒合紀錄",
+        "status": "待開發",
+        "priority": "normal",
+        "description": "以人選履歷特色尋找企業並記錄媒合過程（推薦紀錄），工研院企業紀錄為首批",
+        "notes": ""
+      },
+      {
+        "id": "candidate-records",
+        "name": "人選紀錄表（職涯狀況）",
+        "status": "待開發",
+        "priority": "normal",
+        "description": "維護有效人選的狀態/需求，作為推薦依據",
+        "notes": ""
+      },
+      {
+        "id": "line-group",
+        "name": "越南 LINE 群組：人選標註",
+        "status": "待開發",
+        "priority": "normal",
+        "description": "建立「渠道=LINE群」的人選來源與聯絡狀態/備註欄位，1對1 標註",
+        "notes": ""
+      }
+    ]
+  },
+  "leads": {
+    "summary": {
+      "total": 0,
+      "new_today": 0,
+      "sources": { "104": 0, "1111": 0, "jobfair": 0, "other": 0 }
+    },
+    "items": []
+  },
+  "followups": {
+    "summary": { "total": 0, "pending": 0, "overdue": 0 },
+    "items": []
+  },
+  "declined": {
+    "summary": { "total": 0 },
+    "items": []
+  },
+  "matches": {
+    "summary": { "total": 0, "active": 0 },
+    "items": []
+  },
+  "candidates": {
+    "summary": { "total": 0, "active": 0 },
+    "items": []
+  }
+}
