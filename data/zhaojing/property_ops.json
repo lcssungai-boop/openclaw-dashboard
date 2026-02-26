@@ -1,0 +1,42 @@
+{
+  "updated_at": "2026-02-26T03:31:29Z",
+  "source_csv": "/Users/sunglin/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/昌松_客戶專案帳務/昌松_物業管理台帳.csv",
+  "summary": {
+    "total_items": 1,
+    "properties": 1,
+    "open_items": 1,
+    "overdue_items": 0,
+    "open_arrears_amount": 20000,
+    "top_events": [
+      {
+        "event": "欠租追繳",
+        "count": 1
+      }
+    ]
+  },
+  "properties": [
+    {
+      "property": "永二街 8-2 號",
+      "open_items": 1,
+      "overdue_items": 0,
+      "items": [
+        {
+          "row_no": 2,
+          "date": "2026-02-26",
+          "service": "物業管理",
+          "property": "永二街 8-2 號",
+          "tenant": "程進龍",
+          "event": "欠租追繳",
+          "status": "進行中",
+          "owner": "兆鯨顧問",
+          "due": "2026-03-05",
+          "amount": 20000,
+          "next_step": "三月討論還款方案",
+          "note": "property-ops 建置測試",
+          "overdue": false,
+          "done": false
+        }
+      ]
+    }
+  ]
+}

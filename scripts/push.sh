@@ -10,7 +10,7 @@ MSG="${1:-OpenClaw 自動同步 $(date '+%Y-%m-%d %H:%M')}"
 cd "$REPO"
 
 # 只 commit data/ 和 index/子頁面（不含本機草稿）
-git add data/ index.html openclaw/ caitodo/ zhaojing/ finance/ personal/ assets/ scripts/ .gitignore 2>/dev/null
+git add data/ index.html openclaw/ caitodo/ zhaojing/ finance/ personal/ assets/ scripts/ crm/ .gitignore 2>/dev/null
 
 # 有變更才 commit
 if git diff --cached --quiet; then

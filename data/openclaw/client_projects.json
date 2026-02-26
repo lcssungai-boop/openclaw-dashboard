@@ -1,0 +1,47 @@
+{
+  "updated_at": "2026-02-26T03:31:29Z",
+  "source_csv": "/Users/sunglin/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/昌松_客戶專案帳務/昌松_客戶專案台帳.csv",
+  "summary": {
+    "total_items": 1,
+    "total_customers": 1,
+    "total_projects": 1,
+    "overdue_items": 0,
+    "top_projects": [
+      {
+        "project": "內部流程優化",
+        "count": 1
+      }
+    ]
+  },
+  "customers": [
+    {
+      "customer": "內部專案",
+      "task_count": 1,
+      "overdue_count": 0,
+      "projects": [
+        {
+          "project": "內部流程優化",
+          "task_count": 1,
+          "overdue_count": 0,
+          "items": [
+            {
+              "row_no": 2,
+              "date": "2026-02-26",
+              "customer": "內部專案",
+              "project": "內部流程優化",
+              "subproject": "自動化整理",
+              "type": "task",
+              "status": "進行中",
+              "owner": "大總管",
+              "due": "-",
+              "priority": "normal",
+              "next_step": "建立每週檢查清單",
+              "note": "無客戶專案測試",
+              "overdue": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

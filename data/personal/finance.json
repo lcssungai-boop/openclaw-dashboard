@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-25T14:45:34Z",
+  "updated_at": "2026-02-26T06:42:51Z",
   "net_worth": 1276644,
   "available_cash": 161690,
   "stocks_value": 429514,
@@ -113,6 +113,15 @@
     }
   ],
   "transactions": [
+    {
+      "date": "2026-02-26",
+      "category": "餐飲",
+      "item": "中餐-越南河粉",
+      "income": 0,
+      "expense": 100,
+      "payment": "現金",
+      "note": "2026-02-26"
+    },
     {
       "date": "2026-02-25",
       "category": "餐飲",

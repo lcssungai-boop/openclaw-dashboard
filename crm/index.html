@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理總覽 · Open Claw</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#272729;--bg2:#323234;--bg3:#3D3D3F;--bg4:#484849;
+  --panel:#323234;--border:#585859;--border2:#7A7A7C;
+  --text:#F2F2F7;--dim:#C7C7CC;--muted:#AEAEB2;--bright:#FFFFFF;
+  --urgent-bd:#9A6830;--urgent-text:#F0A840;
+  --blocked-bd:#406888;--blocked-text:#74BADF;
+  --remit-bd:#7A6848;--remit-text:#D0A878;
+  --green:#5BBB78;
+  --radius:10px;--radius-sm:7px;--radius-xs:5px;
+  --hdr-h:54px;--sum-h:32px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;
+  font-weight:400;min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── HEADER ── */
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:var(--hdr-h);
+  background:rgba(39,39,41,.96);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:200;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+.hdr-l{display:flex;align-items:center;gap:14px}
+.back-btn{
+  display:flex;align-items:center;gap:5px;font-size:11px;
+  color:var(--muted);text-decoration:none;
+  padding:4px 10px;border:1px solid transparent;border-radius:var(--radius-xs);
+  transition:border-color .15s,color .15s;letter-spacing:.04em;
+}
+.back-btn:hover{border-color:var(--border);color:var(--dim)}
+.hdr-div{width:1px;height:18px;background:var(--border);flex-shrink:0}
+.logo{
+  width:28px;height:28px;border-radius:50%;overflow:hidden;
+  border:1.5px solid var(--border2);flex-shrink:0;
+  background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:12px;
+}
+.logo img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.hdr-title{font-size:14px;font-weight:700;color:var(--bright);letter-spacing:.3px}
+.hdr-sub{font-size:9px;color:var(--muted);font-weight:300;margin-top:1px;text-transform:uppercase;letter-spacing:.1em}
+.hdr-clock{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--dim);text-align:right;line-height:1.9;font-weight:300}
+
+/* ── SUMMARY BAR ── */
+#sum-bar{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:0 28px;height:var(--sum-h);
+  display:flex;align-items:center;gap:8px;
+  position:sticky;top:var(--hdr-h);z-index:190;
+  font-size:10px;color:var(--muted);
+}
+.sum-bdg{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 9px;border:1px solid var(--border);border-radius:20px;
+  font-size:9px;font-weight:500;letter-spacing:.04em;color:var(--muted);white-space:nowrap;
+}
+.sum-bdg.urgent{border-color:var(--urgent-bd);color:var(--urgent-text)}
+.sum-bdg.blocked{border-color:var(--blocked-bd);color:var(--blocked-text)}
+.sum-bdg.pending{border-color:var(--border2);color:var(--dim)}
+.sum-bdg.done{opacity:.5}
+.sum-sep{width:1px;height:12px;background:var(--border);flex-shrink:0}
+.sum-area{font-size:9px;color:var(--muted);letter-spacing:.05em}
+.sum-ts{margin-left:auto;font-size:9px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+
+/* ── NAV TABS ── */
+#nav-tabs{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:0 28px;display:flex;align-items:center;gap:2px;
+  position:sticky;top:calc(var(--hdr-h) + var(--sum-h));z-index:185;
+  overflow-x:auto;scrollbar-width:none;
+}
+#nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{
+  padding:10px 16px;font-size:11px;font-weight:500;color:var(--muted);
+  cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;
+  transition:color .15s,border-color .15s;letter-spacing:.02em;
+  margin-bottom:-1px;
+}
+.nav-tab:hover{color:var(--dim)}
+.nav-tab.active{color:var(--bright);border-bottom-color:var(--border2)}
+
+/* ── MAIN ── */
+main{
+  max-width:1600px;margin:0 auto;
+  padding:28px 28px;
+  display:flex;flex-direction:column;gap:28px;
+}
+
+/* ── SECTION LABEL ── */
+.sec-lbl{
+  font-size:9px;letter-spacing:.18em;font-weight:700;color:var(--muted);
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:12px;
+  font-family:"JetBrains Mono",monospace;
+}
+.sec-lbl::before{content:"";width:3px;height:11px;background:var(--border2);border-radius:2px;flex-shrink:0}
+.sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
+.sec-lbl .sec-count{
+  font-size:8px;padding:1px 7px;border:1px solid var(--border);
+  border-radius:20px;color:var(--muted);font-weight:400;
+}
+
+/* ── KPI GRID ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:4px}
+.kpi-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+  padding:14px 16px;display:flex;flex-direction:column;gap:3px;
+}
+.kpi-card.hot{border-color:var(--urgent-text)}
+.kpi-card.blk{border-color:var(--blocked-text)}
+.kpi-icon{width:24px;height:24px;border-radius:5px;background:var(--bg2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--dim);margin-bottom:5px;align-self:flex-start}
+.kpi-card.hot .kpi-icon{border-color:var(--urgent-bd);color:var(--urgent-text)}
+.kpi-card.blk .kpi-icon{border-color:var(--blocked-bd);color:var(--blocked-text)}
+.kpi-lbl{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.kpi-val{font-size:32px;font-weight:700;color:var(--bright);font-family:"JetBrains Mono",monospace;line-height:1.1}
+.kpi-card.hot .kpi-val{color:var(--urgent-text)}
+.kpi-card.blk .kpi-val{color:var(--blocked-text)}
+.kpi-hint{font-size:10px;color:var(--dim);margin-top:4px}
+
+/* ── CRM TABLE ── */
+.crm-wrap{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.crm-customer{border-bottom:1px solid var(--border)}
+.crm-customer:last-child{border-bottom:none}
+.crm-cust-hdr{
+  display:flex;align-items:center;padding:11px 18px;cursor:pointer;
+  background:var(--bg2);transition:background .12s;user-select:none;gap:10px;
+}
+.crm-cust-hdr:hover{background:var(--bg3)}
+.crm-cust-toggle{font-size:13px;color:var(--muted);width:16px;flex-shrink:0;
+  font-family:"JetBrains Mono",monospace;transition:transform .2s}
+.crm-cust-toggle.open{transform:rotate(90deg)}
+.crm-cust-name{font-size:13px;font-weight:600;color:var(--bright);flex:1}
+.crm-cust-meta{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.cust-stat{font-size:9px;padding:2px 8px;border:1px solid var(--border);border-radius:20px;color:var(--dim);white-space:nowrap}
+.cust-stat.has-overdue{border-color:var(--urgent-bd);color:var(--urgent-text)}
+.crm-cust-body{display:none;border-top:1px solid var(--border)}
+.crm-cust-body.open{display:block}
+
+/* project within customer */
+.crm-proj-hdr{
+  display:flex;align-items:center;padding:9px 18px 9px 36px;
+  background:var(--panel);border-bottom:1px solid var(--border);
+  cursor:pointer;gap:8px;transition:background .12s;user-select:none;
+}
+.crm-proj-hdr:hover{background:var(--bg3)}
+.crm-proj-toggle{font-size:11px;color:var(--muted);width:14px;flex-shrink:0;
+  font-family:"JetBrains Mono",monospace;transition:transform .2s}
+.crm-proj-toggle.open{transform:rotate(90deg)}
+.crm-proj-name{font-size:12px;font-weight:500;color:var(--text);flex:1}
+.crm-proj-count{font-size:9px;color:var(--muted);padding:1px 7px;border:1px solid var(--border);border-radius:20px;white-space:nowrap}
+.crm-proj-body{display:none;border-bottom:1px solid var(--border)}
+.crm-proj-body.open{display:block}
+
+/* items table */
+.crm-tbl{width:100%;border-collapse:collapse}
+.crm-tbl thead th{
+  padding:7px 12px;font-size:8px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);text-align:left;
+  background:var(--bg);border-bottom:1px solid var(--border);
+  font-family:"JetBrains Mono",monospace;white-space:nowrap;
+}
+.crm-tbl tbody td{
+  padding:9px 12px;font-size:11px;border-bottom:1px solid var(--border);
+  vertical-align:top;color:var(--dim);
+}
+.crm-tbl tbody tr:last-child td{border-bottom:none}
+.crm-tbl tbody tr:hover td{background:var(--bg3)}
+.crm-tbl tbody tr.overdue td{background:rgba(154,104,48,.04)}
+.crm-tbl td.td-sub{color:var(--text);font-weight:400}
+.crm-tbl td.td-note{color:var(--muted);font-size:10px;max-width:200px}
+.crm-tbl td.td-next{color:var(--dim);font-size:10px;max-width:220px}
+.crm-date{font-family:"JetBrains Mono",monospace;font-size:10px;white-space:nowrap}
+.crm-due{font-family:"JetBrains Mono",monospace;font-size:10px;white-space:nowrap}
+.crm-due.overdue{color:var(--urgent-text)}
+.t-stat{font-size:9px;padding:2px 8px;border:1px solid var(--border);border-radius:20px;white-space:nowrap;color:var(--dim);background:var(--bg3)}
+.t-stat.進行中{border-color:#2A5030;color:var(--green)}
+.t-stat.完成{opacity:.5}
+.t-stat.延遲{border-color:var(--urgent-bd);color:var(--urgent-text)}
+.t-stat.待處理{border-color:var(--border2);color:var(--dim)}
+.t-owner{font-size:10px;color:var(--muted);white-space:nowrap}
+.t-type-crm{font-size:9px;padding:2px 7px;border:1px solid var(--border);border-radius:20px;color:var(--dim);white-space:nowrap}
+.crm-empty{padding:24px 18px;font-size:11px;color:var(--muted);text-align:center;background:var(--panel)}
+
+/* ── TASK SECTION (for non-CRM areas) ── */
+.task-panel{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.task-group-hdr{
+  padding:8px 18px;font-size:8px;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);
+  background:var(--bg);border-bottom:1px solid var(--border);
+  font-family:"JetBrains Mono",monospace;display:flex;align-items:center;gap:8px;
+}
+.tg-count{font-size:8px;padding:1px 6px;border:1px solid var(--border);border-radius:20px;color:var(--muted);font-weight:400}
+.task-row{
+  display:grid;grid-template-columns:1fr auto;gap:12px;
+  padding:12px 18px;border-bottom:1px solid var(--border);
+  position:relative;transition:background .12s;align-items:start;
+}
+.task-row:last-child{border-bottom:none}
+.task-row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--border2);border-radius:var(--radius) 0 0 var(--radius)}
+.task-row.is-urgent::before{background:var(--urgent-text)}
+.task-row.is-blocked::before{background:var(--blocked-text)}
+.task-row.is-done{opacity:.4}
+.task-row:hover{background:var(--bg3)}
+.tr-left{display:flex;flex-direction:column;gap:6px;min-width:0}
+.tr-title{font-size:13px;font-weight:500;color:var(--bright);line-height:1.5}
+.tr-meta{display:flex;gap:14px;font-size:10px;color:var(--muted);flex-wrap:wrap;
+  font-family:"JetBrains Mono",monospace}
+.tr-meta span{display:flex;gap:3px;align-items:center}
+.tr-meta-lbl{font-size:8px;opacity:.6}
+.tr-next{font-size:11px;color:var(--dim);padding-top:6px;border-top:1px solid var(--border)}
+.tr-blocked{font-size:11px;color:var(--blocked-text);padding-top:6px;border-top:1px solid var(--blocked-bd)}
+.tr-right{display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex-shrink:0}
+.tag{font-size:9px;padding:2px 8px;border:1px solid var(--border);border-radius:20px;color:var(--dim);white-space:nowrap}
+.tag.urgent{border-color:var(--urgent-bd);color:var(--urgent-text)}
+.tag.important{border-color:var(--border2);color:var(--text)}
+.tag.blocked-tag{border-color:var(--blocked-bd);color:var(--blocked-text)}
+.tag.remit{border-color:var(--remit-bd);color:var(--remit-text)}
+.tag.alert-tag{border-color:#2A5030;color:var(--green)}
+.tag.done{opacity:.5}
+.task-empty{padding:20px;font-size:11px;color:var(--muted);text-align:center}
+
+/* ── DESKTOP WIDE ── */
+@media(min-width:1200px){
+  main{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:24px 28px;
+  }
+  .col-full{grid-column:1 / -1}
+  .col-half{grid-column:auto}
+  .kpi-grid{grid-template-columns:repeat(5,1fr)}
+}
+
+/* ── TABLET ── */
+@media(max-width:1199px) and (min-width:641px){
+  .kpi-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* ── PHONE ── */
+@media(max-width:640px){
+  header,#sum-bar,#nav-tabs{padding-left:16px;padding-right:16px}
+  main{padding:16px 16px;gap:20px}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .kpi-val{font-size:26px}
+  .crm-tbl thead{display:none}
+  .crm-tbl tbody td{display:block;padding:6px 12px;border-bottom:none}
+  .crm-tbl tbody td::before{
+    content:attr(data-label)" ";
+    font-size:8px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-right:4px;
+  }
+  .crm-tbl tbody tr{border-bottom:1px solid var(--border);display:block;padding:6px 0}
+}
+
+/* ── PAGE SECTIONS (tab visibility) ── */
+.page-section{display:none}
+.page-section.active{display:block}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+main>*{animation:fadeUp .35s ease both}
+
+/* ── SKELETON / LOADING ── */
+.loading-row{padding:24px;font-size:11px;color:var(--muted);text-align:center;letter-spacing:.05em}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr-l">
+    <a class="back-btn" href="../">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      返回主頁
+    </a>
+    <div class="hdr-div"></div>
+    <div class="logo">
+      <img src="../assets/avatar.png" alt="OC" onerror="this.style.display='none';this.parentElement.textContent='◈'">
+    </div>
+    <div>
+      <div class="hdr-title">管理總覽</div>
+      <div class="hdr-sub">客戶 · 專案 · 物業 · 業務</div>
+    </div>
+  </div>
+  <div id="clk" class="hdr-clock"></div>
+</header>
+
+<!-- SUMMARY BAR -->
+<div id="sum-bar">
+  <span id="sum-content"><span class="sum-area">載入中…</span></span>
+  <span class="sum-ts" id="sum-ts"></span>
+</div>
+
+<!-- NAV TABS -->
+<div id="nav-tabs">
+  <div class="nav-tab active" data-tab="overview">總覽</div>
+  <div class="nav-tab" data-tab="crm">客戶專案</div>
+  <div class="nav-tab" data-tab="caitodo">才多多</div>
+  <div class="nav-tab" data-tab="zhaojing">兆鯨 · 物業</div>
+  <div class="nav-tab" data-tab="openclaw">OpenClaw</div>
+</div>
+
+<main id="main-content">
+  <div class="loading-row col-full">載入中…</div>
+</main>
+
+<script>
+// ── CLOCK ─────────────────────────────────────────────────────────
+(function tick(){
+  const e=document.getElementById("clk");if(!e)return;
+  const n=new Date(),days=["日","一","二","三","四","五","六"];
+  e.innerHTML=n.toLocaleTimeString("zh-TW",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"})
+    +"<br>"+String(n.getMonth()+1).padStart(2,"0")+"/"+String(n.getDate()).padStart(2,"0")+" 週"+days[n.getDay()];
+  setTimeout(tick,1000);
+})();
+
+// ── CONSTANTS ─────────────────────────────────────────────────────
+const PRI_LBL={urgent:"急件",important:"重要",normal:"一般"};
+const TYPE_LBL={remittance:"匯款",alert:"提醒",task:"任務"};
+const AREAS=[
+  {key:"caitodo",  name:"才多多",    role:"移工・僑外生・派遣", src:"../data/caitodo/tasks.json"},
+  {key:"zhaojing", name:"兆鯨顧問",  role:"顧問・物業・電商",   src:"../data/zhaojing/tasks.json"},
+  {key:"openclaw", name:"OpenClaw",  role:"開發優化師",         src:"../data/openclaw/tasks.json"},
+];
+const DATA={crm:null,caitodo:null,zhaojing:null,openclaw:null};
+
+function fmtTs(iso){
+  if(!iso||iso==="-") return "-";
+  const d=new Date(iso);if(isNaN(d)) return iso;
+  const now=new Date();
+  if(d.toDateString()===now.toDateString())
+    return d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
+  return d.toLocaleDateString("zh-TW",{month:"2-digit",day:"2-digit"});
+}
+function fmtDate(iso){
+  if(!iso||iso==="-") return "-";
+  return iso.slice(0,10);
+}
+function escHtml(s){
+  if(!s) return "";
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+// ── SUMMARY BAR ───────────────────────────────────────────────────
+function renderSummary(){
+  let totalPending=0,totalBlocked=0,totalUrgent=0,totalDone=0,latestTs=null;
+  AREAS.forEach(a=>{
+    (DATA[a.key]?.tasks||[]).forEach(t=>{
+      if(t.status==="已完成") totalDone++;
+      else if(t.status==="阻塞") totalBlocked++;
+      else totalPending++;
+      if(t.priority==="urgent"&&t.status!=="已完成") totalUrgent++;
+      const ts=DATA[a.key]?.updated_at;
+      if(ts&&(!latestTs||ts>latestTs)) latestTs=ts;
+    });
+  });
+  const crmCustomers=(DATA.crm?.customers||[]).length;
+  const crmProjects=(DATA.crm?.customers||[]).reduce((s,c)=>s+(c.projects||[]).length,0);
+  let html="";
+  if(crmCustomers) html+=`<span class="sum-bdg pending">${crmCustomers} 客戶</span><span class="sum-bdg pending">${crmProjects} 專案</span><span class="sum-sep"></span>`;
+  if(totalBlocked) html+=`<span class="sum-bdg blocked">阻塞 ${totalBlocked}</span>`;
+  if(totalUrgent)  html+=`<span class="sum-bdg urgent">急件 ${totalUrgent}</span>`;
+  html+=`<span class="sum-bdg pending">待處理 ${totalPending}</span>`;
+  html+=`<span class="sum-bdg done">已完成 ${totalDone}</span>`;
+  document.getElementById("sum-content").innerHTML=html;
+  if(latestTs) document.getElementById("sum-ts").textContent="更新 "+fmtTs(latestTs);
+}
+
+// ── TAG HELPERS ───────────────────────────────────────────────────
+function priTag(t){
+  if(t.priority==="urgent") return `<span class="tag urgent">急件</span>`;
+  if(t.priority==="important") return `<span class="tag important">重要</span>`;
+  return "";
+}
+function typeTag(t){
+  if(t.type==="remittance") return `<span class="tag remit">匯款</span>`;
+  if(t.type==="alert") return `<span class="tag alert-tag">提醒</span>`;
+  return "";
+}
+function statusTag(t){
+  if(t.status==="阻塞") return `<span class="tag blocked-tag">阻塞</span>`;
+  if(t.status==="已完成") return `<span class="tag done">完成</span>`;
+  return "";
+}
+
+// ── TASK ROW ──────────────────────────────────────────────────────
+function taskRow(t){
+  const isBlk=t.status==="阻塞",isUrg=t.priority==="urgent",isDone=t.status==="已完成";
+  const cls=["task-row",isBlk?"is-blocked":isUrg?"is-urgent":isDone?"is-done":""].filter(Boolean).join(" ");
+  const meta=[];
+  if(t.time&&t.time!=="-") meta.push(`<span><span class="tr-meta-lbl">排程 </span>${escHtml(t.time)}</span>`);
+  if(t.due&&t.due!=="-") meta.push(`<span><span class="tr-meta-lbl">截止 </span>${escHtml(t.due)}</span>`);
+  if(t.owner_role&&t.owner_role!=="-") meta.push(`<span><span class="tr-meta-lbl">負責 </span>${escHtml(t.owner_role)}</span>`);
+  if(t.freq&&t.freq!=="-") meta.push(`<span><span class="tr-meta-lbl">頻率 </span>${escHtml(t.freq)}</span>`);
+  return `<div class="${cls}">
+    <div class="tr-left">
+      <div class="tr-title">${escHtml(t.title)}</div>
+      ${meta.length?`<div class="tr-meta">${meta.join("")}</div>`:""}
+      ${t.next_step&&t.next_step!=="-"?`<div class="tr-next">→ ${escHtml(t.next_step)}</div>`:""}
+      ${isBlk&&t.blocked_reason&&t.blocked_reason!=="-"?`<div class="tr-blocked">阻 — ${escHtml(t.blocked_reason)}</div>`:""}
+    </div>
+    <div class="tr-right">
+      ${priTag(t)}${typeTag(t)}${statusTag(t)}
+    </div>
+  </div>`;
+}
+
+// ── TASK SECTION ──────────────────────────────────────────────────
+function renderTaskSection(tasks){
+  if(!tasks.length) return `<div class="task-empty">— 目前無任務 —</div>`;
+  const groups=[
+    {label:"阻塞中",  fn:t=>t.status==="阻塞"},
+    {label:"急件",    fn:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="urgent"},
+    {label:"重要",    fn:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="important"},
+    {label:"待處理",  fn:t=>t.status!=="阻塞"&&t.status!=="已完成"&&(!t.priority||t.priority==="normal")},
+    {label:"已完成",  fn:t=>t.status==="已完成"},
+  ];
+  return `<div class="task-panel">`+groups.map(g=>{
+    const items=tasks.filter(g.fn);
+    if(!items.length) return "";
+    return `<div class="task-group-hdr">${escHtml(g.label)} <span class="tg-count">${items.length}</span></div>`
+      +items.map(taskRow).join("");
+  }).filter(Boolean).join("")+`</div>`;
+}
+
+// ── CRM SECTION ───────────────────────────────────────────────────
+function statCls(s){
+  const m={"進行中":"進行中","完成":"完成","已完成":"完成","待處理":"待處理","延遲":"延遲"};
+  return m[s]||"";
+}
+function renderCRM(crm){
+  const customers=crm?.customers||[];
+  if(!customers.length){
+    return `<div class="crm-wrap"><div class="crm-empty">目前無客戶資料。<br><small style="margin-top:6px;display:block;opacity:.6">資料來源：data/openclaw/client_projects.json</small></div></div>`;
+  }
+  const html=customers.map((cust,ci)=>{
+    const hasOverdue=cust.overdue_count>0;
+    const projCount=(cust.projects||[]).length;
+    const taskCount=cust.task_count||0;
+    const projHtml=(cust.projects||[]).map((proj,pi)=>{
+      const items=(proj.items||[]);
+      const rowsHtml=items.length?items.map(item=>{
+        const due=item.due&&item.due!=="-"?item.due:"-";
+        const isOverdue=item.overdue;
+        return `<tr class="${isOverdue?"overdue":""}">
+          <td class="crm-date" data-label="日期">${escHtml(fmtDate(item.date))}</td>
+          <td class="td-sub" data-label="子專案">${escHtml(item.subproject||"-")}</td>
+          <td data-label="類型"><span class="t-type-crm">${escHtml(item.type||"-")}</span></td>
+          <td data-label="狀態"><span class="t-stat ${statCls(item.status)}">${escHtml(item.status||"-")}</span></td>
+          <td class="t-owner" data-label="負責人">${escHtml(item.owner||"-")}</td>
+          <td class="${isOverdue?"crm-due overdue":"crm-due"}" data-label="截止">${escHtml(due)}</td>
+          <td class="td-next" data-label="下一步">${escHtml(item.next_step||"-")}</td>
+          <td class="td-note" data-label="備注">${escHtml(item.note||"-")}</td>
+        </tr>`;
+      }).join("")
+      :`<tr><td colspan="8" style="padding:10px 12px;font-size:10px;color:var(--muted)">— 無項目 —</td></tr>`;
+
+      return `<div class="crm-project">
+        <div class="crm-proj-hdr" onclick="toggleProj(this)">
+          <span class="crm-proj-toggle">›</span>
+          <span class="crm-proj-name">${escHtml(proj.project)}</span>
+          <span class="crm-proj-count">${items.length} 項</span>
+          ${proj.overdue_count>0?`<span class="cust-stat has-overdue">逾期 ${proj.overdue_count}</span>`:""}
+        </div>
+        <div class="crm-proj-body">
+          <table class="crm-tbl">
+            <thead><tr>
+              <th>日期</th><th>子專案</th><th>類型</th><th>狀態</th>
+              <th>負責人</th><th>截止</th><th>下一步</th><th>備注</th>
+            </tr></thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+      </div>`;
+    }).join("");
+
+    return `<div class="crm-customer">
+      <div class="crm-cust-hdr" onclick="toggleCust(this)">
+        <span class="crm-cust-toggle">›</span>
+        <span class="crm-cust-name">${escHtml(cust.customer)}</span>
+        <div class="crm-cust-meta">
+          <span class="cust-stat">${projCount} 專案</span>
+          <span class="cust-stat">${taskCount} 項目</span>
+          ${hasOverdue?`<span class="cust-stat has-overdue">逾期 ${cust.overdue_count}</span>`:""}
+        </div>
+      </div>
+      <div class="crm-cust-body">${projHtml}</div>
+    </div>`;
+  }).join("");
+  return `<div class="crm-wrap">${html}</div>`;
+}
+
+// ── TOGGLE HANDLERS ───────────────────────────────────────────────
+function toggleCust(hdr){
+  const body=hdr.nextElementSibling;
+  const tog=hdr.querySelector(".crm-cust-toggle");
+  const open=body.classList.toggle("open");
+  tog.classList.toggle("open",open);
+}
+function toggleProj(hdr){
+  const body=hdr.nextElementSibling;
+  const tog=hdr.querySelector(".crm-proj-toggle");
+  const open=body.classList.toggle("open");
+  tog.classList.toggle("open",open);
+}
+
+// ── OVERVIEW KPIs ─────────────────────────────────────────────────
+function renderOverviewKPIs(){
+  const crmCustomers=(DATA.crm?.customers||[]).length;
+  const crmProjects=(DATA.crm?.customers||[]).reduce((s,c)=>s+(c.projects||[]).length,0);
+  const crmOverdue=(DATA.crm?.summary?.overdue_items||0);
+  let allPending=0,allBlocked=0,allUrgent=0;
+  AREAS.forEach(a=>{
+    (DATA[a.key]?.tasks||[]).forEach(t=>{
+      if(t.status==="已完成") return;
+      if(t.status==="阻塞") allBlocked++;
+      else allPending++;
+      if(t.priority==="urgent") allUrgent++;
+    });
+  });
+  return `<div class="kpi-grid col-full">
+    <div class="kpi-card">
+      <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+      <div class="kpi-lbl">客戶數</div>
+      <div class="kpi-val">${crmCustomers||"—"}</div>
+      <div class="kpi-hint">${crmProjects} 個進行中專案</div>
+    </div>
+    <div class="kpi-card ${crmOverdue>0?"hot":""}">
+      <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div class="kpi-lbl">逾期項目</div>
+      <div class="kpi-val">${crmOverdue}</div>
+      <div class="kpi-hint">${crmOverdue>0?"需立即跟進":"目前無逾期"}</div>
+    </div>
+    <div class="kpi-card ${allUrgent>0?"hot":""}">
+      <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+      <div class="kpi-lbl">急件</div>
+      <div class="kpi-val">${allUrgent}</div>
+      <div class="kpi-hint">跨區域緊急任務</div>
+    </div>
+    <div class="kpi-card ${allBlocked>0?"blk":""}">
+      <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+      <div class="kpi-lbl">阻塞</div>
+      <div class="kpi-val">${allBlocked}</div>
+      <div class="kpi-hint">需立即處理</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="kpi-lbl">待處理</div>
+      <div class="kpi-val">${allPending}</div>
+      <div class="kpi-hint">所有區域合計</div>
+    </div>
+  </div>`;
+}
+
+// ── OVERVIEW ALL-AREA URGENT/BLOCKED SUMMARY ──────────────────────
+function renderOverviewHighlights(){
+  const urgent=[],blocked=[];
+  AREAS.forEach(a=>{
+    (DATA[a.key]?.tasks||[]).filter(t=>t.status!=="已完成").forEach(t=>{
+      if(t.status==="阻塞") blocked.push({t,name:a.name});
+      else if(t.priority==="urgent") urgent.push({t,name:a.name});
+    });
+  });
+  const rows=(items,prefix)=>items.map(({t,name})=>`
+    <div class="task-row ${prefix==="urgent"?"is-urgent":"is-blocked"}">
+      <div class="tr-left">
+        <div class="tr-title">${escHtml(t.title)}</div>
+        ${t.next_step&&t.next_step!=="-"?`<div class="tr-next">→ ${escHtml(t.next_step)}</div>`:""}
+      </div>
+      <div class="tr-right">
+        <span class="tag ${prefix==="urgent"?"urgent":"blocked-tag"}">${name}</span>
+        ${t.due&&t.due!=="-"?`<span class="tag">${escHtml(t.due)}</span>`:""}
+      </div>
+    </div>`).join("");
+
+  const parts=[];
+  if(urgent.length) parts.push(`
+    <div>
+      <div class="sec-lbl">跨區急件 <span class="sec-count">${urgent.length}</span></div>
+      <div class="task-panel">${rows(urgent,"urgent")}</div>
+    </div>`);
+  if(blocked.length) parts.push(`
+    <div>
+      <div class="sec-lbl">阻塞項目 <span class="sec-count">${blocked.length}</span></div>
+      <div class="task-panel">${rows(blocked,"blocked")}</div>
+    </div>`);
+  if(!parts.length) return `<div style="padding:20px;font-size:11px;color:var(--muted);text-align:center;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius)">— 目前無急件或阻塞 —</div>`;
+  return parts.join("");
+}
+
+// ── RENDER PAGE ───────────────────────────────────────────────────
+function renderAll(){
+  const mc=document.getElementById("main-content");
+
+  // TAB: 總覽
+  const overviewHtml=`
+    ${renderOverviewKPIs()}
+    <div class="col-full">
+      <div class="sec-lbl">今日重點 · 急件 &amp; 阻塞</div>
+      ${renderOverviewHighlights()}
+    </div>
+    <div>
+      <div class="sec-lbl">才多多 · 待處理概況</div>
+      ${renderTaskSection((DATA.caitodo?.tasks||[]).filter(t=>t.status!=="已完成").slice(0,5))}
+    </div>
+    <div>
+      <div class="sec-lbl">兆鯨 · 物業概況</div>
+      ${renderTaskSection((DATA.zhaojing?.tasks||[]).filter(t=>t.status!=="已完成").slice(0,5))}
+    </div>
+  `;
+
+  // TAB: 客戶專案
+  const crmHtml=`
+    <div class="col-full">
+      <div class="sec-lbl">客戶專案台帳 <span class="sec-count">${(DATA.crm?.customers||[]).length} 客戶</span></div>
+      ${renderCRM(DATA.crm)}
+    </div>
+  `;
+
+  // TAB: 才多多
+  const caitodoHtml=`
+    <div class="col-full">
+      <div class="sec-lbl">才多多 · 移工・僑外生・派遣</div>
+      ${renderTaskSection(DATA.caitodo?.tasks||[])}
+    </div>
+  `;
+
+  // TAB: 兆鯨
+  const zhaojingHtml=`
+    <div class="col-full">
+      <div class="sec-lbl">兆鯨顧問 · 顧問・物業・電商</div>
+      ${renderTaskSection(DATA.zhaojing?.tasks||[])}
+    </div>
+  `;
+
+  // TAB: OpenClaw
+  const oclawHtml=`
+    <div class="col-full">
+      <div class="sec-lbl">OpenClaw · 開發優化師</div>
+      ${renderTaskSection(DATA.openclaw?.tasks||[])}
+    </div>
+  `;
+
+  mc.innerHTML=`
+    <div class="page-section active" id="tab-overview">${overviewHtml}</div>
+    <div class="page-section" id="tab-crm">${crmHtml}</div>
+    <div class="page-section" id="tab-caitodo">${caitodoHtml}</div>
+    <div class="page-section" id="tab-zhaojing">${zhaojingHtml}</div>
+    <div class="page-section" id="tab-openclaw">${oclawHtml}</div>
+  `;
+}
+
+// ── NAV TABS ──────────────────────────────────────────────────────
+document.querySelectorAll(".nav-tab").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    document.querySelectorAll(".nav-tab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    const key=tab.dataset.tab;
+    document.querySelectorAll(".page-section").forEach(s=>s.classList.remove("active"));
+    document.getElementById("tab-"+key)?.classList.add("active");
+  });
+});
+
+// ── LOAD DATA ─────────────────────────────────────────────────────
+async function loadAll(){
+  const ts=Date.now();
+  const [crmRes,...areaRes]=await Promise.allSettled([
+    fetch(`../data/openclaw/client_projects.json?_=${ts}`),
+    ...AREAS.map(a=>fetch(`${a.src}?_=${ts}`)),
+  ]);
+
+  if(crmRes.status==="fulfilled"&&crmRes.value.ok){
+    DATA.crm=await crmRes.value.json();
+  }
+  for(let i=0;i<AREAS.length;i++){
+    const r=areaRes[i];
+    if(r.status==="fulfilled"&&r.value.ok){
+      DATA[AREAS[i].key]=await r.value.json();
+    }
+  }
+  renderSummary();
+  renderAll();
+}
+
+loadAll();
+</script>
+</body>
+</html>
