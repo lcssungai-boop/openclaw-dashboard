@@ -169,6 +169,22 @@ main{
 .prop-note{font-size:10px;color:var(--muted);max-width:220px}
 .prop-money{font-family:"JetBrains Mono",monospace}
 
+/* ── CRM ANALYSIS ── */
+.ana-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.ana-card{
+  border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);
+  padding:12px 13px;
+}
+.ana-hdr{
+  font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  font-family:"JetBrains Mono",monospace;margin-bottom:8px;
+}
+.ana-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)}
+.ana-row:last-child{border-bottom:none;padding-bottom:0}
+.ana-key{font-size:11px;color:var(--dim)}
+.ana-val{font-size:17px;font-family:"JetBrains Mono",monospace;color:var(--bright)}
+.ana-val.hot{color:var(--urgent-text)}
+
 /* ── CRM TABLE ── */
 .crm-wrap{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .crm-customer{border-bottom:1px solid var(--border)}
@@ -286,6 +302,7 @@ main{
 /* ── TABLET ── */
 @media(max-width:1199px) and (min-width:641px){
   .kpi-grid{grid-template-columns:repeat(3,1fr)}
+  .ana-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
 /* ── PHONE ── */
@@ -294,6 +311,7 @@ main{
   main{padding:16px 16px}
   .page-section.active{gap:18px}
   .kpi-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .ana-grid{grid-template-columns:minmax(0,1fr)}
   .kpi-val{font-size:26px}
   .crm-tbl thead{display:none}
   .crm-tbl tbody td{display:block;padding:6px 12px;border-bottom:none}
@@ -563,6 +581,50 @@ function renderPropertyOpsTable(propertyOps){
   </div>`;
 }
 
+function getCRMItems(crm){
+  return (crm?.customers||[]).flatMap(c=>(c.projects||[]).flatMap(p=>(p.items||[])));
+}
+
+function renderCRMAnalysis(crm){
+  const items=getCRMItems(crm);
+  const status={待處理:0,進行中:0,已完成:0,阻塞:0};
+  const owners={};
+  items.forEach(it=>{
+    const s=it.status||"待處理";
+    if(status[s]==null) status[s]=0;
+    status[s]++;
+    const o=it.owner||"未指派";
+    owners[o]=(owners[o]||0)+1;
+  });
+
+  const topOwners=Object.entries(owners).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const topProjects=(crm?.summary?.top_projects||[]).slice(0,3);
+  const overdue=crm?.summary?.overdue_items||0;
+  const total=crm?.summary?.total_items||items.length;
+
+  return `<div class="ana-grid">
+    <div class="ana-card">
+      <div class="ana-hdr">狀態分佈</div>
+      <div class="ana-row"><span class="ana-key">待處理</span><span class="ana-val">${status["待處理"]||0}</span></div>
+      <div class="ana-row"><span class="ana-key">進行中</span><span class="ana-val">${status["進行中"]||0}</span></div>
+      <div class="ana-row"><span class="ana-key">阻塞</span><span class="ana-val">${status["阻塞"]||0}</span></div>
+      <div class="ana-row"><span class="ana-key">完成</span><span class="ana-val">${status["已完成"]||0}</span></div>
+    </div>
+    <div class="ana-card">
+      <div class="ana-hdr">客戶專案健康度</div>
+      <div class="ana-row"><span class="ana-key">總項目</span><span class="ana-val">${total}</span></div>
+      <div class="ana-row"><span class="ana-key">客戶數</span><span class="ana-val">${crm?.summary?.total_customers||0}</span></div>
+      <div class="ana-row"><span class="ana-key">專案數</span><span class="ana-val">${crm?.summary?.total_projects||0}</span></div>
+      <div class="ana-row"><span class="ana-key">逾期</span><span class="ana-val ${overdue?"hot":""}">${overdue}</span></div>
+    </div>
+    <div class="ana-card">
+      <div class="ana-hdr">負責人 / 熱門專案</div>
+      ${(topOwners.length?topOwners:[["-",0]]).map(([k,v])=>`<div class="ana-row"><span class="ana-key">${escHtml(k)}</span><span class="ana-val">${v}</span></div>`).join("")}
+      ${(topProjects.length?topProjects:[{project:"-",count:0}]).map(p=>`<div class="ana-row"><span class="ana-key">${escHtml(p.project)}</span><span class="ana-val">${p.count}</span></div>`).join("")}
+    </div>
+  </div>`;
+}
+
 // ── CRM SECTION ───────────────────────────────────────────────────
 function statCls(s){
   const m={"進行中":"進行中","完成":"完成","已完成":"完成","待處理":"待處理","延遲":"延遲"};
@@ -739,6 +801,10 @@ function renderAll(){
   const overviewHtml=`
     ${renderOverviewKPIs()}
     <div class="col-full">
+      <div class="sec-lbl">客戶專案 Skill 分析</div>
+      ${renderCRMAnalysis(DATA.crm)}
+    </div>
+    <div class="col-full">
       <div class="sec-lbl">跨區分類矩陣</div>
       ${renderAreaMatrix()}
     </div>
@@ -766,6 +832,10 @@ function renderAll(){
 
   // TAB: 客戶專案
   const crmHtml=`
+    <div class="col-full">
+      <div class="sec-lbl">客戶專案分析面板</div>
+      ${renderCRMAnalysis(DATA.crm)}
+    </div>
     <div class="col-full">
       <div class="sec-lbl">客戶專案台帳 <span class="sec-count">${(DATA.crm?.customers||[]).length} 客戶</span></div>
       ${renderCRM(DATA.crm)}
