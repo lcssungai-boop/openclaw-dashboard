@@ -309,6 +309,8 @@ main>*{animation:fadeUp .35s ease both}
   <div class="nav-tab" data-tab="crm">客戶專案</div>
   <div class="nav-tab" data-tab="caitodo">才多多</div>
   <div class="nav-tab" data-tab="zhaojing">兆鯨 · 物業</div>
+  <div class="nav-tab" data-tab="finance">理財</div>
+  <div class="nav-tab" data-tab="personal">個人財務</div>
   <div class="nav-tab" data-tab="openclaw">OpenClaw</div>
 </div>
 
@@ -316,6 +318,7 @@ main>*{animation:fadeUp .35s ease both}
   <div class="loading-row col-full">載入中…</div>
 </main>
 
+<script src="../assets/js/openclaw-dashboard-core.js"></script>
 <script>
 // ── CLOCK ─────────────────────────────────────────────────────────
 (function tick(){
@@ -329,12 +332,9 @@ main>*{animation:fadeUp .35s ease both}
 // ── CONSTANTS ─────────────────────────────────────────────────────
 const PRI_LBL={urgent:"急件",important:"重要",normal:"一般"};
 const TYPE_LBL={remittance:"匯款",alert:"提醒",task:"任務"};
-const AREAS=[
-  {key:"caitodo",  name:"才多多",    role:"移工・僑外生・派遣", src:"../data/caitodo/tasks.json"},
-  {key:"zhaojing", name:"兆鯨顧問",  role:"顧問・物業・電商",   src:"../data/zhaojing/tasks.json"},
-  {key:"openclaw", name:"OpenClaw",  role:"開發優化師",         src:"../data/openclaw/tasks.json"},
-];
-const DATA={crm:null,caitodo:null,zhaojing:null,openclaw:null};
+const CORE=OpenClawCore.buildContext({basePath:".."});
+const AREAS=CORE.areas;
+const DATA=CORE.data;
 
 function fmtTs(iso){
   if(!iso||iso==="-") return "-";
@@ -435,6 +435,23 @@ function renderTaskSection(tasks){
   }).filter(Boolean).join("")+`</div>`;
 }
 
+function renderPropertyOps(propertyOps){
+  const properties=propertyOps?.properties||[];
+  const items=properties.flatMap(p=>(p.items||[]).map(it=>({
+    title:`${p.property} · ${it.event||it.service||"物業事項"}`,
+    status:it.done?"已完成":(it.status==="阻塞"?"阻塞":"待處理"),
+    next_step:it.next_step||"-",
+    owner_role:it.owner||"-",
+    blocked_reason:it.status==="阻塞"?(it.note||"-"):"-",
+    priority:it.overdue?"urgent":"important",
+    type:it.amount&&it.amount>0?"remittance":"task",
+    due:it.due||"-",
+    time:"-",
+    freq:"-"
+  })));
+  return renderTaskSection(items);
+}
+
 // ── CRM SECTION ───────────────────────────────────────────────────
 function statCls(s){
   const m={"進行中":"進行中","完成":"完成","已完成":"完成","待處理":"待處理","延遲":"延遲"};
@@ -521,6 +538,9 @@ function renderOverviewKPIs(){
   const crmCustomers=(DATA.crm?.customers||[]).length;
   const crmProjects=(DATA.crm?.customers||[]).reduce((s,c)=>s+(c.projects||[]).length,0);
   const crmOverdue=(DATA.crm?.summary?.overdue_items||0);
+  const propertyOpen=(DATA.propertyOps?.summary?.open_items||0);
+  const propertyOverdue=(DATA.propertyOps?.summary?.overdue_items||0);
+  const totalOverdue=crmOverdue+propertyOverdue;
   let allPending=0,allBlocked=0,allUrgent=0;
   AREAS.forEach(a=>{
     (DATA[a.key]?.tasks||[]).forEach(t=>{
@@ -535,13 +555,13 @@ function renderOverviewKPIs(){
       <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
       <div class="kpi-lbl">客戶數</div>
       <div class="kpi-val">${crmCustomers||"—"}</div>
-      <div class="kpi-hint">${crmProjects} 個進行中專案</div>
+      <div class="kpi-hint">${crmProjects} 專案 · 物業待處理 ${propertyOpen}</div>
     </div>
-    <div class="kpi-card ${crmOverdue>0?"hot":""}">
+    <div class="kpi-card ${totalOverdue>0?"hot":""}">
       <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
       <div class="kpi-lbl">逾期項目</div>
-      <div class="kpi-val">${crmOverdue}</div>
-      <div class="kpi-hint">${crmOverdue>0?"需立即跟進":"目前無逾期"}</div>
+      <div class="kpi-val">${totalOverdue}</div>
+      <div class="kpi-hint">CRM ${crmOverdue} · 物業 ${propertyOverdue}</div>
     </div>
     <div class="kpi-card ${allUrgent>0?"hot":""}">
       <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
@@ -619,6 +639,14 @@ function renderAll(){
       <div class="sec-lbl">兆鯨 · 物業概況</div>
       ${renderTaskSection((DATA.zhaojing?.tasks||[]).filter(t=>t.status!=="已完成").slice(0,5))}
     </div>
+    <div>
+      <div class="sec-lbl">理財 · 市場與帳務</div>
+      ${renderTaskSection((DATA.finance?.tasks||[]).filter(t=>t.status!=="已完成").slice(0,5))}
+    </div>
+    <div>
+      <div class="sec-lbl">個人財務 · 近期任務</div>
+      ${renderTaskSection((DATA.personal?.tasks||[]).filter(t=>t.status!=="已完成").slice(0,5))}
+    </div>
   `;
 
   // TAB: 客戶專案
@@ -640,8 +668,28 @@ function renderAll(){
   // TAB: 兆鯨
   const zhaojingHtml=`
     <div class="col-full">
-      <div class="sec-lbl">兆鯨顧問 · 顧問・物業・電商</div>
+      <div class="sec-lbl">兆鯨顧問 · 顧問・物業・電商（任務）</div>
       ${renderTaskSection(DATA.zhaojing?.tasks||[])}
+    </div>
+    <div class="col-full">
+      <div class="sec-lbl">兆鯨物業 · 台帳事件</div>
+      ${renderPropertyOps(DATA.propertyOps)}
+    </div>
+  `;
+
+  // TAB: 理財
+  const financeHtml=`
+    <div class="col-full">
+      <div class="sec-lbl">理財分析師 · 股票・帳務・KDJ</div>
+      ${renderTaskSection(DATA.finance?.tasks||[])}
+    </div>
+  `;
+
+  // TAB: 個人財務
+  const personalHtml=`
+    <div class="col-full">
+      <div class="sec-lbl">個人財務 · 大總管</div>
+      ${renderTaskSection(DATA.personal?.tasks||[])}
     </div>
   `;
 
@@ -658,6 +706,8 @@ function renderAll(){
     <div class="page-section" id="tab-crm">${crmHtml}</div>
     <div class="page-section" id="tab-caitodo">${caitodoHtml}</div>
     <div class="page-section" id="tab-zhaojing">${zhaojingHtml}</div>
+    <div class="page-section" id="tab-finance">${financeHtml}</div>
+    <div class="page-section" id="tab-personal">${personalHtml}</div>
     <div class="page-section" id="tab-openclaw">${oclawHtml}</div>
   `;
 }
@@ -675,21 +725,7 @@ document.querySelectorAll(".nav-tab").forEach(tab=>{
 
 // ── LOAD DATA ─────────────────────────────────────────────────────
 async function loadAll(){
-  const ts=Date.now();
-  const [crmRes,...areaRes]=await Promise.allSettled([
-    fetch(`../data/openclaw/client_projects.json?_=${ts}`),
-    ...AREAS.map(a=>fetch(`${a.src}?_=${ts}`)),
-  ]);
-
-  if(crmRes.status==="fulfilled"&&crmRes.value.ok){
-    DATA.crm=await crmRes.value.json();
-  }
-  for(let i=0;i<AREAS.length;i++){
-    const r=areaRes[i];
-    if(r.status==="fulfilled"&&r.value.ok){
-      DATA[AREAS[i].key]=await r.value.json();
-    }
-  }
+  await CORE.loadAll({crm:true,propertyOps:true});
   renderSummary();
   renderAll();
 }

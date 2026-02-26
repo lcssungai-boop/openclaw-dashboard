@@ -4,3 +4,4 @@ claw_dashboard_2.html
 *.DS_Store
 logs/*.log
 logs/launchd*.log
+.firecrawl/

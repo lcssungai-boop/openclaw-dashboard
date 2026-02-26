@@ -577,6 +577,7 @@ main>section:nth-child(4){animation-delay:.26s}
 
 <footer>Open Claw &nbsp;·&nbsp; 每日自動更新 &nbsp;·&nbsp; 資料來源 tasks.json</footer>
 
+<script src="assets/js/openclaw-dashboard-core.js"></script>
 <script>
 // ── SCROLL: shrink header ─────────────────────────────────────────
 (function(){
@@ -606,15 +607,21 @@ const IC={
 };
 
 // ── AREAS ─────────────────────────────────────────────────────────
-const AREAS=[
-  {key:"caitodo",  name:"才多多",    role:"移工・僑外生・派遣", icon:IC.caitodo,  path:"caitodo/",  data:"data/caitodo/tasks.json"},
-  {key:"zhaojing", name:"兆鯨顧問",  role:"顧問・物業・電商",   icon:IC.zhaojing, path:"zhaojing/", data:"data/zhaojing/tasks.json"},
-  {key:"finance",  name:"理財分析師",role:"股票・帳務・KDJ",    icon:IC.finance,  path:"finance/",  data:"data/finance/tasks.json"},
-  {key:"personal", name:"個人財務",  role:"大總管",             icon:IC.personal, path:"personal/", data:"data/personal/tasks.json"},
-  {key:"openclaw", name:"OpenClaw",  role:"開發優化師",         icon:IC.openclaw, path:"openclaw/", data:"data/openclaw/tasks.json"},
-];
+const CORE=OpenClawCore.buildContext({basePath:"."});
+const AREA_META={
+  caitodo:{icon:IC.caitodo,path:"caitodo/"},
+  zhaojing:{icon:IC.zhaojing,path:"zhaojing/"},
+  finance:{icon:IC.finance,path:"finance/"},
+  personal:{icon:IC.personal,path:"personal/"},
+  openclaw:{icon:IC.openclaw,path:"openclaw/"}
+};
+const AREAS=CORE.areas.map(a=>({
+  ...a,
+  icon:AREA_META[a.key]?.icon||"",
+  path:AREA_META[a.key]?.path||a.path
+}));
 
-const DATA={};
+const DATA=CORE.data;
 const PRI_LBL={urgent:"急件",important:"重要",normal:"一般"};
 const TYPE_LBL={remittance:"匯款",alert:"提醒",task:"任務"};
 
@@ -878,16 +885,8 @@ function toggleAcc(idx){
 }
 
 // ── FETCH ─────────────────────────────────────────────────────────
-async function loadArea(area){
-  try{
-    const r=await fetch(area.data+"?_="+Date.now());
-    if(!r.ok) throw 0;
-    return await r.json();
-  }catch(e){return null;}
-}
 async function init(){
-  const results=await Promise.all(AREAS.map(loadArea));
-  AREAS.forEach((a,i)=>{DATA[a.key]=results[i]||{updated_at:null,tasks:[]};});
+  await CORE.loadAll();
   renderKPIs();
   renderStrip();
   renderWarnings();
