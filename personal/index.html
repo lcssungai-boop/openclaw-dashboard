@@ -63,6 +63,19 @@ header{display:flex;align-items:center;justify-content:space-between;
 .hero-kpi .k-lbl{font-size:8px;opacity:.5;margin-top:3px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .hero-kpi.green .k-val{color:#D4AF37}
 
+.hero-main .amount-wrap{display:flex;justify-content:center;align-items:baseline;gap:10px;flex-wrap:wrap}
+.hero-main .chg{font-size:12px;font-family:"JetBrains Mono",monospace;padding:3px 8px;border-radius:999px;border:1px solid var(--border)}
+.hero-main .chg.up{color:var(--inc);border-color:var(--inc-bd);background:var(--inc-bg)}
+.hero-main .chg.down{color:var(--exp);border-color:var(--exp-bd);background:var(--exp-bg)}
+.hero-main .chg.flat{color:var(--dim);background:var(--bg3)}
+.hero-main .spark{margin-top:8px;height:36px;display:flex;justify-content:center}
+.hero-main .spark svg{width:min(680px,92vw);height:36px}
+@keyframes pulseUp{0%{box-shadow:0 0 0 0 rgba(91,187,120,.35)}100%{box-shadow:0 0 0 10px rgba(91,187,120,0)}}
+@keyframes pulseDown{0%{box-shadow:0 0 0 0 rgba(217,112,112,.35)}100%{box-shadow:0 0 0 10px rgba(217,112,112,0)}}
+.hero-main .chg.up{animation:pulseUp 1.2s ease-out 1}
+.hero-main .chg.down{animation:pulseDown 1.2s ease-out 1}
+
+
 main{max-width:880px;margin:0 auto;padding:40px 32px;display:flex;flex-direction:column;gap:36px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px}
@@ -171,8 +184,12 @@ main>div:nth-child(4){animation-delay:.24s}
 <div id="hero" class="hero" style="display:none">
   <div class="hero-main">
     <div class="label">淨身價總額（含退休金）</div>
-    <div class="amount" id="h-net">—</div>
+    <div class="amount-wrap">
+      <div class="amount" id="h-net">—</div>
+      <div class="chg flat" id="h-chg">—</div>
+    </div>
     <div class="sub" id="h-sub">—</div>
+    <div class="spark" id="h-spark"></div>
   </div>
   <div class="hero-kpis">
     <div class="hero-kpi green"><div class="k-val" id="h-cash">—</div><div class="k-lbl">可用資金</div></div>
@@ -204,13 +221,52 @@ function fmtTs(iso){
 const FIN_PATH="../data/personal/finance.json";
 function fmt(n){return Number(n||0).toLocaleString("zh-TW");}
 function fmtSign(n){return (n>=0?"+":"")+fmt(n);}
+
+function animateValue(el, end, ms=900){
+  const start=0; const t0=performance.now();
+  function tick(now){
+    const p=Math.min(1,(now-t0)/ms);
+    const eased=1-Math.pow(1-p,3);
+    el.textContent=fmt(Math.round(start+(end-start)*eased));
+    if(p<1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+function renderSparkline(values){
+  const box=document.getElementById('h-spark'); if(!box) return;
+  if(!values||values.length<2){ box.innerHTML=''; return; }
+  const w=680,h=36,pad=3;
+  const min=Math.min(...values), max=Math.max(...values);
+  const span=(max-min)||1;
+  const pts=values.map((v,i)=>{
+    const x=pad + (i*(w-2*pad)/(values.length-1));
+    const y=h-pad-((v-min)*(h-2*pad)/span);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  const up=values[values.length-1]-values[0]>=0;
+  const col=up?'#5BBB78':'#D97070';
+  box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline fill="none" stroke="${col}" stroke-width="2" points="${pts}"/><circle cx="${pts.split(' ').slice(-1)[0].split(',')[0]}" cy="${pts.split(' ').slice(-1)[0].split(',')[1]}" r="2.4" fill="${col}"/></svg>`;
+}
+
 function render(fin){
-  document.getElementById("h-net").textContent=fmt(fin.net_worth);
-  document.getElementById("h-cash").textContent=fmt(fin.available_cash);
-  document.getElementById("h-stocks").textContent=fmt(fin.stocks_value);
-  document.getElementById("h-pension").textContent=fmt(fin.pension_value);
+  animateValue(document.getElementById("h-net"), Number(fin.net_worth||0), 1000);
+  animateValue(document.getElementById("h-cash"), Number(fin.available_cash||0), 900);
+  animateValue(document.getElementById("h-stocks"), Number(fin.stocks_value||0), 900);
+  animateValue(document.getElementById("h-pension"), Number(fin.pension_value||0), 900);
   document.getElementById("h-sub").textContent=
     `可用 ${fmt(fin.available_cash)} · 股票 ${fmt(fin.stocks_value)} · 退休金 ${fmt(fin.pension_value)}`;
+  // 今日變動（以今日流水淨額近似）
+  const today=(new Date()).toISOString().slice(0,10);
+  const dayNet=(fin.transactions||[]).filter(x=>(x.date||'').slice(0,10)===today).reduce((s,x)=>s+Number(x.income||0)-Number(x.expense||0),0);
+  const chg=document.getElementById('h-chg');
+  chg.className='chg '+(dayNet>0?'up':dayNet<0?'down':'flat');
+  chg.textContent=(dayNet>0?'↑ ':'':dayNet<0?'↓ ':'→ ')+(dayNet===0?'今日無變動':`今日 ${dayNet>0?'+':''}${fmt(dayNet)}`);
+  // 迷你趨勢線（近12筆累積）
+  const tx=(fin.transactions||[]).slice(-12);
+  let cur=Number(fin.net_worth||0)-tx.reduce((s,x)=>s+Number(x.income||0)-Number(x.expense||0),0);
+  const series=[cur];
+  tx.forEach(x=>{cur+=Number(x.income||0)-Number(x.expense||0);series.push(cur)});
+  renderSparkline(series);
   document.getElementById("hero").style.display="";
   const ts=fin.updated_at?new Date(fin.updated_at).toLocaleDateString("zh-TW"):"-";
   const acctTotal=fin.accounts.reduce((s,a)=>s+a.balance,0);
