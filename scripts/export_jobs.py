@@ -10,10 +10,18 @@ SRC = os.path.expanduser("~/.openclaw/cron/jobs.json")
 DST = os.path.join(os.path.dirname(__file__), "..", "data", "openclaw", "jobs.json")
 DST = os.path.normpath(DST)
 
+def iso_z(dt_obj: datetime) -> str:
+    """UTC ISO-8601 with trailing Z."""
+    return dt_obj.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def fmt_ms(ms):
-    if not ms: return None
-    try: return datetime.fromtimestamp(ms / 1000, tz=timezone.utc).isoformat()
-    except: return None
+    if not ms:
+        return None
+    try:
+        return iso_z(datetime.fromtimestamp(ms / 1000, tz=timezone.utc))
+    except Exception:
+        return None
 
 def cron_human(expr, tz_str="Asia/Taipei"):
     """把 cron expr 轉成人讀格式（簡化版）"""
@@ -95,7 +103,9 @@ disabled = [j for j in jobs if not j["enabled"]]
 errors   = [j for j in jobs if j["consecutive_errors"] > 0 or j["is_timeout"]]
 
 output = {
-    "updated_at": datetime.now(tz=timezone.utc).isoformat(),
+    "updated_at": iso_z(datetime.now(tz=timezone.utc)),
+    "source": "dashboard:/Users/sunglin/Documents/線上儀表板",
+    "schema_version": "2026-02",
     "summary": {
         "total":    len(jobs),
         "enabled":  len(enabled),
