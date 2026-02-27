@@ -588,7 +588,7 @@ main>section:nth-child(5){animation-delay:.33s}
   </section>
 
   <!-- 資料一致性追蹤 -->
-  <section>
+  <section id="sec-trace">
     <div class="sec-lbl">資料一致性追蹤</div>
     <div class="trace-grid" id="trace-grid">
       <div class="trace-card"><div class="trace-name">載入中…</div></div>
@@ -612,7 +612,7 @@ main>section:nth-child(5){animation-delay:.33s}
   </section>
 
   <!-- 全區總覽 -->
-  <section>
+  <section id="sec-overview">
     <div class="sec-lbl">全區總覽</div>
     <div class="acc-wrap" id="acc-wrap">
       <div style="padding:20px;font-size:11px;color:var(--muted)">載入中…</div>
@@ -910,10 +910,10 @@ function renderTraceability(){
     const fallbackCnt=d.meta?.fallbackCount??0;
     return `<div class="trace-card">
       <div class="trace-top">
-        <div class="trace-name"><a href="${VERIFY_LINKS[area.key]||'#'}" target="_blank" style="color:inherit;text-decoration:none">${area.name}</a></div>
+        <div class="trace-name"><a href="#sec-overview" style="color:inherit;text-decoration:none">${area.name}</a></div>
         <div class="trace-upd">更新 ${upd}</div>
       </div>
-      <div class="trace-path"><a href="${VERIFY_LINKS[area.key]||'#'}" target="_blank" style="color:inherit">${area.data}</a></div>
+      <div class="trace-path"><a href="#sec-overview" style="color:inherit">${area.data}</a></div>
       <div class="trace-metrics">
         <span class="trace-badge ${tagRate>=80?"ok":"warn"}">source 標記 ${tagRate}%</span>
         <span class="trace-badge ${fallbackCnt===0?"ok":"warn"}">fallback ${fallbackCnt}</span>
@@ -924,14 +924,14 @@ function renderTraceability(){
   const archCards=[["客戶索引",ARCH.customer],["專案索引",ARCH.project],["知識索引",ARCH.knowledge]].map(([name,m])=>`
     <div class="trace-card">
       <div class="trace-top"><div class="trace-name">${name}</div><div class="trace-upd">更新 ${m?.updated_at||"-"}</div></div>
-      <div class="trace-path">${m?.path?`<a href="${m.path}" target="_blank" style="color:inherit">${m.path}</a>`:"-"}</div>
+      <div class="trace-path"><a href="#sec-overview" style="color:inherit">${m?.path||"-"}</a></div>
       <div class="trace-metrics"><span class="trace-badge ${m?.rows?"ok":"warn"}">索引列數 ${m?.rows??0}</span></div>
     </div>`).join("");
   const zjSummary=getZhaojingFlowSummary(DATA.zhaojing?.tasks||[]);
   const finSummary=getFinanceRefreshSummary(DATA.finance?.tasks||[]);
   const flowCard=`<div class="trace-card">
     <div class="trace-top"><div class="trace-name">流程 KPI 摘要</div><div class="trace-upd">跨域一致性</div></div>
-    <div class="trace-path"><a href="verify/?src=zhaojing" target="_blank" style="color:inherit">兆鯨流程</a> / <a href="verify/?src=finance" target="_blank" style="color:inherit">理財刷新排程</a></div>
+    <div class="trace-path"><a href="#sec-overview" style="color:inherit">兆鯨流程 / 理財刷新排程</a></div>
     <div class="trace-metrics">
       <span class="trace-badge">${zjSummary}</span>
       <span class="trace-badge">${finSummary}</span>
