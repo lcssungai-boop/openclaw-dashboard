@@ -1,20 +1,63 @@
 {
-  "updated_at": "2026-02-26T23:30:52Z",
+  "updated_at": "2026-02-27T11:24:36Z",
   "source_csv": "/Users/sunglin/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/昌松_客戶專案帳務/昌松_物業管理台帳.csv",
   "summary": {
-    "total_items": 1,
-    "properties": 1,
-    "open_items": 1,
+    "total_items": 3,
+    "properties": 2,
+    "open_items": 3,
     "overdue_items": 0,
-    "open_arrears_amount": 20000,
+    "open_arrears_amount": 42000,
     "top_events": [
       {
         "event": "欠租追繳",
+        "count": 2
+      },
+      {
+        "event": "續約",
         "count": 1
       }
     ]
   },
   "properties": [
+    {
+      "property": "未指定物件",
+      "open_items": 2,
+      "overdue_items": 0,
+      "items": [
+        {
+          "row_no": 3,
+          "date": "2026-02-27",
+          "service": "物業管理",
+          "property": "未指定物件",
+          "tenant": "王原埔",
+          "event": "續約",
+          "status": "進行中",
+          "owner": "兆鯨顧問",
+          "due": "2026-03-05",
+          "amount": 22000,
+          "next_step": "製作合約書，確認簽約時間",
+          "note": "同意以22000續約；內部備註：三年基本不漲租（視情況）",
+          "overdue": false,
+          "done": false
+        },
+        {
+          "row_no": 4,
+          "date": "2026-02-27",
+          "service": "物業管理",
+          "property": "未指定物件",
+          "tenant": "王原埔",
+          "event": "欠租追繳",
+          "status": "進行中",
+          "owner": "兆鯨顧問",
+          "due": "2026-03-05",
+          "amount": 22000,
+          "next_step": "追繳二月份房租並確認入帳",
+          "note": "二月份房租未給，與續約同步處理",
+          "overdue": false,
+          "done": false
+        }
+      ]
+    },
     {
       "property": "永二街 8-2 號",
       "open_items": 1,
@@ -38,7 +81,5 @@
         }
       ]
     }
-  ],
-  "source": "dashboard:/Users/sunglin/Documents/線上儀表板",
-  "schema_version": "2026-02"
+  ]
 }
