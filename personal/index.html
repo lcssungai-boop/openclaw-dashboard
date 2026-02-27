@@ -49,14 +49,15 @@ header{display:flex;align-items:center;justify-content:space-between;
   text-align:right;line-height:1.9;font-weight:300}
 
 .hero{border-bottom:1px solid var(--border);padding:24px 32px;
-  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;text-align:center;
   background:linear-gradient(135deg,#272729,#2E2E38)}
+.hero-main{width:100%;text-align:center}
 .hero-main .label{font-size:8px;opacity:.6;letter-spacing:.15em;text-transform:uppercase;
   margin-bottom:6px;color:var(--muted);font-family:"JetBrains Mono",monospace}
 .hero-main .amount{font-size:32px;font-weight:300;letter-spacing:-.5px;
   color:var(--bright);font-family:"JetBrains Mono",monospace}
 .hero-main .sub{font-size:10px;opacity:.4;margin-top:5px;color:var(--dim);letter-spacing:.04em}
-.hero-kpis{display:flex;gap:20px;flex-wrap:wrap}
+.hero-kpis{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;width:100%}
 .hero-kpi{text-align:center}
 .hero-kpi .k-val{font-size:16px;font-weight:400;font-family:"JetBrains Mono",monospace;color:var(--bright)}
 .hero-kpi .k-lbl{font-size:8px;opacity:.5;margin-top:3px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
@@ -121,7 +122,7 @@ main{max-width:880px;margin:0 auto;padding:40px 32px;display:flex;flex-direction
 
 @media(max-width:1024px){
   main,header{padding-left:24px;padding-right:24px}
-  .hero{padding:20px 24px}
+  .hero{padding:20px 24px;justify-content:center;text-align:center}
   .hero-main .amount{font-size:28px}
   .hero-kpi .k-val{font-size:20px}
   .grid2{gap:10px}
