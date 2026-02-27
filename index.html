@@ -685,6 +685,7 @@ const INDEX_SOURCES={
   knowledge:"data/index/knowledge_index.md",
 };
 const VERIFY_LINKS={caitodo:'verify/?src=caitodo',zhaojing:'verify/?src=zhaojing',finance:'verify/?src=finance',personal:'verify/?src=personal',openclaw:'verify/?src=openclaw'};
+const INDEX_LINKS={customer:'index/customer.html',project:'index/project.html',knowledge:'index/knowledge.html'};
 
 function safeStr(v,fallback="-"){
   if(v===undefined||v===null) return fallback;
@@ -913,7 +914,7 @@ function renderTraceability(){
         <div class="trace-name">${area.name}</div>
         <div class="trace-upd">更新 ${upd}</div>
       </div>
-      <div class="trace-path">點擊前往「全區總覽」查看該區任務</div>
+      <div class="trace-path">點擊開啟該區資料檢視頁</div>
       <div class="trace-metrics">
         <span class="trace-badge ${tagRate>=80?"ok":"warn"}">source 標記 ${tagRate}%</span>
         <span class="trace-badge ${fallbackCnt===0?"ok":"warn"}">fallback ${fallbackCnt}</span>
@@ -922,16 +923,16 @@ function renderTraceability(){
     </div>`;
   });
   const archCards=[["客戶索引",ARCH.customer],["專案索引",ARCH.project],["知識索引",ARCH.knowledge]].map(([name,m])=>`
-    <div class="trace-card" onclick="jumpToOverview()">
+    <div class="trace-card" onclick="window.open(INDEX_LINKS[name==='客戶索引'?'customer':name==='專案索引'?'project':'knowledge'],'_blank')">
       <div class="trace-top"><div class="trace-name">${name}</div><div class="trace-upd">更新 ${m?.updated_at||"-"}</div></div>
-      <div class="trace-path">點擊前往「全區總覽」；索引來源：${m?.path||"-"}</div>
+      <div class="trace-path">點擊開啟索引子分頁</div>
       <div class="trace-metrics"><span class="trace-badge ${m?.rows?"ok":"warn"}">索引列數 ${m?.rows??0}</span></div>
     </div>`).join("");
   const zjSummary=getZhaojingFlowSummary(DATA.zhaojing?.tasks||[]);
   const finSummary=getFinanceRefreshSummary(DATA.finance?.tasks||[]);
-  const flowCard=`<div class="trace-card" onclick="jumpToOverview()">
+  const flowCard=`<div class="trace-card" onclick="window.open('verify/?src=zhaojing','_blank')">
     <div class="trace-top"><div class="trace-name">流程 KPI 摘要</div><div class="trace-upd">跨域一致性</div></div>
-    <div class="trace-path">點擊前往「全區總覽」查看流程相關任務</div>
+    <div class="trace-path">點擊開啟兆鯨流程檢視頁</div>
     <div class="trace-metrics">
       <span class="trace-badge">${zjSummary}</span>
       <span class="trace-badge">${finSummary}</span>
@@ -1096,16 +1097,9 @@ function jumpToOverview(){
   if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function jumpToArea(key){
+  const url=VERIFY_LINKS[key];
+  if(url){ window.open(url,'_blank'); return; }
   jumpToOverview();
-  const idx=AREAS.findIndex(a=>a.key===key);
-  if(idx>=0){
-    setTimeout(()=>{
-      const body=document.getElementById(`acc-body-${idx}`);
-      if(body && !body.classList.contains('open')) toggleAcc(idx);
-      const row=document.getElementById(`acc-body-${idx}`);
-      if(row) row.scrollIntoView({behavior:'smooth',block:'start'});
-    },180);
-  }
 }
 
 async function init(){
