@@ -5,3 +5,9 @@ claw_dashboard_2.html
 logs/*.log
 logs/launchd*.log
 .firecrawl/
+logs/
+IMG_*.png
+*.jpg
+備存/
+大總管_*.md
+給大總管_*.txt

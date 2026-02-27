@@ -1,33 +1,397 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>知識索引 · Open Claw</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#272729;--bg2:#323234;--panel:#323234;--border:#585859;--text:#F2F2F7;--dim:#C7C7CC;--muted:#AEAEB2;--bright:#fff;--radius:10px}
-*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Segoe UI",sans-serif}
-header{position:sticky;top:0;z-index:20;background:rgba(39,39,41,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
-a{color:#8eb7ff;text-decoration:none}.wrap{max-width:1200px;margin:0 auto;padding:18px}
-.hero{background:linear-gradient(135deg,#2a2a2c,#34343b);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
-.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.chip{font-size:12px;border:1px solid var(--border);border-radius:999px;padding:3px 8px;color:var(--dim);background:var(--bg2)}
-.card{margin-top:12px;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:920px} th,td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:13px;white-space:nowrap}
-th{position:sticky;top:0;background:#3a3a3d;color:var(--bright);text-align:left}
-.err{margin-top:12px;background:#351d1d;border:1px solid #7b3a3a;color:#ffd6d6;border-radius:8px;padding:10px}
+:root{
+  --bg:#272729;
+  --bg2:#323234;
+  --bg3:#3D3D3F;
+  --panel:#323234;
+  --border:#585859;
+  --border2:#7A7A7C;
+  --text:#F2F2F7;
+  --dim:#C7C7CC;
+  --muted:#AEAEB2;
+  --bright:#FFFFFF;
+  --ok:#7fd68f;
+  --warn:#f1c068;
+  --info:#8cc6e6;
+  --danger:#ff8f8f;
+  --radius:12px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Noto Sans TC",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:#9bc2ff;text-decoration:none}
+a:hover{text-decoration:underline}
+header{
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:rgba(39,39,41,.94);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(16px);
+}
+.hdr-wrap{
+  max-width:1200px;
+  margin:0 auto;
+  padding:14px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.hdr-title{font-size:15px;font-weight:600;color:var(--bright)}
+.hdr-actions{display:flex;align-items:center;gap:10px;font-size:12px}
+main{max-width:1200px;margin:0 auto;padding:22px 20px 28px}
+.hero{
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  background:linear-gradient(135deg,#2c2c2f,#35353a 65%,#303038);
+  padding:16px;
+}
+.hero h1{margin:0;font-size:22px;line-height:1.2}
+.hero-sub{margin-top:6px;font-size:12px;color:var(--muted)}
+.summary{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:999px;
+  border:1px solid var(--border2);
+  color:var(--dim);
+  background:rgba(61,61,63,.55);
+  white-space:nowrap;
+}
+.chip strong{font-family:"JetBrains Mono",monospace;color:var(--bright);font-weight:600}
+.card{
+  margin-top:14px;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  background:var(--panel);
+  padding:12px;
+}
+.list{display:grid;gap:12px}
+.row-card{
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--bg2);
+  overflow:hidden;
+}
+.row-top{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:12px;
+  padding:12px;
+  border-bottom:1px solid var(--border);
+}
+.row-main{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+.row-badges{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  align-content:flex-start;
+  gap:6px;
+  min-width:140px;
+}
+.kv{min-width:0}
+.kv-label{
+  font-size:11px;
+  color:var(--muted);
+  margin-bottom:4px;
+  letter-spacing:.2px;
+}
+.kv-value{
+  font-size:13px;
+  color:var(--bright);
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+.kv-value.id{font-family:"JetBrains Mono",monospace}
+.row-detail{
+  padding:10px 12px 12px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:10px;
+}
+.tag-list{display:flex;flex-wrap:wrap;gap:6px}
+.tag{
+  display:inline-flex;
+  align-items:center;
+  border:1px solid var(--border2);
+  color:var(--dim);
+  border-radius:999px;
+  padding:2px 8px;
+  font-size:11px;
+  line-height:1.4;
+}
+.state-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  border:1px solid currentColor;
+  border-radius:999px;
+  padding:2px 8px;
+  font-size:11px;
+  line-height:1.4;
+  white-space:nowrap;
+}
+.state-pill .state-icon{
+  width:14px;
+  text-align:center;
+  font-size:10px;
+  font-weight:700;
+}
+.state-pill.ok{color:var(--ok)}
+.state-pill.warn{color:var(--warn)}
+.state-pill.info{color:var(--info)}
+.state-pill.danger{color:var(--danger)}
+.state-pill.neutral{color:var(--dim)}
+.cell-muted{color:var(--muted)}
+.empty{
+  padding:20px;
+  border:1px dashed var(--border2);
+  border-radius:10px;
+  color:var(--muted);
+  text-align:center;
+  font-size:13px;
+}
+.err{
+  margin-top:14px;
+  border:1px solid #8c3d3d;
+  color:#ffd7d7;
+  background:#3a2323;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:13px;
+}
+@media (max-width: 980px){
+  .row-main{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media (max-width: 760px){
+  .hdr-wrap{padding:12px 14px}
+  main{padding:14px 12px 20px}
+  .hero{padding:14px}
+  .hero h1{font-size:18px}
+  .summary{gap:6px}
+  .chip{font-size:10px;padding:3px 8px}
+  .card{padding:10px}
+  .row-top{grid-template-columns:1fr}
+  .row-main{grid-template-columns:1fr}
+  .row-badges{justify-content:flex-start;min-width:0}
+  .row-detail{grid-template-columns:1fr}
+  .kv-value{font-size:12px}
+}
 </style>
 </head>
 <body>
-<header><div><a href="../">← 回首頁</a> · 知識索引</div><a href="knowledge.md" target="_blank">原始索引檔</a></header>
-<div class="wrap">
-  <div class="hero"><div style="font-size:18px;font-weight:600">知識索引</div><div id="up" style="font-size:12px;color:var(--muted)">載入中...</div><div class="meta"><span class="chip" id="rows">rows: -</span></div></div>
+<header>
+  <div class="hdr-wrap">
+    <div class="hdr-title"><a href="../">← 回首頁</a> · 知識索引</div>
+    <div class="hdr-actions"><a href="knowledge.md" target="_blank" rel="noopener">原始索引檔</a></div>
+  </div>
+</header>
+<main>
+  <section class="hero">
+    <h1>知識索引</h1>
+    <div id="up" class="hero-sub">載入中...</div>
+    <div class="summary">
+      <span class="chip">updated_at: <strong id="sum-updated">-</strong></span>
+      <span class="chip">rows: <strong id="sum-rows">-</strong></span>
+    </div>
+  </section>
   <div id="err"></div>
-  <div class="card"><table id="tbl"><thead><tr><th>ID</th><th>標題</th><th>狀態</th><th>分類</th><th>標籤</th><th>來源</th><th>更新</th><th>備註</th></tr></thead><tbody></tbody></table></div>
-</div>
+  <section class="card">
+    <div id="list" class="list"></div>
+  </section>
+</main>
 <script>
-fetch('knowledge.md?_='+Date.now()).then(r=>r.text()).then(t=>{
-  const up=(t.match(/- updated_at:\s*([^\n]+)/)||[])[1]||'-';document.getElementById('up').textContent='更新 '+up;
-  const lines=t.split('\n').filter(l=>/^\|\s*K-\d{8}-\d{3}\s*\|/.test(l));document.getElementById('rows').textContent='rows: '+lines.length;
-  const tb=document.querySelector('#tbl tbody');
-  tb.innerHTML=lines.map(l=>{const c=l.split('|').slice(1,-1).map(x=>x.trim());return `<tr><td>${c[0]||''}</td><td>${c[1]||''}</td><td>${c[3]||''}</td><td>${c[4]||''}</td><td>${c[5]||''}</td><td>${c[7]||''}</td><td>${c[8]||''}</td><td>${c[c.length-1]||''}</td></tr>`}).join('');
-}).catch(e=>{document.getElementById('err').innerHTML=`<div class='err'>載入失敗：${e.message}</div>`});
-</script></body></html>
+const sourceFile = 'knowledge.md';
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function splitPipeRow(line) {
+  return line
+    .trim()
+    .replace(/^\|/, '')
+    .replace(/\|$/, '')
+    .split('|')
+    .map(cell => cell.trim());
+}
+
+function parseMarkdownTable(text) {
+  const lines = text.split(/\r?\n/);
+  for (let i = 0; i < lines.length - 1; i += 1) {
+    if (!/^\|/.test(lines[i].trim())) continue;
+    if (!/^\|(?:\s*:?-{3,}:?\s*\|)+\s*$/.test(lines[i + 1].trim())) continue;
+
+    const headers = splitPipeRow(lines[i]);
+    const rows = [];
+    for (let j = i + 2; j < lines.length; j += 1) {
+      const line = lines[j].trim();
+      if (!line || !/^\|/.test(line)) break;
+      rows.push(splitPipeRow(line));
+    }
+    return { headers, rows };
+  }
+  return { headers: [], rows: [] };
+}
+
+function classForState(value) {
+  const v = value.toLowerCase().trim();
+  if (/(error|fail|risk|blocked|逾期|失敗|風險)/.test(v)) return 'danger';
+  if (/(high|urgent|active|yes|ok|done|完成|啟用|正常|追蹤中|a級|a\b)/.test(v)) return 'warn';
+  if (/(planning|pending|tbd|medium|待|進行中|b級|b\b)/.test(v)) return 'info';
+  if (/(inactive|no|cancel|low|n\/a|停止|關閉|不追蹤|c級|c\b)/.test(v)) return 'neutral';
+  return 'ok';
+}
+
+function stateIcon(type) {
+  if (type === 'danger') return '!';
+  if (type === 'warn') return '▲';
+  if (type === 'info') return '●';
+  if (type === 'neutral') return '○';
+  return '✓';
+}
+
+function isStateColumn(header) {
+  return /(status|狀態|stage|priority|action_required|referrer_thanks_status)/i.test(header);
+}
+
+function isTagColumn(header) {
+  return /(tag|標籤|aliases|related_|ids?|risk|分類|lead_source|referrer)/i.test(header);
+}
+
+function isPathColumn(header) {
+  return /(path|source_ref|source)/i.test(header);
+}
+
+function renderState(value) {
+  const type = classForState(value);
+  return `<span class="state-pill ${type}"><span class="state-icon" aria-hidden="true">${stateIcon(type)}</span>${escapeHtml(value)}</span>`;
+}
+
+function renderValue(header, rawValue) {
+  const value = (rawValue || '').trim();
+  if (!value || value === '-') return '<span class="cell-muted">-</span>';
+
+  if (isStateColumn(header)) return renderState(value);
+
+  if (isTagColumn(header)) {
+    const items = value.split(/[,，、;；]/).map(v => v.trim()).filter(Boolean);
+    if (!items.length) return '<span class="cell-muted">-</span>';
+    return `<div class="tag-list">${items.map(item => `<span class="tag">${escapeHtml(item)}</span>`).join('')}</div>`;
+  }
+
+  const cls = isPathColumn(header) ? 'kv-value id' : 'kv-value';
+  return `<span class="${cls}">${escapeHtml(value)}</span>`;
+}
+
+function pickPrimaryHeaders(headers) {
+  const selected = [];
+  const patterns = [
+    /(_id$|^id$|編號)/i,
+    /(name|topic|title|主題|名稱)/i,
+    /(date|last_activity|due|followup|updated|日期)/i
+  ];
+
+  patterns.forEach(pattern => {
+    const candidate = headers.find(h => pattern.test(h) && !selected.includes(h));
+    if (candidate) selected.push(candidate);
+  });
+
+  for (const header of headers) {
+    if (selected.length >= 3) break;
+    if (!selected.includes(header)) selected.push(header);
+  }
+
+  return selected;
+}
+
+function renderRowCard(headers, row, primaryHeaders) {
+  const entries = headers.map((header, idx) => ({
+    header,
+    value: (row[idx] || '').trim()
+  }));
+
+  const badgeEntries = entries.filter(item => isStateColumn(item.header) && item.value && item.value !== '-').slice(0, 3);
+  const primarySet = new Set(primaryHeaders.concat(badgeEntries.map(item => item.header)));
+  const detailEntries = entries.filter(item => !primarySet.has(item.header));
+
+  const mainHtml = primaryHeaders.map(header => {
+    const item = entries.find(entry => entry.header === header) || { value: '-' };
+    const valueHtml = renderValue(header, item.value);
+    const valueClass = /(_id$|^id$)/i.test(header) ? 'kv-value id' : 'kv-value';
+    return `<div class="kv"><div class="kv-label">${escapeHtml(header)}</div><div class="${valueClass}">${valueHtml}</div></div>`;
+  }).join('');
+
+  const badgeHtml = badgeEntries.map(item => {
+    return `<div class="kv"><div class="kv-label">${escapeHtml(item.header)}</div>${renderState(item.value)}</div>`;
+  }).join('');
+
+  const detailHtml = detailEntries.map(item => {
+    return `<div class="kv"><div class="kv-label">${escapeHtml(item.header)}</div><div class="kv-value">${renderValue(item.header, item.value)}</div></div>`;
+  }).join('');
+
+  return `<article class="row-card"><div class="row-top"><div class="row-main">${mainHtml}</div><div class="row-badges">${badgeHtml}</div></div><div class="row-detail">${detailHtml}</div></article>`;
+}
+
+fetch(`${sourceFile}?_=${Date.now()}`)
+  .then(res => {
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.text();
+  })
+  .then(text => {
+    const updatedAt = (text.match(/-\s*updated_at:\s*([^\n]+)/) || [])[1] || '-';
+    const parsed = parseMarkdownTable(text);
+
+    if (!parsed.headers.length) {
+      throw new Error('找不到 markdown 表格');
+    }
+
+    document.getElementById('sum-updated').textContent = updatedAt.trim();
+    document.getElementById('up').textContent = `來源：${sourceFile}`;
+    document.getElementById('sum-rows').textContent = String(parsed.rows.length);
+
+    const primaryHeaders = pickPrimaryHeaders(parsed.headers);
+    const list = document.getElementById('list');
+
+    if (!parsed.rows.length) {
+      list.innerHTML = '<div class="empty">目前沒有可顯示資料。</div>';
+      return;
+    }
+
+    list.innerHTML = parsed.rows
+      .map(row => renderRowCard(parsed.headers, row, primaryHeaders))
+      .join('');
+  })
+  .catch(err => {
+    document.getElementById('err').innerHTML = `<div class="err">載入失敗：${escapeHtml(err.message)}</div>`;
+  });
+</script>
+</body>
+</html>

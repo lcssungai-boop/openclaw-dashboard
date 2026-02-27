@@ -13,7 +13,7 @@ cd "$REPO"
 # 先匯出最新 cron jobs 狀態
 python3 "$(dirname "$0")/export_jobs.py" 2>/dev/null || true
 
-git add data/ index.html openclaw/ caitodo/ zhaojing/ finance/ personal/ assets/ scripts/ crm/ .gitignore 2>/dev/null
+git add data/ index/ index.html openclaw/ caitodo/ zhaojing/ finance/ personal/ assets/ scripts/ crm/ .gitignore 2>/dev/null
 
 # 有變更才 commit
 if git diff --cached --quiet; then
