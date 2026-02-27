@@ -405,6 +405,20 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
   .t-due{font-size:11px}
 }
 
+
+/* ── BOTTOM SUBTABS ── */
+.subtabs{
+  margin:10px auto 0;max-width:1300px;padding:0 12px 12px;
+  display:flex;flex-wrap:wrap;gap:8px;
+}
+.subtabs a{
+  font-size:11px;text-decoration:none;color:var(--dim);
+  border:1px solid var(--border);background:var(--panel);
+  border-radius:999px;padding:6px 10px;display:inline-flex;align-items:center;gap:6px;
+}
+.subtabs a:hover{color:var(--bright);border-color:#3a4554}
+.subtabs .group{font-size:10px;color:var(--muted);padding:6px 2px}
+
 /* ── FOOTER ── */
 footer{
   text-align:center;padding:20px 24px;
@@ -604,6 +618,21 @@ main>section:nth-child(5){animation-delay:.33s}
   </section>
 
 </main>
+
+<div class="subtabs" id="subtabs">
+  <span class="group">子分頁</span>
+  <a href="caitodo/" target="_blank">才多多</a>
+  <a href="zhaojing/" target="_blank">兆鯨顧問</a>
+  <a href="finance/" target="_blank">理財分析師</a>
+  <a href="personal/" target="_blank">個人財務</a>
+  <a href="openclaw/" target="_blank">OpenClaw</a>
+  <span class="group">核對資料</span>
+  <a href="data/caitodo/tasks.json" target="_blank">才多多 JSON</a>
+  <a href="data/zhaojing/tasks.json" target="_blank">兆鯨 JSON</a>
+  <a href="data/finance/tasks.json" target="_blank">理財 JSON</a>
+  <a href="data/personal/tasks.json" target="_blank">個人 JSON</a>
+  <a href="data/openclaw/tasks.json" target="_blank">OpenClaw JSON</a>
+</div>
 
 <footer id="footer-meta">Open Claw &nbsp;·&nbsp; 每日自動更新 &nbsp;·&nbsp; 資料來源 tasks.json</footer>
 
