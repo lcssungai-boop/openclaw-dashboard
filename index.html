@@ -908,12 +908,12 @@ function renderTraceability(){
     const upd=fmtTs(d.updated_at)||"-";
     const tagRate=d.meta?.sourceCoverage??0;
     const fallbackCnt=d.meta?.fallbackCount??0;
-    return `<div class="trace-card">
+    return `<div class="trace-card" onclick="jumpToArea('${area.key}')">
       <div class="trace-top">
-        <div class="trace-name"><a href="#sec-overview" style="color:inherit;text-decoration:none">${area.name}</a></div>
+        <div class="trace-name">${area.name}</div>
         <div class="trace-upd">更新 ${upd}</div>
       </div>
-      <div class="trace-path"><a href="#sec-overview" style="color:inherit">${area.data}</a></div>
+      <div class="trace-path">點擊前往「全區總覽」查看該區任務</div>
       <div class="trace-metrics">
         <span class="trace-badge ${tagRate>=80?"ok":"warn"}">source 標記 ${tagRate}%</span>
         <span class="trace-badge ${fallbackCnt===0?"ok":"warn"}">fallback ${fallbackCnt}</span>
@@ -922,16 +922,16 @@ function renderTraceability(){
     </div>`;
   });
   const archCards=[["客戶索引",ARCH.customer],["專案索引",ARCH.project],["知識索引",ARCH.knowledge]].map(([name,m])=>`
-    <div class="trace-card">
+    <div class="trace-card" onclick="jumpToOverview()">
       <div class="trace-top"><div class="trace-name">${name}</div><div class="trace-upd">更新 ${m?.updated_at||"-"}</div></div>
-      <div class="trace-path"><a href="#sec-overview" style="color:inherit">${m?.path||"-"}</a></div>
+      <div class="trace-path">點擊前往「全區總覽」；索引來源：${m?.path||"-"}</div>
       <div class="trace-metrics"><span class="trace-badge ${m?.rows?"ok":"warn"}">索引列數 ${m?.rows??0}</span></div>
     </div>`).join("");
   const zjSummary=getZhaojingFlowSummary(DATA.zhaojing?.tasks||[]);
   const finSummary=getFinanceRefreshSummary(DATA.finance?.tasks||[]);
-  const flowCard=`<div class="trace-card">
+  const flowCard=`<div class="trace-card" onclick="jumpToOverview()">
     <div class="trace-top"><div class="trace-name">流程 KPI 摘要</div><div class="trace-upd">跨域一致性</div></div>
-    <div class="trace-path"><a href="#sec-overview" style="color:inherit">兆鯨流程 / 理財刷新排程</a></div>
+    <div class="trace-path">點擊前往「全區總覽」查看流程相關任務</div>
     <div class="trace-metrics">
       <span class="trace-badge">${zjSummary}</span>
       <span class="trace-badge">${finSummary}</span>
@@ -1090,6 +1090,24 @@ async function loadArea(area){
     return normalizeDataset(await r.json());
   }catch(e){return normalizeDataset(null);}
 }
+
+function jumpToOverview(){
+  const sec=document.getElementById('sec-overview');
+  if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function jumpToArea(key){
+  jumpToOverview();
+  const idx=AREAS.findIndex(a=>a.key===key);
+  if(idx>=0){
+    setTimeout(()=>{
+      const body=document.getElementById(`acc-body-${idx}`);
+      if(body && !body.classList.contains('open')) toggleAcc(idx);
+      const row=document.getElementById(`acc-body-${idx}`);
+      if(row) row.scrollIntoView({behavior:'smooth',block:'start'});
+    },180);
+  }
+}
+
 async function init(){
   const [results]=await Promise.all([
     Promise.all(AREAS.map(loadArea)),
