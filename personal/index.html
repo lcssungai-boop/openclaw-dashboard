@@ -260,7 +260,7 @@ function render(fin){
   const dayNet=(fin.transactions||[]).filter(x=>(x.date||'').slice(0,10)===today).reduce((s,x)=>s+Number(x.income||0)-Number(x.expense||0),0);
   const chg=document.getElementById('h-chg');
   chg.className='chg '+(dayNet>0?'up':dayNet<0?'down':'flat');
-  chg.textContent=(dayNet>0?'↑ ':'':dayNet<0?'↓ ':'→ ')+(dayNet===0?'今日無變動':`今日 ${dayNet>0?'+':''}${fmt(dayNet)}`);
+  chg.textContent=((dayNet>0)?'↑ ':((dayNet<0)?'↓ ':'→ ')) + (dayNet===0?'今日無變動':`今日 ${dayNet>0?'+':''}${fmt(dayNet)}`);
   // 迷你趨勢線（近12筆累積）
   const tx=(fin.transactions||[]).slice(-12);
   let cur=Number(fin.net_worth||0)-tx.reduce((s,x)=>s+Number(x.income||0)-Number(x.expense||0),0);
