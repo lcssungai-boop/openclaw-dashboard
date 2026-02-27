@@ -172,6 +172,24 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
 .kpi-sub{font-size:12px;color:var(--dim);margin-top:1px}
 .kpi-hint{display:none}
 
+/* ── TRACEABILITY ── */
+.trace-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.trace-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+  padding:12px 14px;display:flex;flex-direction:column;gap:7px;
+}
+.trace-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.trace-name{font-size:13px;color:var(--bright);font-weight:600}
+.trace-upd{font-size:10px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.trace-path{font-size:10px;color:var(--dim);font-family:"JetBrains Mono",monospace;word-break:break-all}
+.trace-metrics{display:flex;flex-wrap:wrap;gap:6px}
+.trace-badge{
+  font-size:10px;border:1px solid var(--border);border-radius:20px;
+  padding:2px 8px;color:var(--dim);background:var(--bg3);
+}
+.trace-badge.warn{border-color:var(--urgent-bd);color:var(--urgent-text);background:transparent}
+.trace-badge.ok{border-color:#2A5030;color:var(--green);background:transparent}
+
 /* ── BRIEF ── */
 .brief-wrap{
   background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
@@ -341,10 +359,11 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
     gap:28px 36px;
     align-items:start;
   }
-  main>section:nth-child(1){grid-column:1;grid-row:1/span 3}
+  main>section:nth-child(1){grid-column:1;grid-row:1/span 4}
   main>section:nth-child(2){grid-column:2;grid-row:1}
   main>section:nth-child(3){grid-column:2;grid-row:2}
   main>section:nth-child(4){grid-column:2;grid-row:3}
+  main>section:nth-child(5){grid-column:2;grid-row:4}
 
   .kpi-grid{grid-template-columns:1fr;gap:8px}
   .kpi-card{padding:12px 14px}
@@ -364,6 +383,7 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
   }
   .kpi-card.kpi-hot .kpi-hint{border-top-color:var(--urgent-bd);color:var(--urgent-text);opacity:.75}
   .kpi-card.kpi-blocked .kpi-hint{border-top-color:var(--blocked-bd);color:var(--blocked-text);opacity:.75}
+  .trace-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 
   .sec-lbl{margin-bottom:16px}
 
@@ -402,6 +422,7 @@ main>section:nth-child(1){animation-delay:.05s}
 main>section:nth-child(2){animation-delay:.12s}
 main>section:nth-child(3){animation-delay:.19s}
 main>section:nth-child(4){animation-delay:.26s}
+main>section:nth-child(5){animation-delay:.33s}
 
 /* ── TABLET (≤1024px) ── */
 @media(max-width:1024px){
@@ -451,6 +472,7 @@ main>section:nth-child(4){animation-delay:.26s}
   .kpi-lbl{font-size:11px}
   .kpi-sub{font-size:13px}
   .kpi-icon{width:24px;height:24px;margin-bottom:6px}
+  .trace-grid{grid-template-columns:1fr}
   .wc-title{font-size:17px}
   .wc-meta{font-size:14px;gap:10px}
   .wc-meta-lbl{font-size:12px}
@@ -549,6 +571,14 @@ main>section:nth-child(4){animation-delay:.26s}
     </div>
   </section>
 
+  <!-- 資料一致性追蹤 -->
+  <section>
+    <div class="sec-lbl">資料一致性追蹤</div>
+    <div class="trace-grid" id="trace-grid">
+      <div class="trace-card"><div class="trace-name">載入中…</div></div>
+    </div>
+  </section>
+
   <!-- 今日提醒 -->
   <section>
     <div class="sec-lbl">今日提醒</div>
@@ -575,9 +605,8 @@ main>section:nth-child(4){animation-delay:.26s}
 
 </main>
 
-<footer>Open Claw &nbsp;·&nbsp; 每日自動更新 &nbsp;·&nbsp; 資料來源 tasks.json</footer>
+<footer id="footer-meta">Open Claw &nbsp;·&nbsp; 每日自動更新 &nbsp;·&nbsp; 資料來源 tasks.json</footer>
 
-<script src="assets/js/openclaw-dashboard-core.js"></script>
 <script>
 // ── SCROLL: shrink header ─────────────────────────────────────────
 (function(){
@@ -607,23 +636,77 @@ const IC={
 };
 
 // ── AREAS ─────────────────────────────────────────────────────────
-const CORE=OpenClawCore.buildContext({basePath:"."});
-const AREA_META={
-  caitodo:{icon:IC.caitodo,path:"caitodo/"},
-  zhaojing:{icon:IC.zhaojing,path:"zhaojing/"},
-  finance:{icon:IC.finance,path:"finance/"},
-  personal:{icon:IC.personal,path:"personal/"},
-  openclaw:{icon:IC.openclaw,path:"openclaw/"}
-};
-const AREAS=CORE.areas.map(a=>({
-  ...a,
-  icon:AREA_META[a.key]?.icon||"",
-  path:AREA_META[a.key]?.path||a.path
-}));
+const AREAS=[
+  {key:"caitodo",  name:"才多多",    role:"移工・僑外生・派遣", icon:IC.caitodo,  path:"caitodo/",  data:"data/caitodo/tasks.json"},
+  {key:"zhaojing", name:"兆鯨顧問",  role:"顧問・物業・電商",   icon:IC.zhaojing, path:"zhaojing/", data:"data/zhaojing/tasks.json"},
+  {key:"finance",  name:"理財分析師",role:"股票・帳務・KDJ",    icon:IC.finance,  path:"finance/",  data:"data/finance/tasks.json"},
+  {key:"personal", name:"個人財務",  role:"大總管",             icon:IC.personal, path:"personal/", data:"data/personal/tasks.json"},
+  {key:"openclaw", name:"OpenClaw",  role:"開發優化師",         icon:IC.openclaw, path:"openclaw/", data:"data/openclaw/tasks.json"},
+];
 
-const DATA=CORE.data;
+const DATA={};
+const ARCH={customer:null,project:null,knowledge:null};
 const PRI_LBL={urgent:"急件",important:"重要",normal:"一般"};
 const TYPE_LBL={remittance:"匯款",alert:"提醒",task:"任務"};
+const INDEX_SOURCES={
+  customer:"memory/topics/system/index/customer_index.md",
+  project:"memory/topics/system/index/project_index.md",
+  knowledge:"memory/topics/system/index/knowledge_index.md",
+};
+
+function safeStr(v,fallback="-"){
+  if(v===undefined||v===null) return fallback;
+  const s=String(v).trim();
+  return s?s:fallback;
+}
+function normStatus(v){
+  const s=safeStr(v,"待處理");
+  return (s==="待處理"||s==="阻塞"||s==="已完成")?s:"待處理";
+}
+function normPriority(v){
+  const s=safeStr(v,"normal");
+  return (s==="urgent"||s==="important"||s==="normal")?s:"normal";
+}
+function normType(v){
+  const s=safeStr(v,"task");
+  return (s==="task"||s==="alert"||s==="remittance")?s:"task";
+}
+function normalizeTask(raw){
+  const t=raw||{};
+  const fallbackUsed=[
+    !safeStr(t.title,""),
+    !safeStr(t.status,""),
+    !safeStr(t.owner_role,""),
+    !safeStr(t.updated_at,""),
+  ].filter(Boolean).length;
+  return {
+    title:safeStr(t.title,"(未命名任務)"),
+    status:normStatus(t.status),
+    next_step:safeStr(t.next_step),
+    owner_role:safeStr(t.owner_role),
+    blocked_reason:safeStr(t.blocked_reason),
+    priority:normPriority(t.priority),
+    type:normType(t.type),
+    due:safeStr(t.due),
+    time:safeStr(t.time),
+    freq:safeStr(t.freq),
+    updated_at:safeStr(t.updated_at),
+    source:safeStr(t.source,"unknown"),
+    _fallbackUsed:fallbackUsed,
+  };
+}
+function normalizeDataset(raw){
+  const src=raw||{};
+  const tasks=Array.isArray(src.tasks)?src.tasks.map(normalizeTask):[];
+  const fallbackCount=tasks.reduce((n,t)=>n+t._fallbackUsed,0)+(Array.isArray(src.tasks)?0:1);
+  const sourceTagged=tasks.filter(t=>t.source!=="unknown").length;
+  const sourceCoverage=tasks.length?Math.round((sourceTagged/tasks.length)*100):0;
+  return {
+    updated_at:safeStr(src.updated_at,null),
+    tasks,
+    meta:{fallbackCount,sourceTagged,sourceCoverage},
+  };
+}
 
 function isWarn(t){return t.priority==="urgent"||t.type==="remittance"||t.status==="阻塞";}
 function isSched(t){return t.time&&t.time!=="-"&&t.freq&&t.freq!=="-";}
@@ -649,6 +732,31 @@ function counts(tasks){
     else c.pending++;
   });
   return c;
+}
+
+async function loadIndexMeta(type,path){
+  try{
+    const r=await fetch(path+"?_="+Date.now());
+    if(!r.ok) throw 0;
+    const txt=await r.text();
+    const updated=(txt.match(/- updated_at:\s*([^\n]+)/)||[])[1]?.trim()||"-";
+    const rowRx=type==="customer"?/^\|\s*C-\d{4}\s*\|/gm
+      :type==="project"?/^\|\s*P-\d{4}\s*\|/gm
+      :/^\|\s*K-\d{8}-\d{3}\s*\|/gm;
+    const rows=(txt.match(rowRx)||[]).length;
+    return {updated_at:updated,rows,path};
+  }catch(e){
+    return {updated_at:"-",rows:0,path,error:true};
+  }
+}
+
+async function loadArchitectureMeta(){
+  const [c,p,k]=await Promise.all([
+    loadIndexMeta("customer",INDEX_SOURCES.customer),
+    loadIndexMeta("project",INDEX_SOURCES.project),
+    loadIndexMeta("knowledge",INDEX_SOURCES.knowledge),
+  ]);
+  ARCH.customer=c;ARCH.project=p;ARCH.knowledge=k;
 }
 
 // ── ALERT STRIP ───────────────────────────────────────────────────
@@ -744,6 +852,64 @@ function renderKPIs(){
   document.getElementById("kpi-urgent-hint").innerHTML=hint(urgentList);
   if(totalBlocked>0) document.getElementById("kpi-card-blocked").className="kpi-card kpi-blocked";
   if(totalUrgent>0) document.getElementById("kpi-card-urgent").className="kpi-card kpi-hot";
+}
+
+function getFinanceRefreshSummary(tasks){
+  const active=(tasks||[]).filter(t=>t.status!=="已完成");
+  const daily=active.filter(t=>t.freq==="daily").length;
+  const weekly=active.filter(t=>t.freq==="weekly"||t.freq==="weekly-mon").length;
+  const monthly=active.filter(t=>t.freq==="monthly").length;
+  return `daily ${daily} / weekly ${weekly} / monthly ${monthly}`;
+}
+
+function getZhaojingFlowSummary(tasks){
+  const flowRx=/租|欠租|續約|招租|修繕|開票|庫存|導入|貸款|調解/;
+  const active=(tasks||[]).filter(t=>t.status!=="已完成");
+  const matched=active.filter(t=>flowRx.test(t.title)).length;
+  return `${matched}/${active.length||0} 任務已掛流程關鍵字`;
+}
+
+function renderTraceability(){
+  const grid=document.getElementById("trace-grid");
+  const areaCards=AREAS.map(area=>{
+    const d=DATA[area.key]||normalizeDataset(null);
+    const upd=fmtTs(d.updated_at)||"-";
+    const tagRate=d.meta?.sourceCoverage??0;
+    const fallbackCnt=d.meta?.fallbackCount??0;
+    return `<div class="trace-card">
+      <div class="trace-top">
+        <div class="trace-name">${area.name}</div>
+        <div class="trace-upd">更新 ${upd}</div>
+      </div>
+      <div class="trace-path">${area.data}</div>
+      <div class="trace-metrics">
+        <span class="trace-badge ${tagRate>=80?"ok":"warn"}">source 標記 ${tagRate}%</span>
+        <span class="trace-badge ${fallbackCnt===0?"ok":"warn"}">fallback ${fallbackCnt}</span>
+        <span class="trace-badge">任務 ${d.tasks.length}</span>
+      </div>
+    </div>`;
+  });
+  const archCards=[["客戶索引",ARCH.customer],["專案索引",ARCH.project],["知識索引",ARCH.knowledge]].map(([name,m])=>`
+    <div class="trace-card">
+      <div class="trace-top"><div class="trace-name">${name}</div><div class="trace-upd">更新 ${m?.updated_at||"-"}</div></div>
+      <div class="trace-path">${m?.path||"-"}</div>
+      <div class="trace-metrics"><span class="trace-badge ${m?.rows?"ok":"warn"}">索引列數 ${m?.rows??0}</span></div>
+    </div>`).join("");
+  const zjSummary=getZhaojingFlowSummary(DATA.zhaojing?.tasks||[]);
+  const finSummary=getFinanceRefreshSummary(DATA.finance?.tasks||[]);
+  const flowCard=`<div class="trace-card">
+    <div class="trace-top"><div class="trace-name">流程 KPI 摘要</div><div class="trace-upd">跨域一致性</div></div>
+    <div class="trace-path">兆鯨流程 / 理財刷新排程</div>
+    <div class="trace-metrics">
+      <span class="trace-badge">${zjSummary}</span>
+      <span class="trace-badge">${finSummary}</span>
+    </div>
+  </div>`;
+  grid.innerHTML=[...areaCards,archCards,flowCard].join("");
+  const footer=document.getElementById("footer-meta");
+  if(footer){
+    footer.innerHTML=`Open Claw &nbsp;·&nbsp; 每日自動更新 &nbsp;·&nbsp; 來源 ${AREAS.length} JSON + 3 Index`;
+  }
 }
 
 // ── LUCKY COLORS ──────────────────────────────────────────────────
@@ -885,10 +1051,22 @@ function toggleAcc(idx){
 }
 
 // ── FETCH ─────────────────────────────────────────────────────────
+async function loadArea(area){
+  try{
+    const r=await fetch(area.data+"?_="+Date.now());
+    if(!r.ok) throw 0;
+    return normalizeDataset(await r.json());
+  }catch(e){return normalizeDataset(null);}
+}
 async function init(){
-  await CORE.loadAll();
+  const [results]=await Promise.all([
+    Promise.all(AREAS.map(loadArea)),
+    loadArchitectureMeta(),
+  ]);
+  AREAS.forEach((a,i)=>{DATA[a.key]=results[i]||normalizeDataset(null);});
   renderKPIs();
   renderStrip();
+  renderTraceability();
   renderWarnings();
   renderBrief();
   renderAccordion();
