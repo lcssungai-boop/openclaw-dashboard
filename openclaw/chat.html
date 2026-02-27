@@ -286,7 +286,7 @@ function connect(){
     setTimeout(() => sendConnect(), 750);
   };
   ws.onclose = () => {
-    isConn = false; setStatus('off');
+    isConn = false; connectSent = false; setStatus('off');
     sendBtn.disabled = true;
     finalStream();
     for(const[,p] of pending) p.reject(new Error('disconnected'));
