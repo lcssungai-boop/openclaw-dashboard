@@ -136,7 +136,13 @@ main>div:nth-child(4){animation-delay:.24s}
       <div class="hdr-sub">開發優化師</div>
     </div>
   </div>
-  <div id="clk" class="hdr-clock"></div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <a href="chat.html" style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);text-decoration:none;padding:5px 12px;border:1px solid var(--border);border-radius:3px;transition:all .15s;letter-spacing:.06em;font-family:'JetBrains Mono',monospace" onmouseover="this.style.borderColor='var(--border2)';this.style.color='var(--dim)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Chat
+    </a>
+    <div id="clk" class="hdr-clock"></div>
+  </div>
 </header>
 <div class="sum-bar">
   <span id="sum-content">載入中…</span>
