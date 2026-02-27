@@ -123,5 +123,7 @@
       "updated_at": "2026-02-24T06:00:57Z",
       "source": "auto"
     }
-  ]
+  ],
+  "source": "dashboard:/Users/sunglin/Documents/線上儀表板",
+  "schema_version": "2026-02"
 }

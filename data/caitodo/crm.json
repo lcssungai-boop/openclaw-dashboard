@@ -85,24 +85,43 @@
     "summary": {
       "total": 0,
       "new_today": 0,
-      "sources": { "104": 0, "1111": 0, "jobfair": 0, "other": 0 }
+      "sources": {
+        "104": 0,
+        "1111": 0,
+        "jobfair": 0,
+        "other": 0
+      }
     },
     "items": []
   },
   "followups": {
-    "summary": { "total": 0, "pending": 0, "overdue": 0 },
+    "summary": {
+      "total": 0,
+      "pending": 0,
+      "overdue": 0
+    },
     "items": []
   },
   "declined": {
-    "summary": { "total": 0 },
+    "summary": {
+      "total": 0
+    },
     "items": []
   },
   "matches": {
-    "summary": { "total": 0, "active": 0 },
+    "summary": {
+      "total": 0,
+      "active": 0
+    },
     "items": []
   },
   "candidates": {
-    "summary": { "total": 0, "active": 0 },
+    "summary": {
+      "total": 0,
+      "active": 0
+    },
     "items": []
-  }
+  },
+  "source": "dashboard:/Users/sunglin/Documents/線上儀表板",
+  "schema_version": "2026-02"
 }

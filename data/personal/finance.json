@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-26T16:43:58Z",
+  "updated_at": "2026-02-26T23:30:52Z",
   "net_worth": 1276644,
   "available_cash": 161690,
   "stocks_value": 429514,
@@ -304,5 +304,7 @@
     "2891": 1000,
     "00878": 1000,
     "1101": 1099
-  }
+  },
+  "source": "dashboard:/Users/sunglin/Documents/線上儀表板",
+  "schema_version": "2026-02"
 }

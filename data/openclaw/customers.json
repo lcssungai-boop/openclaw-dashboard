@@ -31,5 +31,7 @@
       ],
       "note": "客戶主檔初始化"
     }
-  ]
+  ],
+  "source": "dashboard:/Users/sunglin/Documents/線上儀表板",
+  "schema_version": "2026-02"
 }
