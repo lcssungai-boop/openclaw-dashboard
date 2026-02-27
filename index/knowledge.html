@@ -1,2 +1,33 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>知識索引</title><style>body{margin:0;background:#0f1115;color:#e8edf5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif}.wrap{max-width:1100px;margin:0 auto;padding:20px}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}a{color:#7db3ff}.card{background:#171b22;border:1px solid #2a3442;border-radius:12px;padding:12px;margin-top:12px}.meta{font-size:13px;color:#9fb0c3}pre{white-space:pre-wrap;word-break:break-word;background:#10141a;border:1px solid #2a3442;border-radius:10px;padding:12px;color:#d8e6f7}</style></head><body><div class="wrap"><div class="top"><div><a href="../">← 回首頁</a></div><div><a href="knowledge.md" target="_blank">原始索引檔</a></div></div><h2>知識索引</h2><div class="card meta" id="meta">載入中...</div><div class="card"><pre id="content">載入中...</pre></div></div><script>fetch('knowledge.md?_='+Date.now()).then(r=>r.text()).then(t=>{document.getElementById('content').textContent=t;const rows=(t.match(/^\|\s*K-\d{8}-\d{3}\s*\|/gm)||[]).length;const up=(t.match(/- updated_at:\s*([^\n]+)/)||[])[1]||'-';document.getElementById('meta').textContent=`updated_at: ${up} ｜ rows: ${rows}`;}).catch(e=>{document.getElementById('meta').textContent='載入失敗';document.getElementById('content').textContent=e.message;});</script></body></html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>知識索引 · Open Claw</title>
+<style>
+:root{--bg:#272729;--bg2:#323234;--panel:#323234;--border:#585859;--text:#F2F2F7;--dim:#C7C7CC;--muted:#AEAEB2;--bright:#fff;--radius:10px}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Segoe UI",sans-serif}
+header{position:sticky;top:0;z-index:20;background:rgba(39,39,41,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
+a{color:#8eb7ff;text-decoration:none}.wrap{max-width:1200px;margin:0 auto;padding:18px}
+.hero{background:linear-gradient(135deg,#2a2a2c,#34343b);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.chip{font-size:12px;border:1px solid var(--border);border-radius:999px;padding:3px 8px;color:var(--dim);background:var(--bg2)}
+.card{margin-top:12px;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:920px} th,td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:13px;white-space:nowrap}
+th{position:sticky;top:0;background:#3a3a3d;color:var(--bright);text-align:left}
+.err{margin-top:12px;background:#351d1d;border:1px solid #7b3a3a;color:#ffd6d6;border-radius:8px;padding:10px}
+</style>
+</head>
+<body>
+<header><div><a href="../">← 回首頁</a> · 知識索引</div><a href="knowledge.md" target="_blank">原始索引檔</a></header>
+<div class="wrap">
+  <div class="hero"><div style="font-size:18px;font-weight:600">知識索引</div><div id="up" style="font-size:12px;color:var(--muted)">載入中...</div><div class="meta"><span class="chip" id="rows">rows: -</span></div></div>
+  <div id="err"></div>
+  <div class="card"><table id="tbl"><thead><tr><th>ID</th><th>標題</th><th>狀態</th><th>分類</th><th>標籤</th><th>來源</th><th>更新</th><th>備註</th></tr></thead><tbody></tbody></table></div>
+</div>
+<script>
+fetch('knowledge.md?_='+Date.now()).then(r=>r.text()).then(t=>{
+  const up=(t.match(/- updated_at:\s*([^\n]+)/)||[])[1]||'-';document.getElementById('up').textContent='更新 '+up;
+  const lines=t.split('\n').filter(l=>/^\|\s*K-\d{8}-\d{3}\s*\|/.test(l));document.getElementById('rows').textContent='rows: '+lines.length;
+  const tb=document.querySelector('#tbl tbody');
+  tb.innerHTML=lines.map(l=>{const c=l.split('|').slice(1,-1).map(x=>x.trim());return `<tr><td>${c[0]||''}</td><td>${c[1]||''}</td><td>${c[3]||''}</td><td>${c[4]||''}</td><td>${c[5]||''}</td><td>${c[7]||''}</td><td>${c[8]||''}</td><td>${c[c.length-1]||''}</td></tr>`}).join('');
+}).catch(e=>{document.getElementById('err').innerHTML=`<div class='err'>載入失敗：${e.message}</div>`});
+</script></body></html>
