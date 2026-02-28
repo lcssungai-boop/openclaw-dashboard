@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>兆鯨租客名單 · Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1220;--panel:#151a2d;--panel2:#10162a;--border:#273052;
+  --text:#e9ecff;--muted:#aab2d6;--dim:#c7c7cc;--accent:#7da7ff;
+  --ok:#7fd68f;--warn:#f1c068;--danger:#ff8f8f;--radius:14px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;line-height:1.55}
+.wrap{max-width:1200px;margin:0 auto;padding:16px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:8px 0 14px}
+h1{margin:0;font-size:22px}
+.sub{font-size:12px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin:12px 0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.input{flex:1;min-width:220px}
+input,select{width:100%;padding:10px 10px;border-radius:10px;border:1px solid var(--border);background:var(--panel2);color:var(--text);outline:none}
+.kpi{display:flex;gap:12px;flex-wrap:wrap}
+.badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;color:var(--muted)}
+.badge.ok{border-color:#2a5030;color:var(--ok)}
+.badge.warn{border-color:#7a5a1b;color:var(--warn)}
+.badge.danger{border-color:#7a2b2b;color:var(--danger)}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px}
+table{width:100%;border-collapse:collapse;min-width:980px;background:var(--panel2)}
+th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;font-size:13px;vertical-align:top}
+th{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-family:"JetBrains Mono",monospace;background:rgba(255,255,255,.03)}
+tr:hover td{background:rgba(255,255,255,.04)}
+.small{font-size:12px;color:var(--muted)}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--border);font-size:12px;color:var(--dim)}
+.pill.ok{border-color:#2a5030;color:var(--ok)}
+.pill.warn{border-color:#7a5a1b;color:var(--warn)}
+.pill.danger{border-color:#7a2b2b;color:var(--danger)}
+footer{margin-top:12px;color:var(--muted);font-size:12px;font-family:"JetBrains Mono",monospace}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>兆鯨租客名單</h1>
+      <div class="sub">來源：<a href="../data/zhaojing/tenants.json" target="_blank" rel="noopener">tenants.json</a></div>
+    </div>
+    <div class="sub"><a href="../">← 回首頁</a> · <a href="./" target="_blank" rel="noopener">兆鯨子頁</a></div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div class="input">
+        <input id="q" placeholder="搜尋：姓名 / 物件 / 備註" />
+      </div>
+      <div style="min-width:180px">
+        <select id="filter">
+          <option value="all">全部</option>
+          <option value="active">有合約到期日</option>
+          <option value="needs_attention">需注意（欠租/協商/無合約/待確認）</option>
+        </select>
+      </div>
+    </div>
+    <div class="kpi" style="margin-top:10px">
+      <span class="badge" id="b-upd">updated_at: -</span>
+      <span class="badge" id="b-count">count: -</span>
+      <span class="badge warn" id="b-attn">needs attention: -</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>姓名</th>
+            <th>物件</th>
+            <th>租金</th>
+            <th>狀態</th>
+            <th>欠租</th>
+            <th>到期日</th>
+            <th>聯絡</th>
+            <th>備註</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="9" class="small">載入中…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer id="ft">—</footer>
+</div>
+
+<script>
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
+function norm(s){return String(s??'').trim()}
+function money(n){
+  const v=Number(n||0);
+  if(!isFinite(v)) return '-';
+  return v.toLocaleString('zh-TW');
+}
+function pillStatus(s){
+  const t=norm(s);
+  if(['正常','active','出租中'].includes(t)) return 'ok';
+  if(['欠租','協商中','待確認','無合約'].includes(t)) return 'warn';
+  return '';
+}
+function needsAttention(t){
+  const status=norm(t.status);
+  const arrears=Number(t.arrears||0);
+  return arrears>0 || ['欠租','協商中','無合約','待確認','阻塞'].includes(status);
+}
+
+let DATA=null;
+
+function render(){
+  if(!DATA) return;
+  const q=norm(document.getElementById('q').value).toLowerCase();
+  const f=document.getElementById('filter').value;
+  const list=(DATA.tenants||[]).filter(t=>{
+    const hay=[t.id,t.name,t.property,t.note].map(x=>norm(x).toLowerCase()).join(' ');
+    if(q && !hay.includes(q)) return false;
+    if(f==='active') return norm(t.contract_end) && norm(t.contract_end) !== '-';
+    if(f==='needs_attention') return needsAttention(t);
+    return true;
+  });
+
+  const attnCount=(DATA.tenants||[]).filter(needsAttention).length;
+  document.getElementById('b-upd').textContent=`updated_at: ${DATA.updated_at||'-'}`;
+  document.getElementById('b-count').textContent=`count: ${list.length}`;
+  document.getElementById('b-attn').textContent=`needs attention: ${attnCount}`;
+
+  const rows=list.map(t=>{
+    const st=norm(t.status||'-');
+    const cls=pillStatus(st);
+    const arrears=Number(t.arrears||0);
+    const arrearsPill=arrears>0?`<span class="pill danger">${money(arrears)}</span>`:`<span class="pill">0</span>`;
+    return `<tr>
+      <td class="small">${esc(t.id||'-')}</td>
+      <td><strong>${esc(t.name||'-')}</strong></td>
+      <td>${esc(t.property||'-')}</td>
+      <td>${money(t.rent||0)}</td>
+      <td><span class="pill ${cls}">${esc(st||'-')}</span></td>
+      <td>${arrearsPill}</td>
+      <td>${esc(t.contract_end||'-')}</td>
+      <td>${esc(t.contact||'-')}</td>
+      <td class="small">${esc(t.note||'')}</td>
+    </tr>`;
+  }).join('');
+
+  const tb=document.getElementById('tbody');
+  tb.innerHTML=rows || '<tr><td colspan="9" class="small">無符合條件資料</td></tr>';
+  document.getElementById('ft').textContent=`載入完成 · ${new Date().toLocaleString('zh-TW')}`;
+}
+
+async function boot(){
+  try{
+    const res=await fetch(`../data/zhaojing/tenants.json?_=${Date.now()}`);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    DATA=await res.json();
+    document.getElementById('q').addEventListener('input',render);
+    document.getElementById('filter').addEventListener('change',render);
+    render();
+  }catch(e){
+    document.getElementById('tbody').innerHTML=`<tr><td colspan="9" class="small">載入失敗：${esc(e.message||e)}</td></tr>`;
+  }
+}
+boot();
+</script>
+</body>
+</html>
