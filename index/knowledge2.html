@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>knowledge 索引</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#272729;
+  --bg2:#323234;
+  --bg3:#3D3D3F;
+  --panel:#323234;
+  --border:#585859;
+  --border2:#7A7A7C;
+  --text:#F2F2F7;
+  --dim:#C7C7CC;
+  --muted:#AEAEB2;
+  --bright:#FFFFFF;
+  --ok:#5BBB78;
+  --warn:#F0A840;
+  --warn-bd:#9A6830;
+  --danger:#74BADF;
+  --danger-bd:#406888;
+  --radius:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding:20px}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
+.title{font-size:24px;font-weight:700;color:var(--bright)}
+.sub{font-size:12px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+a.btn{color:var(--dim);text-decoration:none;border:1px solid var(--border2);padding:7px 11px;border-radius:999px;background:var(--bg3);font-size:12px}
+a.btn:hover{color:var(--bright);border-color:var(--dim)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.kpi .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-family:"JetBrains Mono",monospace}
+.kpi .v{font-size:20px;color:var(--bright);font-weight:700;margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.chip{font-size:11px;padding:3px 10px;border-radius:999px;border:1px solid var(--border2);background:var(--bg3);color:var(--dim)}
+.chip.ok{border-color:#2A5030;color:var(--ok)}
+.chip.warn{border-color:var(--warn-bd);color:var(--warn)}
+.chip.danger{border-color:var(--danger-bd);color:var(--danger)}
+.section{font-size:11px;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;font-family:"JetBrains Mono",monospace;margin-bottom:10px}
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
+table{width:100%;border-collapse:collapse;min-width:760px;background:var(--bg2)}
+th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;font-size:13px;vertical-align:top}
+th{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-family:"JetBrains Mono",monospace;background:var(--bg3)}
+tr:hover td{background:#3a3a3c}
+.msg{font-size:13px;color:var(--dim);border:1px dashed var(--border2);border-radius:8px;padding:12px;background:var(--bg2)}
+.msg.error{border-color:var(--warn-bd);color:var(--warn)}
+pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;color:var(--dim);max-height:260px;overflow:auto}
+@media (max-width:840px){
+  .wrap{padding:14px}
+  .grid{grid-template-columns:1fr}
+  .title{font-size:21px}
+}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="title">Knowledge 索引</div>
+        <div class="sub">SSOT Index Viewer</div>
+      </div>
+      <div class="actions">
+        <a class="btn" href="../">← 回首頁</a>
+        <a class="btn" href="knowledge.md" target="_blank" rel="noopener">原始索引檔</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section">摘要</div>
+      <div class="grid">
+        <div class="kpi"><div class="k">updated_at</div><div class="v" id="updatedAt">--</div></div>
+        <div class="kpi"><div class="k">總列數</div><div class="v" id="rowCount">--</div></div>
+        <div class="kpi"><div class="k">狀態欄位</div><div class="v" id="statusField">--</div></div>
+      </div>
+      <div class="chips" id="statusChips"></div>
+    </div>
+
+    <div class="card">
+      <div class="section">索引表格</div>
+      <div id="tableHost" class="msg">載入中...</div>
+    </div>
+
+    <div class="card">
+      <div class="section">原文（fallback）</div>
+      <pre id="rawText">載入中...</pre>
+    </div>
+  </div>
+
+<script>
+const CONFIG = { file: 'knowledge.md', title: 'Knowledge Index' };
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+
+function parseUpdatedAt(md){
+  const m = md.match(/^-\s*updated_at:\s*(.+)$/m);
+  return m ? m[1].trim() : '未提供';
+}
+
+function findStatusColumn(headers){
+  const targets = ['status','stage','action_required'];
+  for (const key of targets){
+    const idx = headers.findIndex(h => h.toLowerCase() === key);
+    if (idx >= 0) return { idx, key };
+  }
+  return { idx: -1, key: '無' };
+}
+
+function parseFirstMarkdownTable(md){
+  const lines = md.split(/\r?\n/);
+  for (let i = 0; i < lines.length - 2; i++){
+    if (!lines[i].trim().startsWith('|') || !lines[i+1].includes('---')) continue;
+    const tableLines = [lines[i], lines[i+1]];
+    for (let j = i + 2; j < lines.length; j++){
+      if (!lines[j].trim().startsWith('|')) break;
+      tableLines.push(lines[j]);
+    }
+    if (tableLines.length < 3) continue;
+    const toCells = (line) => line.split('|').slice(1,-1).map(s => s.trim());
+    const headers = toCells(tableLines[0]);
+    const rows = tableLines.slice(2).map(toCells).filter(r => r.length && r.some(c => c));
+    return { headers, rows };
+  }
+  return null;
+}
+
+function chipClass(v){
+  const t = v.toLowerCase();
+  if (['active','yes','open','high'].includes(t)) return 'ok';
+  if (['planning','medium','pending','tbd'].includes(t)) return 'warn';
+  if (['inactive','no','blocked','closed','low'].includes(t)) return 'danger';
+  return '';
+}
+
+function renderTable(parsed){
+  const head = `<tr>${parsed.headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>`;
+  const body = parsed.rows.map(r => `<tr>${parsed.headers.map((_,idx) => `<td>${escapeHtml(r[idx] ?? '')}</td>`).join('')}</tr>`).join('');
+  return `<div class="table-wrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+function renderStatus(parsed){
+  const chips = document.getElementById('statusChips');
+  chips.innerHTML = '';
+  const { idx, key } = findStatusColumn(parsed.headers);
+  document.getElementById('statusField').textContent = key;
+  if (idx < 0){
+    chips.innerHTML = '<span class="chip">無可解析狀態欄位</span>';
+    return;
+  }
+  const counts = new Map();
+  parsed.rows.forEach(r => {
+    const val = (r[idx] || '空值').trim() || '空值';
+    counts.set(val, (counts.get(val) || 0) + 1);
+  });
+  [...counts.entries()].sort((a,b)=>b[1]-a[1]).forEach(([v,c]) => {
+    const span = document.createElement('span');
+    span.className = `chip ${chipClass(v)}`.trim();
+    span.textContent = `${v}: ${c}`;
+    chips.appendChild(span);
+  });
+}
+
+async function boot(){
+  const raw = document.getElementById('rawText');
+  const host = document.getElementById('tableHost');
+  try{
+    const res = await fetch(`${CONFIG.file}?_=${Date.now()}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const md = await res.text();
+    raw.textContent = md;
+    document.getElementById('updatedAt').textContent = parseUpdatedAt(md);
+
+    const parsed = parseFirstMarkdownTable(md);
+    if (!parsed){
+      document.getElementById('rowCount').textContent = '0';
+      document.getElementById('statusField').textContent = '無';
+      host.className = 'msg error';
+      host.textContent = '未解析到 markdown 表格，請檢查原始索引格式。';
+      return;
+    }
+
+    document.getElementById('rowCount').textContent = String(parsed.rows.length);
+    renderStatus(parsed);
+    host.className = '';
+    host.innerHTML = renderTable(parsed);
+  }catch(err){
+    document.getElementById('updatedAt').textContent = '載入失敗';
+    document.getElementById('rowCount').textContent = '0';
+    document.getElementById('statusField').textContent = '無';
+    document.getElementById('statusChips').innerHTML = '<span class="chip danger">fetch error</span>';
+    host.className = 'msg error';
+    host.textContent = `載入失敗：${err.message}`;
+    raw.textContent = `載入失敗：${err.message}`;
+  }
+}
+
+boot();
+</script>
+</body>
+</html>
