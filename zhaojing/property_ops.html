@@ -119,17 +119,18 @@ function render(){
   if(!DATA) return;
   const q=norm(document.getElementById('q').value).toLowerCase();
   const f=document.getElementById('filter').value;
-  const items=(DATA.items||[]).filter(it=>{
+  const flat=(DATA.properties||[]).flatMap(p=>p.items||[]);
+  const items=flat.filter(it=>{
     const hay=[it.property,it.tenant,it.event,it.note,it.next_step,it.status,it.due].map(x=>norm(x).toLowerCase()).join(' ');
     if(q && !hay.includes(q)) return false;
-    if(f==='open') return norm(it.status) !== '已完成';
+    if(f==='open') return (it.done===false) && norm(it.status) !== '已完成';
     return true;
   });
 
   document.getElementById('b-upd').textContent=`updated_at: ${DATA.updated_at||'-'}`;
-  document.getElementById('b-count').textContent=`items: ${DATA.items?.length||0}`;
-  document.getElementById('b-open').textContent=`open: ${DATA.open_items||0}`;
-  document.getElementById('b-overdue').textContent=`overdue: ${DATA.overdue_items||0}`;
+  document.getElementById('b-count').textContent=`items: ${DATA.summary?.total_items ?? items.length}`;
+  document.getElementById('b-open').textContent=`open: ${DATA.summary?.open_items ?? 0}`;
+  document.getElementById('b-overdue').textContent=`overdue: ${DATA.summary?.overdue_items ?? 0}`;
 
   const rows=items.map(it=>{
     const st=norm(it.status||'-');
@@ -149,7 +150,8 @@ function render(){
 
   const tb=document.getElementById('tbody');
   tb.innerHTML=rows || '<tr><td colspan="9" class="small">無符合條件資料</td></tr>';
-  document.getElementById('ft').textContent=`載入完成 · ${new Date().toLocaleString('zh-TW')}`;
+  const s=DATA.summary||{};
+  document.getElementById('ft').textContent=`載入完成 · ${new Date().toLocaleString('zh-TW')} · open_arrears_amount ${s.open_arrears_amount ?? '-'} `;
 }
 
 async function boot(){
