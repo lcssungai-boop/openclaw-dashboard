@@ -189,8 +189,15 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
 }
 .trace-badge.warn{border-color:var(--urgent-bd);color:var(--urgent-text);background:transparent}
 .trace-badge.ok{border-color:#2A5030;color:var(--green);background:transparent}
-.trace-card a{color:inherit;text-decoration:underline;text-decoration-color:#3b4b60}
-.trace-card a:hover{text-decoration-color:#7da7ff}
+/* trace-card links: make the whole card clickable without blue underline */
+.trace-card{color:inherit;text-decoration:none;cursor:pointer}
+.trace-card:visited{color:inherit}
+.trace-card:hover{border-color:#7da7ff}
+.trace-card:focus{outline:none}
+.trace-card:focus-visible{outline:none}
+.trace-card a{color:inherit;text-decoration:none}
+.trace-card a:hover{text-decoration:none}
+
 
 /* ── BRIEF ── */
 .brief-wrap{
