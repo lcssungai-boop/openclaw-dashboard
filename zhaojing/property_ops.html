@@ -202,10 +202,6 @@ async function boot(){
     document.getElementById('q').addEventListener('input',render);
     document.getElementById('filter').addEventListener('change',render);
     document.getElementById('b-reload').addEventListener('click',()=>location.reload());
-      applyTheme(v);
-    });
-      applyFontPt(v);
-    });
     render();
   }catch(e){
     document.getElementById('tbody').innerHTML=`<tr><td colspan="9" class="small">載入失敗：${esc(e.message||e)}<br/>請按上方 ↻ reload，或確認資料檔存在：data/zhaojing/property_ops.json</td></tr>`;
