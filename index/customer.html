@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>客戶索引 · Open Claw</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>customer 索引</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -18,380 +18,191 @@
   --dim:#C7C7CC;
   --muted:#AEAEB2;
   --bright:#FFFFFF;
-  --ok:#7fd68f;
-  --warn:#f1c068;
-  --info:#8cc6e6;
-  --danger:#ff8f8f;
+  --ok:#5BBB78;
+  --warn:#F0A840;
+  --warn-bd:#9A6830;
+  --danger:#74BADF;
+  --danger-bd:#406888;
   --radius:12px;
 }
 *{box-sizing:border-box}
-body{
-  margin:0;
-  min-height:100vh;
-  background:var(--bg);
-  color:var(--text);
-  font-family:"Noto Sans TC",sans-serif;
-  -webkit-font-smoothing:antialiased;
-}
-a{color:#9bc2ff;text-decoration:none}
-a:hover{text-decoration:underline}
-header{
-  position:sticky;
-  top:0;
-  z-index:30;
-  background:rgba(39,39,41,.94);
-  border-bottom:1px solid var(--border);
-  backdrop-filter:blur(16px);
-}
-.hdr-wrap{
-  max-width:1200px;
-  margin:0 auto;
-  padding:14px 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-.hdr-title{font-size:15px;font-weight:600;color:var(--bright)}
-.hdr-actions{display:flex;align-items:center;gap:10px;font-size:12px}
-main{max-width:1200px;margin:0 auto;padding:22px 20px 28px}
-.hero{
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  background:linear-gradient(135deg,#2c2c2f,#35353a 65%,#303038);
-  padding:16px;
-}
-.hero h1{margin:0;font-size:22px;line-height:1.2}
-.hero-sub{margin-top:6px;font-size:12px;color:var(--muted)}
-.summary{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
-.chip{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  font-size:11px;
-  padding:4px 10px;
-  border-radius:999px;
-  border:1px solid var(--border2);
-  color:var(--dim);
-  background:rgba(61,61,63,.55);
-  white-space:nowrap;
-}
-.chip strong{font-family:"JetBrains Mono",monospace;color:var(--bright);font-weight:600}
-.card{
-  margin-top:14px;
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  background:var(--panel);
-  padding:12px;
-}
-.list{display:grid;gap:12px}
-.row-card{
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:var(--bg2);
-  overflow:hidden;
-}
-.row-top{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:12px;
-  padding:12px;
-  border-bottom:1px solid var(--border);
-}
-.row-main{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
-}
-.row-badges{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-  align-content:flex-start;
-  gap:6px;
-  min-width:140px;
-}
-.kv{min-width:0}
-.kv-label{
-  font-size:11px;
-  color:var(--muted);
-  margin-bottom:4px;
-  letter-spacing:.2px;
-}
-.kv-value{
-  font-size:13px;
-  color:var(--bright);
-  line-height:1.5;
-  overflow-wrap:anywhere;
-}
-.kv-value.id{font-family:"JetBrains Mono",monospace}
-.row-detail{
-  padding:10px 12px 12px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:10px;
-}
-.tag-list{display:flex;flex-wrap:wrap;gap:6px}
-.tag{
-  display:inline-flex;
-  align-items:center;
-  border:1px solid var(--border2);
-  color:var(--dim);
-  border-radius:999px;
-  padding:2px 8px;
-  font-size:11px;
-  line-height:1.4;
-}
-.state-pill{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  border:1px solid currentColor;
-  border-radius:999px;
-  padding:2px 8px;
-  font-size:11px;
-  line-height:1.4;
-  white-space:nowrap;
-}
-.state-pill .state-icon{
-  width:14px;
-  text-align:center;
-  font-size:10px;
-  font-weight:700;
-}
-.state-pill.ok{color:var(--ok)}
-.state-pill.warn{color:var(--warn)}
-.state-pill.info{color:var(--info)}
-.state-pill.danger{color:var(--danger)}
-.state-pill.neutral{color:var(--dim)}
-.cell-muted{color:var(--muted)}
-.empty{
-  padding:20px;
-  border:1px dashed var(--border2);
-  border-radius:10px;
-  color:var(--muted);
-  text-align:center;
-  font-size:13px;
-}
-.err{
-  margin-top:14px;
-  border:1px solid #8c3d3d;
-  color:#ffd7d7;
-  background:#3a2323;
-  border-radius:10px;
-  padding:10px 12px;
-  font-size:13px;
-}
-@media (max-width: 980px){
-  .row-main{grid-template-columns:repeat(2,minmax(0,1fr));}
-}
-@media (max-width: 760px){
-  .hdr-wrap{padding:12px 14px}
-  main{padding:14px 12px 20px}
-  .hero{padding:14px}
-  .hero h1{font-size:18px}
-  .summary{gap:6px}
-  .chip{font-size:10px;padding:3px 8px}
-  .card{padding:10px}
-  .row-top{grid-template-columns:1fr}
-  .row-main{grid-template-columns:1fr}
-  .row-badges{justify-content:flex-start;min-width:0}
-  .row-detail{grid-template-columns:1fr}
-  .kv-value{font-size:12px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding:20px}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
+.title{font-size:24px;font-weight:700;color:var(--bright)}
+.sub{font-size:12px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+a.btn{color:var(--dim);text-decoration:none;border:1px solid var(--border2);padding:7px 11px;border-radius:999px;background:var(--bg3);font-size:12px}
+a.btn:hover{color:var(--bright);border-color:var(--dim)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.kpi .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-family:"JetBrains Mono",monospace}
+.kpi .v{font-size:20px;color:var(--bright);font-weight:700;margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.chip{font-size:11px;padding:3px 10px;border-radius:999px;border:1px solid var(--border2);background:var(--bg3);color:var(--dim)}
+.chip.ok{border-color:#2A5030;color:var(--ok)}
+.chip.warn{border-color:var(--warn-bd);color:var(--warn)}
+.chip.danger{border-color:var(--danger-bd);color:var(--danger)}
+.section{font-size:11px;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;font-family:"JetBrains Mono",monospace;margin-bottom:10px}
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
+table{width:100%;border-collapse:collapse;min-width:760px;background:var(--bg2)}
+th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;font-size:13px;vertical-align:top}
+th{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-family:"JetBrains Mono",monospace;background:var(--bg3)}
+tr:hover td{background:#3a3a3c}
+.msg{font-size:13px;color:var(--dim);border:1px dashed var(--border2);border-radius:8px;padding:12px;background:var(--bg2)}
+.msg.error{border-color:var(--warn-bd);color:var(--warn)}
+pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;color:var(--dim);max-height:260px;overflow:auto}
+@media (max-width:840px){
+  .wrap{padding:14px}
+  .grid{grid-template-columns:1fr}
+  .title{font-size:21px}
 }
 </style>
 </head>
 <body>
-<header>
-  <div class="hdr-wrap">
-    <div class="hdr-title"><a href="../">← 回首頁</a> · 客戶索引</div>
-    <div class="hdr-actions"><a href="customer.md" target="_blank" rel="noopener">原始索引檔</a></div>
-  </div>
-</header>
-<main>
-  <section class="hero">
-    <h1>客戶索引</h1>
-    <div id="up" class="hero-sub">載入中...</div>
-    <div class="summary">
-      <span class="chip">updated_at: <strong id="sum-updated">-</strong></span>
-      <span class="chip">rows: <strong id="sum-rows">-</strong></span>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="title">Customer 索引</div>
+        <div class="sub">SSOT Index Viewer</div>
+      </div>
+      <div class="actions">
+        <a class="btn" href="../">← 回首頁</a>
+        <a class="btn" href="customer.md" target="_blank" rel="noopener">原始索引檔</a>
+      </div>
     </div>
-  </section>
-  <div id="err"></div>
-  <section class="card">
-    <div id="list" class="list"></div>
-  </section>
-</main>
+
+    <div class="card">
+      <div class="section">摘要</div>
+      <div class="grid">
+        <div class="kpi"><div class="k">updated_at</div><div class="v" id="updatedAt">--</div></div>
+        <div class="kpi"><div class="k">總列數</div><div class="v" id="rowCount">--</div></div>
+        <div class="kpi"><div class="k">狀態欄位</div><div class="v" id="statusField">--</div></div>
+      </div>
+      <div class="chips" id="statusChips"></div>
+    </div>
+
+    <div class="card">
+      <div class="section">索引表格</div>
+      <div id="tableHost" class="msg">載入中...</div>
+    </div>
+
+    <div class="card">
+      <div class="section">原文（fallback）</div>
+      <pre id="rawText">載入中...</pre>
+    </div>
+  </div>
+
 <script>
-const sourceFile = 'customer.md';
+const CONFIG = { file: 'customer.md', title: 'Customer Index' };
 
-function escapeHtml(value) {
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 }
 
-function splitPipeRow(line) {
-  return line
-    .trim()
-    .replace(/^\|/, '')
-    .replace(/\|$/, '')
-    .split('|')
-    .map(cell => cell.trim());
+function parseUpdatedAt(md){
+  const m = md.match(/^-\s*updated_at:\s*(.+)$/m);
+  return m ? m[1].trim() : '未提供';
 }
 
-function parseMarkdownTable(text) {
-  const lines = text.split(/\r?\n/);
-  for (let i = 0; i < lines.length - 1; i += 1) {
-    if (!/^\|/.test(lines[i].trim())) continue;
-    if (!/^\|(?:\s*:?-{3,}:?\s*\|)+\s*$/.test(lines[i + 1].trim())) continue;
+function findStatusColumn(headers){
+  const targets = ['status','stage','action_required'];
+  for (const key of targets){
+    const idx = headers.findIndex(h => h.toLowerCase() === key);
+    if (idx >= 0) return { idx, key };
+  }
+  return { idx: -1, key: '無' };
+}
 
-    const headers = splitPipeRow(lines[i]);
-    const rows = [];
-    for (let j = i + 2; j < lines.length; j += 1) {
-      const line = lines[j].trim();
-      if (!line || !/^\|/.test(line)) break;
-      rows.push(splitPipeRow(line));
+function parseFirstMarkdownTable(md){
+  const lines = md.split(/\r?\n/);
+  for (let i = 0; i < lines.length - 2; i++){
+    if (!lines[i].trim().startsWith('|') || !lines[i+1].includes('---')) continue;
+    const tableLines = [lines[i], lines[i+1]];
+    for (let j = i + 2; j < lines.length; j++){
+      if (!lines[j].trim().startsWith('|')) break;
+      tableLines.push(lines[j]);
     }
+    if (tableLines.length < 3) continue;
+    const toCells = (line) => line.split('|').slice(1,-1).map(s => s.trim());
+    const headers = toCells(tableLines[0]);
+    const rows = tableLines.slice(2).map(toCells).filter(r => r.length && r.some(c => c));
     return { headers, rows };
   }
-  return { headers: [], rows: [] };
+  return null;
 }
 
-function classForState(value) {
-  const v = value.toLowerCase().trim();
-  if (/(error|fail|risk|blocked|逾期|失敗|風險)/.test(v)) return 'danger';
-  if (/(high|urgent|active|yes|ok|done|完成|啟用|正常|追蹤中|a級|a\b)/.test(v)) return 'warn';
-  if (/(planning|pending|tbd|medium|待|進行中|b級|b\b)/.test(v)) return 'info';
-  if (/(inactive|no|cancel|low|n\/a|停止|關閉|不追蹤|c級|c\b)/.test(v)) return 'neutral';
-  return 'ok';
+function chipClass(v){
+  const t = v.toLowerCase();
+  if (['active','yes','open','high'].includes(t)) return 'ok';
+  if (['planning','medium','pending','tbd'].includes(t)) return 'warn';
+  if (['inactive','no','blocked','closed','low'].includes(t)) return 'danger';
+  return '';
 }
 
-function stateIcon(type) {
-  if (type === 'danger') return '!';
-  if (type === 'warn') return '▲';
-  if (type === 'info') return '●';
-  if (type === 'neutral') return '○';
-  return '✓';
+function renderTable(parsed){
+  const head = `<tr>${parsed.headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>`;
+  const body = parsed.rows.map(r => `<tr>${parsed.headers.map((_,idx) => `<td>${escapeHtml(r[idx] ?? '')}</td>`).join('')}</tr>`).join('');
+  return `<div class="table-wrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
 }
 
-function isStateColumn(header) {
-  return /(status|狀態|stage|priority|action_required|referrer_thanks_status)/i.test(header);
-}
-
-function isTagColumn(header) {
-  return /(tag|標籤|aliases|related_|ids?|risk|分類|lead_source|referrer)/i.test(header);
-}
-
-function isPathColumn(header) {
-  return /(path|source_ref|source)/i.test(header);
-}
-
-function renderState(value) {
-  const type = classForState(value);
-  return `<span class="state-pill ${type}"><span class="state-icon" aria-hidden="true">${stateIcon(type)}</span>${escapeHtml(value)}</span>`;
-}
-
-function renderValue(header, rawValue) {
-  const value = (rawValue || '').trim();
-  if (!value || value === '-') return '<span class="cell-muted">-</span>';
-
-  if (isStateColumn(header)) return renderState(value);
-
-  if (isTagColumn(header)) {
-    const items = value.split(/[,，、;；]/).map(v => v.trim()).filter(Boolean);
-    if (!items.length) return '<span class="cell-muted">-</span>';
-    return `<div class="tag-list">${items.map(item => `<span class="tag">${escapeHtml(item)}</span>`).join('')}</div>`;
+function renderStatus(parsed){
+  const chips = document.getElementById('statusChips');
+  chips.innerHTML = '';
+  const { idx, key } = findStatusColumn(parsed.headers);
+  document.getElementById('statusField').textContent = key;
+  if (idx < 0){
+    chips.innerHTML = '<span class="chip">無可解析狀態欄位</span>';
+    return;
   }
-
-  const cls = isPathColumn(header) ? 'kv-value id' : 'kv-value';
-  return `<span class="${cls}">${escapeHtml(value)}</span>`;
-}
-
-function pickPrimaryHeaders(headers) {
-  const selected = [];
-  const patterns = [
-    /(_id$|^id$|編號)/i,
-    /(name|topic|title|主題|名稱)/i,
-    /(date|last_activity|due|followup|updated|日期)/i
-  ];
-
-  patterns.forEach(pattern => {
-    const candidate = headers.find(h => pattern.test(h) && !selected.includes(h));
-    if (candidate) selected.push(candidate);
+  const counts = new Map();
+  parsed.rows.forEach(r => {
+    const val = (r[idx] || '空值').trim() || '空值';
+    counts.set(val, (counts.get(val) || 0) + 1);
   });
-
-  for (const header of headers) {
-    if (selected.length >= 3) break;
-    if (!selected.includes(header)) selected.push(header);
-  }
-
-  return selected;
+  [...counts.entries()].sort((a,b)=>b[1]-a[1]).forEach(([v,c]) => {
+    const span = document.createElement('span');
+    span.className = `chip ${chipClass(v)}`.trim();
+    span.textContent = `${v}: ${c}`;
+    chips.appendChild(span);
+  });
 }
 
-function renderRowCard(headers, row, primaryHeaders) {
-  const entries = headers.map((header, idx) => ({
-    header,
-    value: (row[idx] || '').trim()
-  }));
-
-  const badgeEntries = entries.filter(item => isStateColumn(item.header) && item.value && item.value !== '-').slice(0, 3);
-  const primarySet = new Set(primaryHeaders.concat(badgeEntries.map(item => item.header)));
-  const detailEntries = entries.filter(item => !primarySet.has(item.header));
-
-  const mainHtml = primaryHeaders.map(header => {
-    const item = entries.find(entry => entry.header === header) || { value: '-' };
-    const valueHtml = renderValue(header, item.value);
-    const valueClass = /(_id$|^id$)/i.test(header) ? 'kv-value id' : 'kv-value';
-    return `<div class="kv"><div class="kv-label">${escapeHtml(header)}</div><div class="${valueClass}">${valueHtml}</div></div>`;
-  }).join('');
-
-  const badgeHtml = badgeEntries.map(item => {
-    return `<div class="kv"><div class="kv-label">${escapeHtml(item.header)}</div>${renderState(item.value)}</div>`;
-  }).join('');
-
-  const detailHtml = detailEntries.map(item => {
-    return `<div class="kv"><div class="kv-label">${escapeHtml(item.header)}</div><div class="kv-value">${renderValue(item.header, item.value)}</div></div>`;
-  }).join('');
-
-  return `<article class="row-card"><div class="row-top"><div class="row-main">${mainHtml}</div><div class="row-badges">${badgeHtml}</div></div><div class="row-detail">${detailHtml}</div></article>`;
-}
-
-fetch(`${sourceFile}?_=${Date.now()}`)
-  .then(res => {
+async function boot(){
+  const raw = document.getElementById('rawText');
+  const host = document.getElementById('tableHost');
+  try{
+    const res = await fetch(`${CONFIG.file}?_=${Date.now()}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.text();
-  })
-  .then(text => {
-    const updatedAt = (text.match(/-\s*updated_at:\s*([^\n]+)/) || [])[1] || '-';
-    const parsed = parseMarkdownTable(text);
+    const md = await res.text();
+    raw.textContent = md;
+    document.getElementById('updatedAt').textContent = parseUpdatedAt(md);
 
-    if (!parsed.headers.length) {
-      throw new Error('找不到 markdown 表格');
-    }
-
-    document.getElementById('sum-updated').textContent = updatedAt.trim();
-    document.getElementById('up').textContent = `來源：${sourceFile}`;
-    document.getElementById('sum-rows').textContent = String(parsed.rows.length);
-
-    const primaryHeaders = pickPrimaryHeaders(parsed.headers);
-    const list = document.getElementById('list');
-
-    if (!parsed.rows.length) {
-      list.innerHTML = '<div class="empty">目前沒有可顯示資料。</div>';
+    const parsed = parseFirstMarkdownTable(md);
+    if (!parsed){
+      document.getElementById('rowCount').textContent = '0';
+      document.getElementById('statusField').textContent = '無';
+      host.className = 'msg error';
+      host.textContent = '未解析到 markdown 表格，請檢查原始索引格式。';
       return;
     }
 
-    list.innerHTML = parsed.rows
-      .map(row => renderRowCard(parsed.headers, row, primaryHeaders))
-      .join('');
-  })
-  .catch(err => {
-    document.getElementById('err').innerHTML = `<div class="err">載入失敗：${escapeHtml(err.message)}</div>`;
-  });
+    document.getElementById('rowCount').textContent = String(parsed.rows.length);
+    renderStatus(parsed);
+    host.className = '';
+    host.innerHTML = renderTable(parsed);
+  }catch(err){
+    document.getElementById('updatedAt').textContent = '載入失敗';
+    document.getElementById('rowCount').textContent = '0';
+    document.getElementById('statusField').textContent = '無';
+    document.getElementById('statusChips').innerHTML = '<span class="chip danger">fetch error</span>';
+    host.className = 'msg error';
+    host.textContent = `載入失敗：${err.message}`;
+    raw.textContent = `載入失敗：${err.message}`;
+  }
+}
+
+boot();
 </script>
 </body>
 </html>

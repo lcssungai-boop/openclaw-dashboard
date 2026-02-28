@@ -930,9 +930,9 @@ function renderTraceability(){
     </div>`).join("");
   const zjSummary=getZhaojingFlowSummary(DATA.zhaojing?.tasks||[]);
   const finSummary=getFinanceRefreshSummary(DATA.finance?.tasks||[]);
-  const flowCard=`<div class="trace-card" onclick="window.open('verify/?src=zhaojing','_blank')">
+  const flowCard=`<div class="trace-card">
     <div class="trace-top"><div class="trace-name">流程 KPI 摘要</div><div class="trace-upd">跨域一致性</div></div>
-    <div class="trace-path">點擊開啟兆鯨流程檢視頁</div>
+    <div class="trace-path">流程覆蓋率 + 財務資料新鮮度（摘要，非核對檢視）</div>
     <div class="trace-metrics">
       <span class="trace-badge">${zjSummary}</span>
       <span class="trace-badge">${finSummary}</span>
