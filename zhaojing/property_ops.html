@@ -8,39 +8,73 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
+  --base-font-size:18px;
+  --font-ui:"PingFang TC","PingFangTC-Regular","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  --mono:"JetBrains Mono","SF Mono",ui-monospace,monospace;
   --bg:#272729;--bg2:#323234;--bg3:#3D3D3F;--panel:#323234;
   --border:#585859;--border2:#7A7A7C;--text:#F2F2F7;--dim:#C7C7CC;
   --muted:#AEAEB2;--bright:#FFFFFF;--urgent-bd:#9A6830;--warn:#F0A840;
   --danger:#74BADF;--ok:#5BBB78;--radius:12px;--radius-sm:8px;
 }
+body[data-theme="light"]{
+  --bg:#F5F7FA;--bg2:#FFFFFF;--bg3:#F0F3F8;--panel:#FFFFFF;
+  --border:#D3DBE7;--border2:#C1CAD8;--text:#192535;--dim:#4A5A70;
+  --muted:#6B7A90;--bright:#0F1D33;--urgent-bd:#B77D33;--warn:#B76C00;
+  --danger:#2D6EA8;--ok:#167B39;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+html{font-size:var(--base-font-size)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-ui);line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .2s,color .2s}
 .wrap{max-width:1200px;margin:0 auto;padding:16px}
 .top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:8px 0 14px}
-h1{margin:0;font-size:22px}
-.sub{font-size:12px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+h1{margin:0;font-size:1.25rem}
+.sub{font-size:.78rem;color:var(--muted);font-family:var(--mono)}
 a{color:#9bc2ff;text-decoration:none}
 a:hover{text-decoration:underline}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin:12px 0}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .input{flex:1;min-width:220px}
+input,select,button{font:inherit}
 input,select{width:100%;padding:10px 10px;border-radius:10px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);outline:none}
 .kpi{display:flex;gap:12px;flex-wrap:wrap}
-.badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:.78rem;color:var(--muted)}
 .badge.ok{border-color:#2A5030;color:var(--ok)}
 .badge.warn{border-color:var(--urgent-bd);color:var(--warn)}
 .badge.danger{border-color:#406888;color:var(--danger)}
 .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px}
 table{width:100%;border-collapse:collapse;min-width:1180px;background:var(--bg2)}
-th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;font-size:13px;vertical-align:top}
-th{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-family:"JetBrains Mono",monospace;background:rgba(255,255,255,.03)}
+th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;font-size:.92rem;vertical-align:top}
+th{font-size:.72rem;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-family:var(--mono);background:rgba(255,255,255,.03)}
 tr:hover td{background:rgba(255,255,255,.04)}
-.small{font-size:12px;color:var(--muted)}
-.pill{display:inline-block;padding:1px 6px;border-radius:999px;border:1px solid var(--border);font-size:10px;color:var(--dim);white-space:nowrap}
+.small{font-size:.82rem;color:var(--muted)}
+.pill{display:inline-block;padding:1px 6px;border-radius:999px;border:1px solid var(--border);font-size:.68rem;color:var(--dim);white-space:nowrap}
 .pill.ok{border-color:#2A5030;color:var(--ok)}
 .pill.warn{border-color:var(--urgent-bd);color:var(--warn)}
 .pill.danger{border-color:#406888;color:var(--danger)}
-footer{margin-top:12px;color:var(--muted);font-size:12px;font-family:"JetBrains Mono",monospace}
+footer{margin-top:12px;color:var(--muted);font-size:.78rem;font-family:var(--mono)}
+.tool{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{padding:8px 10px;border-radius:10px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);cursor:pointer}
+.btn:hover{filter:brightness(1.06)}
+@media(max-width:1024px){
+  :root{--base-font-size:18px}
+  .wrap{padding:14px}
+}
+@media(max-width:820px){
+  :root{--base-font-size:17px}
+  .wrap{padding:10px}
+  .table-wrap{overflow:visible}
+  table{min-width:0}
+  thead{display:none}
+  tbody tr{display:block;border-bottom:1px solid var(--border)}
+  tbody td{display:grid;grid-template-columns:6.2em 1fr;gap:10px;padding:10px 12px;border-bottom:0}
+  tbody td::before{content:attr(data-label);color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.5px}
+}
+@media(max-width:430px){
+  :root{--base-font-size:16px}
+  .wrap{padding:8px}
+  .card{padding:10px}
+  .badge{padding:4px 8px}
+}
 </style>
 </head>
 <body>
@@ -60,6 +94,16 @@ footer{margin-top:12px;color:var(--muted);font-size:12px;font-family:"JetBrains 
         <select id="filter">
           <option value="open">只看未完成</option>
           <option value="all">全部</option>
+        </select>
+      </div>
+      <div class="tool">
+        <select id="theme">
+          <option value="dark">深色</option>
+          <option value="light">日色</option>
+        </select>
+        <select id="fontSize">
+          <option value="16">16pt</option>
+          <option value="18" selected>18pt（推薦）</option>
         </select>
       </div>
     </div>
@@ -112,6 +156,45 @@ function pillStatus(s){
   if(['阻塞','blocked'].includes(t)) return 'danger';
   return 'warn';
 }
+const PREF_THEME_KEY='zj_property_theme';
+const PREF_FONT_KEY='zj_property_font_pt';
+function applyTheme(v){
+  document.body.dataset.theme = (v==='light') ? 'light' : 'dark';
+}
+function applyFontPt(v){
+  const pt = Number(v)===16 ? 16 : 18;
+  document.documentElement.style.setProperty('--base-font-size', `${pt}px`);
+}
+function initPrefs(){
+  const savedTheme = localStorage.getItem(PREF_THEME_KEY) || 'dark';
+  const savedFont = localStorage.getItem(PREF_FONT_KEY) || '18';
+  document.getElementById('theme').value = savedTheme;
+  document.getElementById('fontSize').value = (savedFont==='16'?'16':'18');
+  applyTheme(savedTheme);
+  applyFontPt(savedFont);
+}
+async function fetchJSONWithFallback(){
+  const urls=[
+    `../data/zhaojing/property_ops.json?_=${Date.now()}`,
+    `./data/zhaojing/property_ops.json?_=${Date.now()}`,
+    `/data/zhaojing/property_ops.json?_=${Date.now()}`
+  ];
+  let lastErr=null;
+  for(const u of urls){
+    const ctl = new AbortController();
+    const t = setTimeout(()=>ctl.abort(), 12000);
+    try{
+      const res=await fetch(u,{signal:ctl.signal,cache:'no-store'});
+      if(!res.ok) throw new Error(`HTTP ${res.status} @ ${u}`);
+      return await res.json();
+    }catch(e){
+      lastErr=e;
+    }finally{
+      clearTimeout(t);
+    }
+  }
+  throw lastErr || new Error('fetch failed');
+}
 
 let DATA=null;
 
@@ -136,15 +219,15 @@ function render(){
     const st=norm(it.status||'-');
     const cls=pillStatus(st);
     return `<tr>
-      <td class="small">${esc(it.date||'-')}</td>
-      <td>${esc(it.property||'-')}</td>
-      <td><strong>${esc(it.tenant||'-')}</strong></td>
-      <td>${esc(it.event||'-')}</td>
-      <td><span class="pill ${cls}">${esc(st)}</span></td>
-      <td>${esc(it.due||'-')}</td>
-      <td>${money(it.amount||0)}</td>
-      <td class="small">${esc(it.next_step||'')}</td>
-      <td class="small">${esc(it.note||'')}</td>
+      <td data-label="日期" class="small">${esc(it.date||'-')}</td>
+      <td data-label="物件">${esc(it.property||'-')}</td>
+      <td data-label="租客"><strong>${esc(it.tenant||'-')}</strong></td>
+      <td data-label="事件類型">${esc(it.event||'-')}</td>
+      <td data-label="狀態"><span class="pill ${cls}">${esc(st)}</span></td>
+      <td data-label="截止日">${esc(it.due||'-')}</td>
+      <td data-label="金額">${money(it.amount||0)}</td>
+      <td data-label="下一步" class="small">${esc(it.next_step||'')}</td>
+      <td data-label="備註" class="small">${esc(it.note||'')}</td>
     </tr>`;
   }).join('');
 
@@ -156,15 +239,25 @@ function render(){
 
 async function boot(){
   try{
-    const res=await fetch(`../data/zhaojing/property_ops.json?_=${Date.now()}`);
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    DATA=await res.json();
+    initPrefs();
+    DATA=await fetchJSONWithFallback();
     document.getElementById('q').addEventListener('input',render);
     document.getElementById('filter').addEventListener('change',render);
     document.getElementById('b-reload').addEventListener('click',()=>location.reload());
+    document.getElementById('theme').addEventListener('change',(e)=>{
+      const v=e.target.value;
+      localStorage.setItem(PREF_THEME_KEY,v);
+      applyTheme(v);
+    });
+    document.getElementById('fontSize').addEventListener('change',(e)=>{
+      const v=e.target.value;
+      localStorage.setItem(PREF_FONT_KEY,v);
+      applyFontPt(v);
+    });
     render();
   }catch(e){
-    document.getElementById('tbody').innerHTML=`<tr><td colspan="9" class="small">載入失敗：${esc(e.message||e)}</td></tr>`;
+    document.getElementById('tbody').innerHTML=`<tr><td colspan="9" class="small">載入失敗：${esc(e.message||e)}<br/>請按上方 ↻ reload，或確認資料檔存在：data/zhaojing/property_ops.json</td></tr>`;
+    document.getElementById('ft').textContent=`載入失敗 · ${new Date().toLocaleString('zh-TW')}`;
   }
 }
 boot();
