@@ -193,6 +193,13 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
 .trace-card{color:inherit;text-decoration:none;cursor:pointer}
 .trace-card:visited{color:inherit}
 .trace-card:hover{border-color:#7da7ff}
+/* Force visited state to not tint (Safari can show purple on anchor text) */
+.trace-card, .trace-card:visited{color:var(--text)}
+.trace-card:visited .trace-name{color:var(--bright)}
+.trace-card:visited .trace-upd{color:var(--muted)}
+.trace-card:visited .trace-path{color:var(--dim)}
+.trace-card{-webkit-tap-highlight-color: transparent}
+
 .trace-card:focus{outline:none}
 .trace-card:focus-visible{outline:none}
 .trace-card a{color:inherit;text-decoration:none}
