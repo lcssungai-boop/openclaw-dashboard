@@ -761,7 +761,10 @@ function normalizeDataset(raw){
   };
 }
 
-function isWarn(t){return t.priority==="urgent"||t.type==="remittance"||t.status==="阻塞";}
+function isWarn(t){
+  if(!t||t.status==="已完成") return false;
+  return t.priority==="urgent"||t.type==="remittance"||t.status==="阻塞";
+}
 function isSched(t){return t.time&&t.time!=="-"&&t.freq&&t.freq!=="-";}
 function chipCls(t){return t.type==="remittance"?"r":t.status==="阻塞"?"b":"u";}
 function chipIcon(t){

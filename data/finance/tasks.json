@@ -10,9 +10,10 @@
       "priority": "urgent",
       "type": "alert",
       "due": "-",
-      "time": "07:00",
+      "time": "08:15",
       "freq": "daily",
-      "updated_at": "2026-02-22T15:17:45Z"
+      "updated_at": "2026-02-22T15:17:45Z",
+      "note": "對齊 cron: 週一～五 08:15"
     },
     {
       "title": "週一台積電零股掛單提醒",
