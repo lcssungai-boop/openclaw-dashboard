@@ -8,12 +8,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0f1220;--panel:#151a2d;--panel2:#10162a;--border:#273052;
-  --text:#e9ecff;--muted:#aab2d6;--dim:#c7c7cc;--accent:#7da7ff;
-  --ok:#7fd68f;--warn:#f1c068;--danger:#ff8f8f;--radius:14px;
+  --bg:#272729;
+  --bg2:#323234;
+  --bg3:#3D3D3F;
+  --panel:#323234;
+  --border:#585859;
+  --border2:#7A7A7C;
+  --text:#F2F2F7;
+  --dim:#C7C7CC;
+  --muted:#AEAEB2;
+  --bright:#FFFFFF;
+  --urgent-bd:#9A6830;
+  --warn:#F0A840;
+  --danger:#74BADF;
+  --radius:12px;
+  --radius-sm:8px;
 }
+
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;line-height:1.55}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1200px;margin:0 auto;padding:16px}
 .top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:8px 0 14px}
 h1{margin:0;font-size:22px}
@@ -23,22 +36,22 @@ a:hover{text-decoration:underline}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin:12px 0}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .input{flex:1;min-width:220px}
-input,select{width:100%;padding:10px 10px;border-radius:10px;border:1px solid var(--border);background:var(--panel2);color:var(--text);outline:none}
+input,select{width:100%;padding:10px 10px;border-radius:10px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);outline:none}
 .kpi{display:flex;gap:12px;flex-wrap:wrap}
 .badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;color:var(--muted)}
-.badge.ok{border-color:#2a5030;color:var(--ok)}
-.badge.warn{border-color:#7a5a1b;color:var(--warn)}
-.badge.danger{border-color:#7a2b2b;color:var(--danger)}
+.badge.ok{border-color:#2A5030;color:#5BBB78}
+.badge.warn{border-color:var(--urgent-bd);color:var(--warn)}
+.badge.danger{border-color:#406888;color:var(--danger)}
 .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px}
-table{width:100%;border-collapse:collapse;min-width:980px;background:var(--panel2)}
+table{width:100%;border-collapse:collapse;min-width:980px;background:var(--bg2)}
 th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;font-size:13px;vertical-align:top}
 th{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-family:"JetBrains Mono",monospace;background:rgba(255,255,255,.03)}
 tr:hover td{background:rgba(255,255,255,.04)}
 .small{font-size:12px;color:var(--muted)}
 .pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--border);font-size:12px;color:var(--dim)}
-.pill.ok{border-color:#2a5030;color:var(--ok)}
-.pill.warn{border-color:#7a5a1b;color:var(--warn)}
-.pill.danger{border-color:#7a2b2b;color:var(--danger)}
+.pill.ok{border-color:#2A5030;color:#5BBB78}
+.pill.warn{border-color:var(--urgent-bd);color:var(--warn)}
+.pill.danger{border-color:#406888;color:var(--danger)}
 footer{margin-top:12px;color:var(--muted);font-size:12px;font-family:"JetBrains Mono",monospace}
 </style>
 </head>
@@ -66,10 +79,30 @@ footer{margin-top:12px;color:var(--muted);font-size:12px;font-family:"JetBrains 
       </div>
     </div>
     <div class="kpi" style="margin-top:10px">
-      <span class="badge" id="b-upd">updated_at: -</span>
+      <span class="badge" id="b-upd">updated_at: -</span><span class="badge" style="cursor:pointer" id="b-reload">↻ reload</span>
       <span class="badge" id="b-count">count: -</span>
       <span class="badge warn" id="b-attn">needs attention: -</span>
     </div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:flex-end">
+      <div>
+        <div class="sub" style="font-weight:700;color:var(--bright)">快速記錄（先暫存於本機）</div>
+        <div class="small">可先在手機記一筆，按「複製」後貼到 Telegram/或直接丟給我，我再同步進物業台帳。</div>
+      </div>
+      <div class="small" id="lastSync">最後載入：—</div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div class="input"><input id="noteTenant" placeholder="租客（例：林瑞芳）"/></div>
+      <div class="input"><input id="noteProperty" placeholder="物件（可選，例：2-1-2）"/></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div class="input" style="flex:2"><input id="noteText" placeholder="內容（例：電費未收可取消；改半年抄錶一次）"/></div>
+      <div style="min-width:140px"><button id="btnCopy" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border2);background:var(--bg3);color:var(--text)">複製</button></div>
+      <div style="min-width:140px"><button id="btnSave" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border2);background:var(--bg3);color:var(--text)">暫存</button></div>
+    </div>
+    <div class="small" id="noteStatus" style="margin-top:8px;color:var(--muted)">—</div>
   </div>
 
   <div class="card">
@@ -116,6 +149,43 @@ function needsAttention(t){
   const status=norm(t.status);
   const arrears=Number(t.arrears||0);
   return arrears>0 || ['欠租','協商中','無合約','待確認','阻塞'].includes(status);
+}
+
+function nowTs(){return new Date().toLocaleString('zh-TW')}
+function buildNote(){
+  const tenant=norm(document.getElementById('noteTenant').value);
+  const prop=norm(document.getElementById('noteProperty').value);
+  const text=norm(document.getElementById('noteText').value);
+  if(!tenant && !text) return '';
+  const head=tenant?`[兆鯨物業] ${tenant}`:'[兆鯨物業]';
+  const propTxt=prop?`｜物件:${prop}`:'';
+  return `${head}${propTxt}｜${text}`;
+}
+function loadNotes(){
+  try{
+    const arr=JSON.parse(localStorage.getItem('zj_notes')||'[]');
+    return Array.isArray(arr)?arr:[];
+  }catch(e){return []}
+}
+function saveNote(msg){
+  const arr=loadNotes();
+  arr.unshift({ts:new Date().toISOString(),msg});
+  localStorage.setItem('zj_notes', JSON.stringify(arr.slice(0,50)));
+}
+async function copyToClipboard(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    return true;
+  }catch(e){
+    // fallback
+    const ta=document.createElement('textarea');
+    ta.value=text;
+    document.body.appendChild(ta);
+    ta.select();
+    const ok=document.execCommand('copy');
+    ta.remove();
+    return ok;
+  }
 }
 
 let DATA=null;
@@ -166,6 +236,20 @@ async function boot(){
     if(!res.ok) throw new Error('HTTP '+res.status);
     DATA=await res.json();
     document.getElementById('q').addEventListener('input',render);
+    document.getElementById('b-reload').addEventListener('click',()=>location.reload());
+    const ls=document.getElementById('lastSync'); if(ls) ls.textContent='最後載入：'+nowTs();
+    document.getElementById('btnCopy').addEventListener('click', async()=>{
+      const msg=buildNote();
+      if(!msg){document.getElementById('noteStatus').textContent='請先輸入租客或內容'; return;}
+      const ok=await copyToClipboard(msg);
+      document.getElementById('noteStatus').textContent= ok?('已複製：'+msg):'複製失敗，請手動選取複製';
+    });
+    document.getElementById('btnSave').addEventListener('click', ()=>{
+      const msg=buildNote();
+      if(!msg){document.getElementById('noteStatus').textContent='請先輸入租客或內容'; return;}
+      saveNote(msg);
+      document.getElementById('noteStatus').textContent='已暫存（localStorage）：'+msg;
+    });
     document.getElementById('filter').addEventListener('change',render);
     render();
   }catch(e){
