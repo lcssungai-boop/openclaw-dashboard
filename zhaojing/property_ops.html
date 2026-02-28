@@ -7,28 +7,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --base-font-size:18px;
-  --font-ui:"PingFang TC","PingFangTC-Regular","Noto Sans TC","Microsoft JhengHei",sans-serif;
-  --mono:"JetBrains Mono","SF Mono",ui-monospace,monospace;
-  --bg:#272729;--bg2:#323234;--bg3:#3D3D3F;--panel:#323234;
+:root{  --bg:#272729;--bg2:#323234;--bg3:#3D3D3F;--panel:#323234;
   --border:#585859;--border2:#7A7A7C;--text:#F2F2F7;--dim:#C7C7CC;
   --muted:#AEAEB2;--bright:#FFFFFF;--urgent-bd:#9A6830;--warn:#F0A840;
   --danger:#74BADF;--ok:#5BBB78;--radius:12px;--radius-sm:8px;
 }
-body[data-theme="light"]{
-  --bg:#F5F7FA;--bg2:#FFFFFF;--bg3:#F0F3F8;--panel:#FFFFFF;
-  --border:#D3DBE7;--border2:#C1CAD8;--text:#192535;--dim:#4A5A70;
-  --muted:#6B7A90;--bright:#0F1D33;--urgent-bd:#B77D33;--warn:#B76C00;
-  --danger:#2D6EA8;--ok:#167B39;
-}
 *{box-sizing:border-box}
-html{font-size:var(--base-font-size)}
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-ui);line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .2s,color .2s}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1200px;margin:0 auto;padding:16px}
 .top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:8px 0 14px}
-h1{margin:0;font-size:1.25rem}
-.sub{font-size:.78rem;color:var(--muted);font-family:var(--mono)}
+h1{margin:0;font-size:22px}
+.sub{font-size:12px;color:var(--muted);font-family:"JetBrains Mono",monospace}
 a{color:#9bc2ff;text-decoration:none}
 a:hover{text-decoration:underline}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin:12px 0}
@@ -43,27 +32,23 @@ input,select{width:100%;padding:10px 10px;border-radius:10px;border:1px solid va
 .badge.danger{border-color:#406888;color:var(--danger)}
 .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px}
 table{width:100%;border-collapse:collapse;min-width:1180px;background:var(--bg2)}
-th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;font-size:.92rem;vertical-align:top}
-th{font-size:.72rem;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-family:var(--mono);background:rgba(255,255,255,.03)}
+th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;font-size:13px;vertical-align:top}
+th{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-family:"JetBrains Mono",monospace;background:rgba(255,255,255,.03)}
 tr:hover td{background:rgba(255,255,255,.04)}
 .td-tenant{white-space:nowrap}
 
-.small{font-size:.82rem;color:var(--muted)}
+.small{font-size:12px;color:var(--muted)}
 .pill{display:inline-block;padding:1px 6px;border-radius:999px;border:1px solid var(--border);font-size:.68rem;color:var(--dim);white-space:nowrap}
 .pill.ok{border-color:#2A5030;color:var(--ok)}
 .pill.warn{border-color:var(--urgent-bd);color:var(--warn)}
 .pill.danger{border-color:#406888;color:var(--danger)}
-footer{margin-top:12px;color:var(--muted);font-size:.78rem;font-family:var(--mono)}
-.tool{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.btn{padding:8px 10px;border-radius:10px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);cursor:pointer}
-.btn:hover{filter:brightness(1.06)}
+footer{margin-top:12px;color:var(--muted);font-size:12px;font-family:"JetBrains Mono",monospace}
 @media(max-width:1024px){
-  :root{--base-font-size:18px}
   .wrap{padding:14px}
 }
+}
 @media(max-width:820px){
-  :root{--base-font-size:17px}
-  .wrap{padding:10px}
+    .wrap{padding:10px}
   .table-wrap{overflow:visible}
   table{min-width:0}
   thead{display:none}
@@ -72,8 +57,7 @@ footer{margin-top:12px;color:var(--muted);font-size:.78rem;font-family:var(--mon
   tbody td::before{content:attr(data-label);color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.5px}
 }
 @media(max-width:430px){
-  :root{--base-font-size:16px}
-  .wrap{padding:8px}
+    .wrap{padding:8px}
   .card{padding:10px}
   .badge{padding:4px 8px}
 }
@@ -96,16 +80,6 @@ footer{margin-top:12px;color:var(--muted);font-size:.78rem;font-family:var(--mon
         <select id="filter">
           <option value="open">只看未完成</option>
           <option value="all">全部</option>
-        </select>
-      </div>
-      <div class="tool">
-        <select id="theme">
-          <option value="dark">深色</option>
-          <option value="light">日色</option>
-        </select>
-        <select id="fontSize">
-          <option value="16">16pt</option>
-          <option value="18" selected>18pt（推薦）</option>
         </select>
       </div>
     </div>
