@@ -4,7 +4,7 @@
 # 用法：bash /Users/sunglin/Documents/線上儀表板/scripts/push.sh "訊息"
 # ─────────────────────────────────────────────────────────────
 set -e
-REPO="/Users/sunglin/Documents/線上儀表板"
+REPO="$(cd "$(dirname "$0")/.." && pwd)"
 MSG="${1:-OpenClaw 自動同步 $(date '+%Y-%m-%d %H:%M')}"
 
 cd "$REPO"

@@ -4,7 +4,8 @@
 # 1. 重設 freq=daily/weekly/monthly 的已完成任務 → 待處理
 # 2. 有變動就 push 上線
 # ─────────────────────────────────────────────────────────────
-REPO="/Users/sunglin/Documents/線上儀表板"
+# 自動推導 repo 位置（避免硬編碼使用者路徑）
+REPO="$(cd "$(dirname "$0")/.." && pwd)"
 LOG="$REPO/logs/cron.log"
 PYTHON="/usr/bin/python3"
 
