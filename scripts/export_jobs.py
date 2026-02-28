@@ -104,7 +104,7 @@ errors   = [j for j in jobs if j["consecutive_errors"] > 0 or j["is_timeout"]]
 
 output = {
     "updated_at": iso_z(datetime.now(tz=timezone.utc)),
-    "source": "dashboard:/Users/sunglin/Documents/線上儀表板",
+    "source": "dashboard:/Users/sung/Documents/線上儀表板",
     "schema_version": "2026-02",
     "summary": {
         "total":    len(jobs),

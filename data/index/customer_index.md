@@ -7,7 +7,7 @@
 - updated_at: 2026-02-27
 - owner: 小c
 - id_rule: `C-####`
-- scan_target: `/Users/sunglin/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間`
+- scan_target: `/Users/sung/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間`
 
 ## Columns
 | customer_id | customer_name | aliases | status | lead_source | referrer | referrer_thanks_status | priority | followup_next | owner | source_path | last_activity | related_projects | notes |

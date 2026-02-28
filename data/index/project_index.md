@@ -7,7 +7,7 @@
 - updated_at: 2026-02-27
 - owner: 小c
 - id_rule: `P-####`
-- scan_target: `/Users/sunglin/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間`
+- scan_target: `/Users/sung/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間`
 
 ## Columns
 | project_id | project_name | customer_id | stage | priority | pm_owner | due_date | source_path | related_knowledge | risks | notes |

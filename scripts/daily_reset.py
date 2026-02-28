@@ -14,7 +14,7 @@ import json, sys
 from pathlib import Path
 from datetime import datetime, timezone
 
-REPO  = Path("/Users/sunglin/Documents/線上儀表板")
+REPO  = Path("/Users/sung/Documents/線上儀表板")
 AREAS = ["openclaw", "caitodo", "zhaojing", "finance", "personal"]
 
 def now_iso():

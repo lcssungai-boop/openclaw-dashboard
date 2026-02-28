@@ -1,6 +1,6 @@
 {
   "updated_at": "2026-02-26T23:30:52Z",
-  "source_csv": "/Users/sunglin/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/昌松_客戶專案帳務/昌松_客戶專案台帳.csv",
+  "source_csv": "/Users/sung/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/昌松_客戶專案帳務/昌松_客戶專案台帳.csv",
   "summary": {
     "total_items": 1,
     "total_customers": 1,
@@ -44,6 +44,6 @@
       ]
     }
   ],
-  "source": "dashboard:/Users/sunglin/Documents/線上儀表板",
+  "source": "dashboard:/Users/sung/Documents/線上儀表板",
   "schema_version": "2026-02"
 }

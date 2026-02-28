@@ -1,7 +1,7 @@
 #!/bin/bash
 # ─────────────────────────────────────────────────────────────
 # push.sh — OpenClaw 儀表板同步腳本
-# 用法：bash /Users/sunglin/Documents/線上儀表板/scripts/push.sh "訊息"
+# 用法：bash /Users/sung/Documents/線上儀表板/scripts/push.sh "訊息"
 # ─────────────────────────────────────────────────────────────
 set -e
 REPO="$(cd "$(dirname "$0")/.." && pwd)"

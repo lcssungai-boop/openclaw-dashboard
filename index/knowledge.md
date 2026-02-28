@@ -7,7 +7,7 @@
 - updated_at: 2026-02-28
 - owner: 小c
 - id_rule: `K-YYYYMMDD-###`
-- scan_target: `/Users/sunglin/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間`
+- scan_target: `/Users/sung/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間`
 
 ## Classification Rules
 知識索引僅收錄以下 source_type：`regulation`、`meeting_note`、`operations_doc`、`migration_doc`。
