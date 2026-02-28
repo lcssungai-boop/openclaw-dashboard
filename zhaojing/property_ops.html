@@ -132,23 +132,6 @@ function pillStatus(s){
   if(['阻塞','blocked'].includes(t)) return 'danger';
   return 'warn';
 }
-const PREF_THEME_KEY='zj_property_theme';
-const PREF_FONT_KEY='zj_property_font_pt';
-function applyTheme(v){
-  document.body.dataset.theme = (v==='light') ? 'light' : 'dark';
-}
-function applyFontPt(v){
-  const pt = Number(v)===16 ? 16 : 18;
-  document.documentElement.style.setProperty('--base-font-size', `${pt}px`);
-}
-function initPrefs(){
-  const savedTheme = localStorage.getItem(PREF_THEME_KEY) || 'dark';
-  const savedFont = localStorage.getItem(PREF_FONT_KEY) || '18';
-  document.getElementById('theme').value = savedTheme;
-  document.getElementById('fontSize').value = (savedFont==='16'?'16':'18');
-  applyTheme(savedTheme);
-  applyFontPt(savedFont);
-}
 async function fetchJSONWithFallback(){
   const urls=[
     `../data/zhaojing/property_ops.json?_=${Date.now()}`,
@@ -215,19 +198,12 @@ function render(){
 
 async function boot(){
   try{
-    initPrefs();
     DATA=await fetchJSONWithFallback();
     document.getElementById('q').addEventListener('input',render);
     document.getElementById('filter').addEventListener('change',render);
     document.getElementById('b-reload').addEventListener('click',()=>location.reload());
-    document.getElementById('theme').addEventListener('change',(e)=>{
-      const v=e.target.value;
-      localStorage.setItem(PREF_THEME_KEY,v);
       applyTheme(v);
     });
-    document.getElementById('fontSize').addEventListener('change',(e)=>{
-      const v=e.target.value;
-      localStorage.setItem(PREF_FONT_KEY,v);
       applyFontPt(v);
     });
     render();
