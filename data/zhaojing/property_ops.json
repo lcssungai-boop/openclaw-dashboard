@@ -1,10 +1,10 @@
 {
-  "updated_at": "2026-02-28T02:58:32Z",
+  "updated_at": "2026-02-28T03:40:27Z",
   "source_csv": "/Users/sunglin/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/昌松_客戶專案帳務/昌松_物業管理台帳.csv",
   "summary": {
-    "total_items": 4,
-    "properties": 2,
-    "open_items": 4,
+    "total_items": 5,
+    "properties": 3,
+    "open_items": 5,
     "overdue_items": 0,
     "open_arrears_amount": 62000,
     "top_events": [
@@ -15,10 +15,37 @@
       {
         "event": "續約",
         "count": 1
+      },
+      {
+        "event": "租金收款確認",
+        "count": 1
       }
     ]
   },
   "properties": [
+    {
+      "property": "勝利70",
+      "open_items": 1,
+      "overdue_items": 0,
+      "items": [
+        {
+          "row_no": 6,
+          "date": "2026-02-28",
+          "service": "物業管理",
+          "property": "勝利70",
+          "tenant": "王虞鈞",
+          "event": "租金收款確認",
+          "status": "進行中",
+          "owner": "兆鯨顧問",
+          "due": "2026-03-05",
+          "amount": 18000,
+          "next_step": "查中信(822)末五碼01639入帳；確認後標記已完成並回覆房客",
+          "note": "房客回報：3月份房租已轉帳NT$18,000；帳號末五碼01639；中國信託822（來源：訊息）",
+          "overdue": false,
+          "done": false
+        }
+      ]
+    },
     {
       "property": "未指定物件",
       "open_items": 2,
