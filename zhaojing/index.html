@@ -163,6 +163,29 @@ main>div{animation:fadeUp .4s ease both}
 main>div:nth-child(2){animation-delay:.08s}
 main>div:nth-child(3){animation-delay:.16s}
 main>div:nth-child(4){animation-delay:.24s}
+
+/* ── QUICK NAV ── */
+.qnav{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin:0 auto;max-width:860px;padding:14px 32px 18px;
+  border-top:1px solid var(--border);
+}
+.qnav-lbl{
+  width:100%;font-size:8px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);font-family:"JetBrains Mono",monospace;margin-bottom:2px;
+}
+.qnav a{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11px;text-decoration:none;color:var(--dim);
+  border:1px solid var(--border);background:var(--panel);
+  border-radius:999px;padding:5px 12px;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .15s,border-color .15s;
+}
+.qnav a:hover{color:var(--bright);border-color:var(--border2)}
+.qnav a.data{border-style:dashed;font-size:10px;color:var(--muted)}
+.qnav a.data:hover{color:var(--dim);border-color:var(--border2)}
+@media(max-width:600px){.qnav{padding:12px 16px 16px}}
 </style>
 </head>
 <body>
@@ -205,6 +228,14 @@ main>div:nth-child(4){animation-delay:.24s}
 <div class="tab-panel active" id="panel-tasks"><main id="main-tasks"><div class="loading-wrap">載入中…</div></main></div>
 <div class="tab-panel" id="panel-props"><main id="main-props"><div class="loading-wrap">載入中…</div></main></div>
 <div class="tab-panel" id="panel-tenants"><main id="main-tenants"><div class="loading-wrap">載入中…</div></main></div>
+
+<div class="qnav">
+  <div class="qnav-lbl">快速導航</div>
+  <a href="tenants.html">租客名單</a>
+  <a href="property_ops.html">物業事件</a>
+  <a href="../data/zhaojing/tenants.json" class="data" target="_blank">JSON: 租客</a>
+  <a href="../data/zhaojing/property_ops.json" class="data" target="_blank">JSON: 物業事件</a>
+</div>
 
 <script>
 
