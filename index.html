@@ -922,22 +922,22 @@ function renderTraceability(){
       </div>
     </div>`;
   });
-  const archCards=[["客戶索引",ARCH.customer],["專案索引",ARCH.project],["知識索引",ARCH.knowledge]].map(([name,m])=>`
-    <div class="trace-card" onclick="window.open(INDEX_LINKS[name==='客戶索引'?'customer':name==='專案索引'?'project':'knowledge'],'_blank')">
+  const archCards=[["客戶索引","customer",ARCH.customer],["專案索引","project",ARCH.project],["知識索引","knowledge",ARCH.knowledge]].map(([name,key,m])=>`
+    <a class="trace-card" href="${INDEX_LINKS[key]}" target="_blank" rel="noopener">
       <div class="trace-top"><div class="trace-name">${name}</div><div class="trace-upd">更新 ${m?.updated_at||"-"}</div></div>
       <div class="trace-path">點擊開啟索引子分頁</div>
       <div class="trace-metrics"><span class="trace-badge ${m?.rows?"ok":"warn"}">索引列數 ${m?.rows??0}</span></div>
-    </div>`).join("");
+    </a>`).join("");
   const zjSummary=getZhaojingFlowSummary(DATA.zhaojing?.tasks||[]);
   const finSummary=getFinanceRefreshSummary(DATA.finance?.tasks||[]);
-  const flowCard=`<div class="trace-card">
+  const flowCard=`<a class="trace-card" href="flow-kpi.html" target="_blank" rel="noopener">
     <div class="trace-top"><div class="trace-name">流程 KPI 摘要</div><div class="trace-upd">跨域一致性</div></div>
-    <div class="trace-path">流程覆蓋率 + 財務資料新鮮度（摘要，非核對檢視）</div>
+    <div class="trace-path">點擊開啟流程 KPI 詳細頁（摘要非核對檢視）</div>
     <div class="trace-metrics">
       <span class="trace-badge">${zjSummary}</span>
       <span class="trace-badge">${finSummary}</span>
     </div>
-  </div>`;
+  </a>`;
   grid.innerHTML=[...areaCards,archCards,flowCard].join("");
   const footer=document.getElementById("footer-meta");
   if(footer){

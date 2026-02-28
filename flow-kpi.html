@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>流程 KPI · OpenClaw</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1220;--panel:#151a2d;--border:#273052;--text:#e9ecff;--muted:#aab2d6;--accent:#7da7ff;--radius:14px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;line-height:1.55}
+.wrap{max-width:980px;margin:0 auto;padding:18px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:8px 0 14px}
+h1{margin:0;font-size:22px}
+.sub{font-size:12px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:12px 0}
+.kv{display:grid;grid-template-columns:160px 1fr;gap:10px}
+.k{color:var(--muted);font-size:12px;font-family:"JetBrains Mono",monospace}
+.v{font-size:14px}
+a{color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:12px;color:var(--muted);margin-right:8px;margin-top:6px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}.kv{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>流程 KPI 詳細頁</h1>
+      <div class="sub">摘要頁：流程覆蓋率 / 財務資料新鮮度（非資料核對檢視）</div>
+    </div>
+    <div class="sub"><a href="./">← 回首頁</a></div>
+  </div>
+
+  <div class="card">
+    <div class="kv">
+      <div class="k">兆鯨流程覆蓋率</div>
+      <div class="v" id="zj">載入中…</div>
+      <div class="k">理財資料更新節奏</div>
+      <div class="v" id="fin">載入中…</div>
+    </div>
+    <div id="meta" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <div class="k">快速連結</div>
+    <div class="v">
+      <div class="badge"><a href="index/customer.html" target="_blank" rel="noopener">客戶索引</a></div>
+      <div class="badge"><a href="index/project.html" target="_blank" rel="noopener">專案索引</a></div>
+      <div class="badge"><a href="index/knowledge.html" target="_blank" rel="noopener">知識索引</a></div>
+      <div class="badge"><a href="verify/?src=zhaojing" target="_blank" rel="noopener">資料核對（兆鯨）</a></div>
+      <div class="badge"><a href="verify/?src=finance" target="_blank" rel="noopener">資料核對（理財）</a></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="k">說明</div>
+    <div class="v">
+      這頁只做「摘要 KPI 展示」：
+      <ul>
+        <li>兆鯨：以任務標題關鍵字（租/欠租/續約/招租/修繕/開票/庫存/導入/貸款/調解）粗略計算流程覆蓋。</li>
+        <li>理財：統計 active 任務中 daily/weekly/monthly 的刷新節奏。</li>
+      </ul>
+      若要檢查 JSON 格式/資料完整性，請用「資料核對」頁（verify）。
+    </div>
+  </div>
+</div>
+
+<script>
+function safeStr(v,fb='-'){if(v===undefined||v===null) return fb; const s=String(v).trim(); return s?s:fb}
+function normStatus(v){const s=safeStr(v,'待處理'); return (s==='待處理'||s==='阻塞'||s==='已完成')?s:'待處理'}
+function normPriority(v){const s=safeStr(v,'normal'); return (s==='urgent'||s==='important'||s==='normal')?s:'normal'}
+function normType(v){const s=safeStr(v,'task'); return (s==='task'||s==='alert'||s==='remittance')?s:'task'}
+function normalizeTask(raw){const t=raw||{};return {title:safeStr(t.title,'(未命名任務)'),status:normStatus(t.status),priority:normPriority(t.priority),type:normType(t.type),freq:safeStr(t.freq),updated_at:safeStr(t.updated_at),source:safeStr(t.source,'unknown')}}
+function normalizeDataset(raw){const src=raw||{};const tasks=Array.isArray(src.tasks)?src.tasks.map(normalizeTask):[];return {updated_at:safeStr(src.updated_at,null),tasks}}
+function getFinanceRefreshSummary(tasks){const active=(tasks||[]).filter(t=>t.status!=='已完成');const daily=active.filter(t=>t.freq==='daily').length;const weekly=active.filter(t=>t.freq==='weekly'||t.freq==='weekly-mon').length;const monthly=active.filter(t=>t.freq==='monthly').length;return `daily ${daily} / weekly ${weekly} / monthly ${monthly}`;}
+function getZhaojingFlowSummary(tasks){const flowRx=/租|欠租|續約|招租|修繕|開票|庫存|導入|貸款|調解/;const active=(tasks||[]).filter(t=>t.status!=='已完成');const matched=active.filter(t=>flowRx.test(t.title)).length;return `${matched}/${active.length||0} 任務已掛流程關鍵字`;}
+async function loadJson(path){const r=await fetch(path+'?_='+Date.now()); if(!r.ok) throw new Error('HTTP '+r.status); return await r.json();}
+(async()=>{
+  try{
+    const zj=normalizeDataset(await loadJson('data/zhaojing/tasks.json'));
+    const fin=normalizeDataset(await loadJson('data/finance/tasks.json'));
+    document.getElementById('zj').textContent=getZhaojingFlowSummary(zj.tasks);
+    document.getElementById('fin').textContent=getFinanceRefreshSummary(fin.tasks);
+    document.getElementById('meta').innerHTML=`<span class="badge">兆鯨更新 ${safeStr(zj.updated_at,'-')}</span><span class="badge">理財更新 ${safeStr(fin.updated_at,'-')}</span>`;
+  }catch(e){
+    document.getElementById('zj').textContent='載入失敗';
+    document.getElementById('fin').textContent='載入失敗';
+    document.getElementById('meta').textContent=String(e.message||e);
+  }
+})();
+</script>
+</body>
+</html>
