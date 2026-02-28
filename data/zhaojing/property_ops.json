@@ -1,16 +1,16 @@
 {
-  "updated_at": "2026-02-27T11:24:36Z",
+  "updated_at": "2026-02-28T02:58:32Z",
   "source_csv": "/Users/sunglin/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/昌松_客戶專案帳務/昌松_物業管理台帳.csv",
   "summary": {
-    "total_items": 3,
+    "total_items": 4,
     "properties": 2,
-    "open_items": 3,
+    "open_items": 4,
     "overdue_items": 0,
-    "open_arrears_amount": 42000,
+    "open_arrears_amount": 62000,
     "top_events": [
       {
         "event": "欠租追繳",
-        "count": 2
+        "count": 3
       },
       {
         "event": "續約",
@@ -60,7 +60,7 @@
     },
     {
       "property": "永二街 8-2 號",
-      "open_items": 1,
+      "open_items": 2,
       "overdue_items": 0,
       "items": [
         {
@@ -76,6 +76,22 @@
           "amount": 20000,
           "next_step": "三月討論還款方案",
           "note": "property-ops 建置測試",
+          "overdue": false,
+          "done": false
+        },
+        {
+          "row_no": 5,
+          "date": "2026-02-28",
+          "service": "物業管理",
+          "property": "永二街 8-2 號",
+          "tenant": "程進龍",
+          "event": "欠租追繳",
+          "status": "進行中",
+          "owner": "兆鯨顧問",
+          "due": "2026-03-05",
+          "amount": 20000,
+          "next_step": "確認剩餘欠款金額與結清期程；如未清，續催收",
+          "note": "2/25已繳20000元，但之前欠款未清（來源：手機快速記錄）",
           "overdue": false,
           "done": false
         }
