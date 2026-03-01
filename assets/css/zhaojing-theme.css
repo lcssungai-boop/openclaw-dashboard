@@ -41,13 +41,65 @@ body[data-theme="light"]{
 .zj-muted{color:var(--zj-text-3)}
 .zj-dim{color:var(--zj-text-2)}
 
-/* Ecom page: map its existing classes to tokens (non-invasive overrides) */
-body{background:var(--zj-bg);color:var(--zj-text)}
-.card{background:var(--zj-surface);border:1px solid var(--zj-border)}
+/* ========== ZhaoJing component layer (v1) ========== */
+body.zj, .zj-scope{background:var(--zj-bg);color:var(--zj-text)}
+
+/* Card: support existing .card plus optional .zj-card */
+.card, .zj-card{
+  background:var(--zj-surface);
+  border:1px solid var(--zj-border);
+  border-radius:var(--zj-radius);
+  padding:var(--zj-pad-md);
+  box-shadow:0 1px 0 rgba(0,0,0,.25);
+}
+
+/* Labels */
 .sec-lbl{color:var(--zj-text-3)}
 .note, th{color:var(--zj-text-3)}
 .kpi-val{color:var(--zj-text)}
-.pill{border-color:var(--zj-border)}
+
+/* Pills / badges: support .pill plus .zj-badge */
+.pill, .zj-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:2px 10px;
+  border-radius:999px;
+  border:1px solid var(--zj-border);
+  background:var(--zj-surface-2);
+  color:var(--zj-text-2);
+  font-size:12px;
+  line-height:18px;
+  white-space:nowrap;
+}
+
+/* Status variants (stable; low saturation) */
+.zj-badge--ok{border-color:rgba(60,207,145,.35);color:var(--zj-ok)}
+.zj-badge--warn{border-color:rgba(242,201,76,.35);color:var(--zj-warn)}
+.zj-badge--err{border-color:rgba(255,93,93,.35);color:var(--zj-err)}
+
+/* Table: support plain table + optional .zj-table */
+table, .zj-table{width:100%;border-collapse:collapse;background:transparent}
+
+table thead th, .zj-table thead th{
+  position:sticky;top:0;
+  background:var(--zj-surface-2);
+  color:var(--zj-text-2);
+  font-weight:600;
+  font-size:12px;
+  text-align:left;
+  border-bottom:1px solid var(--zj-border);
+  padding:10px 12px;
+}
+
+table tbody td, .zj-table tbody td{
+  border-bottom:1px solid var(--zj-border);
+  padding:10px 12px;
+  font-size:13px;
+  color:var(--zj-text);
+}
+
+table tbody tr:hover, .zj-table tbody tr:hover{background:rgba(255,255,255,.03)}
 
 /* Ecom header (keep readable in light) */
 header{border-bottom:1px solid var(--zj-border)}
@@ -55,5 +107,5 @@ header .back{color:var(--zj-text-2)}
 header .back:hover{color:var(--zj-text)}
 header .sub{color:var(--zj-text-3)}
 
-/* Make numeric columns easier to scan (opt-in via class="num") */
-td.num, th.num{text-align:right;font-variant-numeric:tabular-nums}
+/* Numeric alignment helpers */
+.num, td.num, th.num{text-align:right;font-variant-numeric:tabular-nums}
