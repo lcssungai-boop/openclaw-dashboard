@@ -245,6 +245,79 @@ function renderDevProgress(crm){
   </div>`;
 }
 
+function parseMdTable(txt){
+  const lines=(txt||"").split(/\r?\n/);
+  let i=lines.findIndex(l=>/^\|/.test(l.trim()));
+  if(i<0||i+1>=lines.length) return [];
+  // find header + separator
+  while(i+1<lines.length && !/^\|\s*---/.test(lines[i+1].trim())) i++;
+  if(i<=0) return [];
+  const header=lines[i-1].trim();
+  const sep=lines[i].trim();
+  if(!/^\|\s*---/.test(sep)) return [];
+  const cols=header.split("|").map(s=>s.trim()).filter(Boolean);
+  const rows=[];
+  for(let j=i+1;j<lines.length;j++){
+    const line=lines[j].trim();
+    if(!/^\|/.test(line)) break;
+    const cells=line.split("|").map(s=>s.trim());
+    const vals=cells.slice(1,-1);
+    if(vals.length!==cols.length) continue;
+    const o={};
+    cols.forEach((c,idx)=>o[c]=vals[idx]);
+    rows.push(o);
+  }
+  return rows;
+}
+
+function renderCustomers(rows){
+  const active=(rows||[]).filter(r=>(r.status||"")!="inactive");
+  if(!active.length) return "";
+  const top=active.slice(0,8);
+  return `<div><div class="sec-lbl">客戶總覽</div>
+    <div class="task-list">
+      ${top.map(r=>`<div class="task-card">
+        <div class="tc-top">
+          <div class="tc-title">${r.customer_name||"-"}</div>
+          <div class="tc-tags">
+            ${r.priority&&r.priority!=="-"?`<span class="tag ${r.priority==='A'?'urgent':r.priority==='B'?'important':''}">${r.priority}</span>`:""}
+            ${r.lead_source&&r.lead_source!=="-"?`<span class="tag">${r.lead_source}</span>`:""}
+          </div>
+        </div>
+        <div class="tc-meta">
+          <span><span class="tc-meta-lbl">ID </span>${r.customer_id||"-"}</span>
+          <span><span class="tc-meta-lbl">下次 </span>${r.followup_next||"-"}</span>
+          <span><span class="tc-meta-lbl">近況 </span>${r.last_activity||"-"}</span>
+        </div>
+      </div>`).join("")}
+    </div>
+  </div>`;
+}
+
+function renderProjects(rows){
+  const active=(rows||[]).filter(r=>String(r.stage||"").toLowerCase()!=='archived');
+  if(!active.length) return "";
+  const top=active.slice(0,8);
+  return `<div><div class="sec-lbl">專案總覽</div>
+    <div class="task-list">
+      ${top.map(r=>`<div class="task-card">
+        <div class="tc-top">
+          <div class="tc-title">${r.project_name||r.project||"-"}</div>
+          <div class="tc-tags">
+            ${r.priority&&r.priority!=="-"?`<span class="tag ${r.priority==='A'?'urgent':r.priority==='B'?'important':''}">${r.priority}</span>`:""}
+            ${r.stage&&r.stage!=="-"?`<span class="tag">${r.stage}</span>`:""}
+          </div>
+        </div>
+        <div class="tc-meta">
+          <span><span class="tc-meta-lbl">ID </span>${r.project_id||"-"}</span>
+          <span><span class="tc-meta-lbl">截止 </span>${r.due_date||r.due||"-"}</span>
+          <span><span class="tc-meta-lbl">客戶 </span>${r.customer_name||r.customer||"-"}</span>
+        </div>
+      </div>`).join("")}
+    </div>
+  </div>`;
+}
+
 function renderTaskGroups(tasks){
   const groups=[
     {label:"阻塞中",    fn:t=>t.status==="阻塞"},
@@ -264,22 +337,37 @@ function renderTaskGroups(tasks){
 async function init(){
   const main=document.getElementById("main");
   try{
-    const [taskRes,crmRes]=await Promise.allSettled([
+    const [taskRes,crmRes,custRes,projRes]=await Promise.allSettled([
       fetch("../data/caitodo/tasks.json?_="+Date.now()),
       fetch("../data/caitodo/crm.json?_="+Date.now()),
+      fetch("../data/index/customer_index.md?_="+Date.now()),
+      fetch("../data/index/project_index.md?_="+Date.now()),
     ]);
     if(taskRes.status!=="fulfilled"||!taskRes.value.ok) throw 0;
     const d=await taskRes.value.json();
+
     let crm=null;
     if(crmRes.status==="fulfilled" && crmRes.value.ok){
       try{ crm=await crmRes.value.json(); }catch(e){}
     }
 
+    let customers=[];
+    if(custRes.status==="fulfilled" && custRes.value.ok){
+      try{ customers=parseMdTable(await custRes.value.text()); }catch(e){}
+    }
+
+    let projects=[];
+    if(projRes.status==="fulfilled" && projRes.value.ok){
+      try{ projects=parseMdTable(await projRes.value.text()); }catch(e){}
+    }
+
     renderSummary(d.tasks||[],d.updated_at);
     const crmKpiHtml=renderCrmKpis(crm);
     const devHtml=renderDevProgress(crm);
+    const custHtml=renderCustomers(customers);
+    const projHtml=renderProjects(projects);
     const tasksHtml=renderTaskGroups(d.tasks||[]);
-    main.innerHTML=`${crmKpiHtml}${devHtml}${tasksHtml}`;
+    main.innerHTML=`${crmKpiHtml}${devHtml}${custHtml}${projHtml}${tasksHtml}`;
   }catch(e){
     main.innerHTML=`<div class="loading-wrap">無法載入資料</div>`;
   }
