@@ -3,36 +3,43 @@
    - .oc-status-ok   : green breath
    - .oc-status-warn : amber breath
    - .oc-status-bad  : red breath
+
+   v1 business spec (per 小c):
+   - ring = thin circle (2px)
+   - inset = 2px (do not expand layout)
+   - slow gentle breath
 */
+
+:root{
+  --logo-ring-width: 2px;
+  --logo-ring-inset: 2px;
+}
 
 .logo.oc-status-ring{position:relative}
 .logo.oc-status-ring::after{
   content:"";
   position:absolute;
-  inset:-5px;
-  border-radius:14px;
+  inset: var(--logo-ring-inset);
+  border-radius: 999px;
   pointer-events:none;
-  opacity:1;
-  /* baseline ring so it is always visible */
-  box-shadow:0 0 0 2px rgba(255,255,255,.10);
+  opacity:.85;
+  border: var(--logo-ring-width) solid rgba(255,255,255,.10);
+  filter: drop-shadow(0 0 2px rgba(0,0,0,.25));
 }
 
-@keyframes ocBreathOK{
-  0%{box-shadow:0 0 0 2px rgba(110,200,150,.25)}
-  50%{box-shadow:0 0 0 5px rgba(110,200,150,.18)}
-  100%{box-shadow:0 0 0 2px rgba(110,200,150,.25)}
-}
-@keyframes ocBreathWarn{
-  0%{box-shadow:0 0 0 2px rgba(210,180,90,.22)}
-  50%{box-shadow:0 0 0 5px rgba(210,180,90,.14)}
-  100%{box-shadow:0 0 0 2px rgba(210,180,90,.22)}
-}
-@keyframes ocBreathBad{
-  0%{box-shadow:0 0 0 2px rgba(220,110,110,.28)}
-  50%{box-shadow:0 0 0 6px rgba(220,110,110,.16)}
-  100%{box-shadow:0 0 0 2px rgba(220,110,110,.28)}
-}
+@keyframes ocRingBreathOK{0%,100%{opacity:.75}50%{opacity:.95}}
+@keyframes ocRingBreathWarn{0%,100%{opacity:.70}50%{opacity:.92}}
+@keyframes ocRingBreathBad{0%,100%{opacity:.70}50%{opacity:.95}}
 
-.logo.oc-status-ok::after{animation:ocBreathOK 2.4s ease-in-out infinite}
-.logo.oc-status-warn::after{animation:ocBreathWarn 2.6s ease-in-out infinite}
-.logo.oc-status-bad::after{animation:ocBreathBad 1.8s ease-in-out infinite}
+.logo.oc-status-ok::after{
+  border-color: rgba(60,207,145,.85);
+  animation: ocRingBreathOK 2.6s ease-in-out infinite;
+}
+.logo.oc-status-warn::after{
+  border-color: rgba(242,201,76,.85);
+  animation: ocRingBreathWarn 2.8s ease-in-out infinite;
+}
+.logo.oc-status-bad::after{
+  border-color: rgba(255,93,93,.85);
+  animation: ocRingBreathBad 2.2s ease-in-out infinite;
+}
