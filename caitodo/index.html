@@ -404,7 +404,8 @@ async function init(){
     const custHtml=renderCustomers(customers);
     const projHtml=renderProjects(projects);
     const tasksHtml=renderTaskGroups(d.tasks||[]);
-    main.innerHTML=`${projectTrackHtml}${custHtml}${projHtml}${tasksHtml}`;
+    // Place CRM project tracking under weekly focus (customers/projects)
+    main.innerHTML=`${custHtml}${projHtml}${projectTrackHtml}${tasksHtml}`;
   }catch(e){
     main.innerHTML=`<div class="loading-wrap">無法載入資料</div>`;
   }
