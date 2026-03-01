@@ -26,14 +26,14 @@
 
 /* Optional: light mode tokens (only when a page uses data-theme="light") */
 body[data-theme="light"]{
-  --zj-bg:#f4f5f7;
+  --zj-bg:#f6f7fb;
   --zj-surface:#ffffff;
-  --zj-surface-2:#f7f8fa;
-  --zj-border:rgba(18,22,32,0.10);
+  --zj-surface-2:#f1f3f8;
+  --zj-border:rgba(15,23,42,.12);
 
-  --zj-text:rgba(18,22,32,.92);
-  --zj-text-2:rgba(18,22,32,.72);
-  --zj-text-3:rgba(18,22,32,.56);
+  --zj-text:rgba(15,23,42,.92);
+  --zj-text-2:rgba(15,23,42,.72);
+  --zj-text-3:rgba(15,23,42,.52);
 }
 
 /* Shared components (safe, low-specificity) */
@@ -42,12 +42,18 @@ body[data-theme="light"]{
 .zj-dim{color:var(--zj-text-2)}
 
 /* Ecom page: map its existing classes to tokens (non-invasive overrides) */
-body{background:var(--zj-bg)}
+body{background:var(--zj-bg);color:var(--zj-text)}
 .card{background:var(--zj-surface);border:1px solid var(--zj-border)}
 .sec-lbl{color:var(--zj-text-3)}
 .note, th{color:var(--zj-text-3)}
 .kpi-val{color:var(--zj-text)}
 .pill{border-color:var(--zj-border)}
+
+/* Ecom header (keep readable in light) */
+header{border-bottom:1px solid var(--zj-border)}
+header .back{color:var(--zj-text-2)}
+header .back:hover{color:var(--zj-text)}
+header .sub{color:var(--zj-text-3)}
 
 /* Make numeric columns easier to scan (opt-in via class="num") */
 td.num, th.num{text-align:right;font-variant-numeric:tabular-nums}
