@@ -221,6 +221,8 @@ async function openDoc(id){
   const d = ID2DOC[id];
   if(!d) return;
   $('doc').innerHTML = '<div class="p">載入中…</div>';
+  const editorEl = $('editor');
+  if(editorEl){ editorEl.style.display='none'; editorEl.innerHTML=''; }
   const actionEl = $('action');
   if(actionEl){ actionEl.style.display='none'; actionEl.innerHTML=''; }
 
@@ -262,6 +264,56 @@ async function openDoc(id){
       <div class="p" style="color:var(--muted);font-family:var(--mono);font-size:11px">${esc(d.rel_path)} · ${fmtTs(d.mtime)}</div>
       <div class="md">${renderMarkdownBasic(md)}</div>
     `;
+
+    // editor panel (raw markdown)
+    if(editorEl){
+      editorEl.style.display='block';
+      editorEl.innerHTML = `
+        <div class="row">
+          <button class="btn btn-sm" id="ed_toggle">顯示編輯器</button>
+          <button class="btn btn-sm" id="ed_save" style="display:none">儲存內容</button>
+          <div class="p" style="color:var(--muted);font-size:11px">（支援 Markdown 語法；會直接改原檔）</div>
+        </div>
+        <div id="ed_wrap" style="display:none;margin-top:10px">
+          <textarea id="ed_text"></textarea>
+          <div class="hint" id="ed_hint" style="display:none">目前無法寫入：請先按下方「使用可編輯模式」或確認 8802 已開。</div>
+        </div>
+      `;
+
+      const toggle = $('ed_toggle');
+      const save = $('ed_save');
+      const wrap = $('ed_wrap');
+      const ta = $('ed_text');
+      const hint = $('ed_hint');
+
+      if(ta) ta.value = md;
+      if(hint) hint.style.display = API_OK ? 'none' : 'block';
+
+      let open=false;
+      if(toggle) toggle.onclick = ()=>{
+        open = !open;
+        if(wrap) wrap.style.display = open ? 'block' : 'none';
+        if(save) save.style.display = open ? 'inline-flex' : 'none';
+        if(toggle) toggle.textContent = open ? '隱藏編輯器' : '顯示編輯器';
+      };
+
+      if(save) save.onclick = async ()=>{
+        if(!API_OK){
+          alert('目前無法寫入。請先按「使用可編輯模式」');
+          return;
+        }
+        try{
+          const next = (ta?.value ?? '');
+          await apiWrite(d.rel_path, next);
+          md = next;
+          // re-render preview
+          $('doc').querySelector('.md').innerHTML = renderMarkdownBasic(md);
+          alert('已儲存內容');
+        }catch(e){
+          alert('儲存失敗：'+(e?.message||e));
+        }
+      };
+    }
 
     // assistant action panel (YAML frontmatter)
     if(actionEl){
