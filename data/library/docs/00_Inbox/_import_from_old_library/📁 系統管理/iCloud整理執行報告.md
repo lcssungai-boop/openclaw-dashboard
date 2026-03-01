@@ -52,10 +52,10 @@
 
 ```bash
 # 復原 .DS_Store
-mv "/Users/sunglin/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/資訊資料庫/_整理候選/.DS_Store" "/Users/sunglin/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/資訊資料庫/"
+mv "/Users/sung/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/資訊資料庫/_整理候選/.DS_Store" "/Users/sung/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/資訊資料庫/"
 
 # 復原 SSH雙機互援技術規劃.md
-mv "/Users/sunglin/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/資訊資料庫/_整理候選/SSH雙機互援技術規劃.md" "/Users/sunglin/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/資訊資料庫/"
+mv "/Users/sung/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/資訊資料庫/_整理候選/SSH雙機互援技術規劃.md" "/Users/sung/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/資訊資料庫/"
 ```
 
 ---
