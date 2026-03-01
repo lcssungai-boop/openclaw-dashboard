@@ -6,10 +6,15 @@
   <title>兆鯨｜電商推進</title>
   <style>
     :root{
-      --bg:#0b1020;--panel:#111a2e;--panel2:#0f1729;--border:rgba(255,255,255,.08);
-      --text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.62);--dim:rgba(255,255,255,.75);
-      --good:#7DFFB2;--warn:#FFD666;--bad:#FF6B6B;--indigo:#6C5CFF;--cyan:#35F4FF;
+      --bg:#0b1020;--panel:rgba(255,255,255,0.03);--panel2:rgba(255,255,255,0.02);--border:rgba(255,255,255,.08);
+      --text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.62);--dim:rgba(255,255,255,.78);
+      --good:#5BD39A;--warn:#D2B45A;--bad:#D96A6A;--accent:#6C5CFF;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    body[data-theme="light"]{
+      --bg:#f4f5f7;--panel:#ffffff;--panel2:#f7f8fa;--border:rgba(18,22,32,0.10);
+      --text:rgba(18,22,32,.92);--muted:rgba(18,22,32,.56);--dim:rgba(18,22,32,.80);
+      --good:#2f8f62;--warn:#9a7b2f;--bad:#b94a4a;--accent:#5b6b7a;
     }
     *{box-sizing:border-box}
     body{margin:0;background:linear-gradient(180deg,#070b16 0%, #0b1020 45%, #070b16 100%);
@@ -58,6 +63,7 @@
       <div class="title">兆鯨｜電商推進</div>
       <div class="sub">獲利導向 · 跟業主對齊進度</div>
     </div>
+    <button class="back" id="btn-theme" style="margin-left:auto">日光模式</button>
   </div>
 </header>
 
@@ -170,6 +176,19 @@
 </main>
 
 <script>
+function applyTheme(){
+  const saved = localStorage.getItem('zj_theme') || 'light';
+  document.body.setAttribute('data-theme', saved);
+  const btn=document.getElementById('btn-theme');
+  if(btn) btn.textContent = saved==='light' ? '深色模式' : '日光模式';
+}
+function toggleTheme(){
+  const cur = document.body.getAttribute('data-theme') || 'light';
+  const next = cur==='light' ? 'dark' : 'light';
+  localStorage.setItem('zj_theme', next);
+  applyTheme();
+}
+
 function li(arr){
   if(!arr || !arr.length) return '<li class="empty">—</li>';
   return arr.map(x=>`<li>${x}</li>`).join('');
@@ -260,6 +279,10 @@ async function load(){
   document.getElementById('dec_you').innerHTML = li((d.decisions?.you||[]).slice(0,5));
   document.getElementById('dec_owner').innerHTML = li((d.decisions?.owner||[]).slice(0,5));
 }
+
+applyTheme();
+const btnT=document.getElementById('btn-theme');
+if(btnT) btnT.addEventListener('click', toggleTheme);
 
 load().catch(()=>{});
 </script>

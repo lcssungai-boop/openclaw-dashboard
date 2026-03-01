@@ -13,23 +13,25 @@
     const css = document.createElement('style');
     css.id = 'oc-status-ring-css';
     css.textContent = `
+      /* Business subtle status ring */
       .logo.oc-status-ring{position:relative}
       .logo.oc-status-ring::after{
         content:"";
         position:absolute;
-        inset:-6px;
+        inset:-5px;
         border-radius:14px;
         pointer-events:none;
-        opacity:0;
-        box-shadow:0 0 0 0 rgba(120,220,160,.65);
+        opacity:1;
+        box-shadow:0 0 0 2px rgba(255,255,255,.10);
       }
-      @keyframes ocBreath{0%{opacity:.25;box-shadow:0 0 0 0 rgba(120,220,160,.55)}50%{opacity:.85;box-shadow:0 0 0 10px rgba(120,220,160,.08)}100%{opacity:.25;box-shadow:0 0 0 0 rgba(120,220,160,.55)}}
-      @keyframes ocBlinkWarn{0%,50%{opacity:.15;box-shadow:0 0 0 0 rgba(255,214,102,.55)}60%,100%{opacity:.75;box-shadow:0 0 0 10px rgba(255,214,102,.08)}}
-      @keyframes ocBlinkBad{0%,35%{opacity:.15;box-shadow:0 0 0 0 rgba(255,98,98,.55)}50%,100%{opacity:.9;box-shadow:0 0 0 12px rgba(255,98,98,.10)}}
 
-      .logo.oc-status-ok::after{opacity:1;animation:ocBreath 2.2s ease-in-out infinite}
-      .logo.oc-status-warn::after{opacity:1;animation:ocBlinkWarn 2.6s ease-in-out infinite}
-      .logo.oc-status-bad::after{opacity:1;animation:ocBlinkBad 1.2s ease-in-out infinite}
+      @keyframes ocBreathOK{0%{box-shadow:0 0 0 2px rgba(110,200,150,.25)}50%{box-shadow:0 0 0 5px rgba(110,200,150,.18)}100%{box-shadow:0 0 0 2px rgba(110,200,150,.25)}}
+      @keyframes ocBreathWarn{0%{box-shadow:0 0 0 2px rgba(210,180,90,.22)}50%{box-shadow:0 0 0 5px rgba(210,180,90,.14)}100%{box-shadow:0 0 0 2px rgba(210,180,90,.22)}}
+      @keyframes ocBreathBad{0%{box-shadow:0 0 0 2px rgba(220,110,110,.28)}50%{box-shadow:0 0 0 6px rgba(220,110,110,.16)}100%{box-shadow:0 0 0 2px rgba(220,110,110,.28)}}
+
+      .logo.oc-status-ok::after{animation:ocBreathOK 2.4s ease-in-out infinite}
+      .logo.oc-status-warn::after{animation:ocBreathWarn 2.6s ease-in-out infinite}
+      .logo.oc-status-bad::after{animation:ocBreathBad 1.8s ease-in-out infinite}
     `;
     document.head.appendChild(css);
   }

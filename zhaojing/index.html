@@ -7,6 +7,44 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@200;300;400;500;700&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
+/* Theme tokens (default: dark) */
+:root{
+  --bg: #0b1020;
+  --panel: rgba(255,255,255,0.03);
+  --panel2: rgba(255,255,255,0.02);
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.16);
+  --text: rgba(255,255,255,0.92);
+  --dim: rgba(255,255,255,0.78);
+  --muted: rgba(255,255,255,0.62);
+  --bright: rgba(255,255,255,0.96);
+  --accent: #6C5CFF;
+}
+body[data-theme="light"]{
+  --bg: #f4f5f7;
+  --panel: #ffffff;
+  --panel2: #f7f8fa;
+  --border: rgba(18,22,32,0.10);
+  --border2: rgba(18,22,32,0.18);
+  --text: rgba(18,22,32,0.92);
+  --dim: rgba(18,22,32,0.80);
+  --muted: rgba(18,22,32,0.56);
+  --bright: rgba(18,22,32,0.96);
+  --accent: #5b6b7a; /* grey-blue low saturation */
+}
+
+/* Theme toggle button */
+.theme-toggle{
+  margin-left:auto;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:var(--dim);
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:11px;
+  cursor:pointer;
+}
+
 
 :root{
   --bg:#272729;--bg2:#323234;--bg3:#3D3D3F;--bg4:#484849;
@@ -194,11 +232,12 @@ main>div:nth-child(4){animation-delay:.24s}
   <div class="hdr-l">
     <a class="back-btn" href="../">‹ 返回</a>
     <div class="hdr-div"></div>
-    <div class="logo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="12" height="18"/><path d="M15 7h4l2 14H15"/><line x1="7" y1="8" x2="10" y2="8"/><line x1="7" y1="12" x2="10" y2="12"/><rect x="8" y="17" width="3" height="4"/></svg><img src="../assets/avatar.png" alt="OC" onerror="this.remove()"></div>
+    <div class="logo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="12" height="18"/><path d="M15 7h4l2 14H15"/><line x1="7" y1="8" x2="10" y2="8"/><line x1="7" y1="12" x2="10" y2="12"/><rect x="8" y="17" width="3" height="4"/></svg><img src="../assets/avatar.png" alt="OC" onerror="this.remove()"></div>
     <div>
       <div class="hdr-name">兆鯨顧問</div>
       <div class="hdr-sub">顧問 · 物業 · 電商</div>
     </div>
+    <button class="theme-toggle" id="btn-theme">日光模式</button>
   </div>
   <div id="clk" class="hdr-clock"></div>
 </header>
@@ -254,6 +293,27 @@ function tick(){
     +"<br>"+String(n.getMonth()+1).padStart(2,"0")+"/"+String(n.getDate()).padStart(2,"0")+" 週"+days[n.getDay()];
 }
 tick();setInterval(tick,1000);
+
+// Theme (default light for business)
+(function(){
+  const saved = localStorage.getItem('zj_theme') || 'light';
+  document.body.setAttribute('data-theme', saved);
+  const btn=document.getElementById('btn-theme');
+  function sync(){
+    const cur=document.body.getAttribute('data-theme')||'light';
+    if(btn) btn.textContent = cur==='light' ? '深色模式' : '日光模式';
+  }
+  if(btn){
+    btn.addEventListener('click', ()=>{
+      const cur=document.body.getAttribute('data-theme')||'light';
+      const next=cur==='light'?'dark':'light';
+      localStorage.setItem('zj_theme', next);
+      document.body.setAttribute('data-theme', next);
+      sync();
+    });
+  }
+  sync();
+})();
 
 function fmtTs(iso){
   if(!iso||iso==="-") return "-";
