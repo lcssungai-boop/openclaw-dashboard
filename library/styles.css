@@ -15,6 +15,10 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans)}
 .left{display:flex;flex-direction:column}
 .search{padding:12px;border-bottom:1px solid var(--border)}
 .search input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#2b2b2d;color:var(--text)}
+.left-mode{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border);background:rgba(43,43,45,.6)}
+.btn{border:1px solid var(--border);background:#2b2b2d;color:var(--text);padding:6px 10px;border-radius:999px;cursor:pointer;font-size:12px}
+.btn:hover{border-color:var(--accent)}
+.crumb{color:var(--muted);font-family:var(--mono);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tree{padding:8px;overflow:auto;font-size:12px}
 .results{padding:12px;overflow:auto}
 .results{border-top:1px solid var(--border);display:none}

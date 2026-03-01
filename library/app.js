@@ -145,6 +145,25 @@ async function openDoc(id){
   }
 }
 
+function setLeftMode(mode, folderPath=''){
+  // mode: 'tree' | 'list'
+  const back = $('btn-back');
+  const crumb = $('crumb');
+  if(mode==='list'){
+    if(back) back.style.display = 'inline-flex';
+    if(crumb){ crumb.style.display='block'; crumb.textContent = folderPath || ''; }
+    $('tree').style.display = 'none';
+    $('results').style.display = 'block';
+    $('results').scrollTop = 0;
+  }else{
+    if(back) back.style.display = 'none';
+    if(crumb) crumb.style.display = 'none';
+    $('tree').style.display = 'block';
+    $('results').style.display = 'none';
+    $('results').innerHTML = '';
+  }
+}
+
 function wireClicks(){
   document.body.addEventListener('click', (ev)=>{
     const it = ev.target.closest('.item[data-id]');
@@ -157,7 +176,7 @@ function wireClicks(){
     if(f){
       const folder = f.dataset.folder;
       const subset = DOCS.filter(d=>d.rel_path.startsWith(folder+'/'));
-      $('results').style.display = 'block';
+      setLeftMode('list', folder);
       mountList($('results'), subset.slice(0,500));
       return;
     }
@@ -199,8 +218,8 @@ function wireSearch(){
   $('q').addEventListener('input', ()=>{
     const q = $('q').value.trim();
     if(!q){
-      $('results').innerHTML = '';
-      $('results').style.display = 'none';
+      // return to tree mode
+      setLeftMode('tree');
       return;
     }
     const qq = q.toLowerCase();
@@ -209,16 +228,23 @@ function wireSearch(){
         || (d.rel_path||'').toLowerCase().includes(qq)
         || (d.excerpt||'').toLowerCase().includes(qq);
     }).slice(0,200);
-    $('results').style.display = 'block';
+    setLeftMode('list', `搜尋：${q}`);
     mountList($('results'), hits);
-    // auto scroll to results
-    $('results').scrollIntoView({behavior:'smooth', block:'start'});
   });
 }
 
 async function init(){
   wireClicks();
   wireSearch();
+
+  const back = $('btn-back');
+  if(back){
+    back.addEventListener('click', (ev)=>{
+      ev.preventDefault();
+      setLeftMode('tree');
+    });
+  }
+
   const idx = await fetchJson('../data/library/index.json');
   INDEX = idx;
   DOCS = idx.docs||[];
@@ -226,7 +252,7 @@ async function init(){
   REL2ID = Object.fromEntries(DOCS.map(d=>[d.rel_path,d.id]));
   $('lib-meta').textContent = `docs=${idx.doc_count||DOCS.length} · gen=${idx.generated_at||'-'}`;
   $('tree').innerHTML = buildTree(DOCS);
-  $('results').style.display = 'none';
+  setLeftMode('tree');
 }
 
 init().catch(err=>{
