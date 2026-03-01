@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>兆鯨｜電商推進</title>
+  <style>
+    :root{
+      --bg:#0b1020;--panel:#111a2e;--panel2:#0f1729;--border:rgba(255,255,255,.08);
+      --text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.62);--dim:rgba(255,255,255,.75);
+      --good:#7DFFB2;--warn:#FFD666;--bad:#FF6B6B;--indigo:#6C5CFF;--cyan:#35F4FF;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#070b16 0%, #0b1020 45%, #070b16 100%);
+      color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+    }
+    header{position:sticky;top:0;z-index:20;background:rgba(11,16,32,.92);backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--border);
+    }
+    .hdr{max-width:980px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:10px}
+    .back{color:var(--dim);text-decoration:none;border:1px solid var(--border);border-radius:999px;padding:6px 10px}
+    .logo{width:30px;height:30px;display:flex;align-items:center;justify-content:center}
+    .title{font-size:14px;font-weight:700}
+    .sub{font-size:11px;color:var(--muted)}
+    main{max-width:980px;margin:0 auto;padding:16px}
+    .sec{margin:18px 0 0}
+    .sec-lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+    .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .card{background:rgba(17,26,46,.85);border:1px solid var(--border);border-radius:16px;padding:12px 14px}
+    .kpi-lbl{font-size:12px;color:var(--muted)}
+    .kpi-val{font-size:18px;font-weight:750;margin-top:6px;line-height:1.25}
+    .kpi-sub{font-size:11px;color:var(--muted);margin-top:6px}
+    .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:11px;color:var(--dim)}
+    .pill.warn{border-color:rgba(255,214,102,.35);background:rgba(255,214,102,.10);color:var(--warn)}
+    .pill.good{border-color:rgba(125,255,178,.30);background:rgba(125,255,178,.10);color:var(--good)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid var(--border);padding:10px 8px;text-align:left;font-size:12px;vertical-align:top}
+    th{color:var(--muted);font-weight:650}
+    td small{color:var(--muted)}
+    .right{float:right}
+    .note{font-size:12px;color:var(--muted);line-height:1.5}
+    ul{margin:8px 0 0 18px}
+    li{margin:6px 0}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .empty{color:var(--muted)}
+
+    @media(max-width:860px){.grid3{grid-template-columns:1fr}.split{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="hdr">
+    <a class="back" href="./">‹ 返回兆鯨</a>
+    <div class="logo"><img src="../assets/avatar.png" alt="OC" style="width:28px;height:28px;border-radius:10px" onerror="this.remove()"></div>
+    <div>
+      <div class="title">兆鯨｜電商推進</div>
+      <div class="sub">獲利導向 · 跟業主對齊進度</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="sec">
+    <div class="sec-lbl">本週儀表</div>
+    <div class="grid3">
+      <div class="card">
+        <div class="kpi-lbl">本週主推</div>
+        <div class="kpi-val" id="kpi_week">—</div>
+        <div class="kpi-sub">主力品 3–5 個（先補齊成本/售價/含稅）</div>
+      </div>
+      <div class="card">
+        <div class="kpi-lbl">獲利目標</div>
+        <div class="kpi-val" id="kpi_profit">—</div>
+        <div class="kpi-sub">毛利額 / 毛利率（先留空，後續補）</div>
+      </div>
+      <div class="card">
+        <div class="kpi-lbl">成交引擎</div>
+        <div class="kpi-val" id="kpi_engine">—</div>
+        <div class="kpi-sub">LINE OA / 目錄 / 現場客轉單</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-lbl">肚肚上線期</div>
+    <div class="card">
+      <div class="row">
+        <span class="pill" id="phase_label">—</span>
+        <span class="pill warn" id="phase_phase">—</span>
+        <span class="pill" id="phase_date">—</span>
+      </div>
+      <div class="note" id="phase_notes" style="margin-top:10px">—</div>
+      <div class="note" style="margin-top:10px">教育期必做：品名一致/含稅規則/庫存流程/權限報表/教育檢核（先穩現場再拉電商）</div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-lbl">商品毛利表（先補資料）</div>
+    <div class="card">
+      <div class="note" style="margin-bottom:10px">欄位：品名｜售價｜成本｜毛利%｜毛利額｜含稅｜供貨｜備註（後續可接肚肚/鼎新）</div>
+      <div style="overflow:auto">
+        <table>
+          <thead>
+            <tr>
+              <th style="min-width:180px">品名</th>
+              <th style="min-width:80px">售價</th>
+              <th style="min-width:80px">成本</th>
+              <th style="min-width:70px">毛利%</th>
+              <th style="min-width:80px">毛利額</th>
+              <th style="min-width:80px">含稅</th>
+              <th style="min-width:90px">供貨</th>
+              <th style="min-width:220px">備註</th>
+            </tr>
+          </thead>
+          <tbody id="prod_rows">
+            <tr><td class="empty" colspan="8">尚未填商品（先把主推 3–5 個補進來）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="split" style="margin-top:12px">
+        <div class="card" style="background:rgba(15,23,41,.75)">
+          <div class="sec-lbl" style="margin:0 0 8px">缺資料（自動）</div>
+          <ul id="missing_list"><li class="empty">—</li></ul>
+        </div>
+        <div class="card" style="background:rgba(15,23,41,.75)">
+          <div class="sec-lbl" style="margin:0 0 8px">風險提醒</div>
+          <ul id="risk_list"><li class="empty">—</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-lbl">目錄 / 訂購單（成交）</div>
+    <div class="card">
+      <div class="note">最新版：<span id="catalog_latest" class="pill">—</span></div>
+      <div class="note" style="margin-top:8px">規則：<span id="catalog_rule" class="pill">—</span></div>
+      <div class="note" style="margin-top:8px">鼎新/品名一致：<span id="catalog_dingxin" class="pill">—</span></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-lbl">LINE OA / 行銷</div>
+    <div class="card">
+      <div class="note">LINE OA 狀態：<span id="line_status" class="pill">—</span></div>
+      <div class="note" style="margin-top:10px">本週行銷動作（2 件）：</div>
+      <ul id="mkt_actions"><li class="empty">—</li></ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-lbl">待決策</div>
+    <div class="split">
+      <div class="card">
+        <div class="note">你要決策（最多 5）</div>
+        <ul id="dec_you"><li class="empty">—</li></ul>
+      </div>
+      <div class="card">
+        <div class="note">業主要決策（最多 5）</div>
+        <ul id="dec_owner"><li class="empty">—</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="note">資料來源：<code style="font-family:var(--mono)">../data/zhaojing/ecom.json</code></div>
+  </section>
+</main>
+
+<script>
+function li(arr){
+  if(!arr || !arr.length) return '<li class="empty">—</li>';
+  return arr.map(x=>`<li>${x}</li>`).join('');
+}
+function money(n){
+  if(n===null||n===undefined||n==="") return '';
+  const v=Number(n);
+  if(!isFinite(v)) return String(n);
+  return v.toLocaleString('zh-TW');
+}
+function pct(v){
+  if(v===null||v===undefined||v==="") return '';
+  const n=Number(v);
+  if(!isFinite(n)) return String(v);
+  return (n*100).toFixed(0)+'%';
+}
+
+async function load(){
+  const r=await fetch(`../data/zhaojing/ecom.json?_=${Date.now()}`);
+  const d=await r.json();
+
+  // KPIs
+  document.getElementById('kpi_week').textContent = d.kpis?.week_focus || '—';
+  document.getElementById('kpi_profit').textContent = d.kpis?.profit_target || '—';
+  document.getElementById('kpi_engine').textContent = d.kpis?.engine || '—';
+
+  // Phase
+  const ph=d.launch_phase||{};
+  document.getElementById('phase_label').textContent = ph.label || '肚肚上線期';
+  document.getElementById('phase_phase').textContent = ph.phase || '—';
+  document.getElementById('phase_date').textContent = ph.date ? ('上線日：'+ph.date) : '—';
+  document.getElementById('phase_notes').textContent = (ph.notes||[]).map(x=>'• '+x).join('\n') || '—';
+
+  // Products
+  const rows=document.getElementById('prod_rows');
+  const prods=d.products||[];
+  const missing=[];
+  const risks=[];
+
+  if(!prods.length){
+    rows.innerHTML = '<tr><td class="empty" colspan="8">尚未填商品（先把主推 3–5 個補進來）</td></tr>';
+  } else {
+    rows.innerHTML = prods.map(p=>{
+      const price = p.price;
+      const cost = p.cost;
+      let gmPct = '';
+      let gmAmt = '';
+      if(price!==null && price!==undefined && price!=='' && cost!==null && cost!==undefined && cost!==''){
+        const pr=Number(price), co=Number(cost);
+        if(isFinite(pr) && isFinite(co) && pr>0){
+          gmAmt = pr - co;
+          gmPct = (gmAmt/pr);
+          if(gmPct < 0.25) risks.push(`${p.name||'（未命名）'} 毛利偏低（<25%）`);
+        }
+      }
+      if(price===null||price===undefined||price==='') missing.push(`${p.name||'（未命名）'}：缺售價`);
+      if(cost===null||cost===undefined||cost==='') missing.push(`${p.name||'（未命名）'}：缺成本`);
+      if(!p.tax) missing.push(`${p.name||'（未命名）'}：含稅未定`);
+
+      return `
+        <tr>
+          <td>${p.name||'—'}</td>
+          <td>${money(price)||'—'}</td>
+          <td>${money(cost)||'—'}</td>
+          <td>${gmPct===''?'—':pct(gmPct)}</td>
+          <td>${gmAmt===''?'—':money(gmAmt)}</td>
+          <td>${p.tax||'—'}</td>
+          <td>${p.supply||'—'}</td>
+          <td><small>${p.note||''}</small></td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('missing_list').innerHTML = li(missing.slice(0,12));
+  document.getElementById('risk_list').innerHTML = li(risks.slice(0,12));
+
+  // Catalog
+  document.getElementById('catalog_latest').textContent = d.catalog?.latest || '—';
+  document.getElementById('catalog_rule').textContent = d.catalog?.rule || '—';
+  document.getElementById('catalog_dingxin').textContent = d.catalog?.dingxin || '—';
+
+  // Marketing
+  document.getElementById('line_status').textContent = d.line?.status || '—';
+  document.getElementById('mkt_actions').innerHTML = li((d.marketing?.actions||[]).slice(0,2));
+
+  // Decisions
+  document.getElementById('dec_you').innerHTML = li((d.decisions?.you||[]).slice(0,5));
+  document.getElementById('dec_owner').innerHTML = li((d.decisions?.owner||[]).slice(0,5));
+}
+
+load().catch(()=>{});
+</script>
+<script src="../assets/js/status-ring.js"></script>
+</body>
+</html>
