@@ -207,9 +207,22 @@ function renderProjectTrack(crm){
   const mods=(dp?.modules)||[];
   if(!mods.length) return "";
   const priClass=p=>p==="high"?"urgent":p==="normal"?"important":"";
-  const title=(dp?.project||"專案追蹤").replace(/\s+/g," ").trim();
+  const title=(dp?.project||"CRM專案").replace(/\s+/g," ").trim();
   const overall=dp?.status?`<span class=\"tag\">${dp.status}</span>`:"";
-  return `<div><div class=\"sec-lbl\">專案追蹤</div>
+  const top=mods.slice(0,3);
+  const rest=mods.slice(3);
+  const row=(m)=>`<div class=\"task-card\">
+    <div class=\"tc-top\">
+      <div class=\"tc-title\">${m.name}</div>
+      <div class=\"tc-tags\">
+        <span class=\"tag ${priClass(m.priority)}\">${m.priority||"-"}</span>
+        <span class=\"tag\">${m.status||"-"}</span>
+      </div>
+    </div>
+    ${m.description?`<div class=\"tc-next\">→ ${m.description}</div>`:""}
+  </div>`;
+
+  return `<div><div class=\"sec-lbl\">本週焦點（CRM專案）</div>
     <div class=\"task-list\">
       <div class=\"task-card\">
         <div class=\"tc-top\">
@@ -217,21 +230,15 @@ function renderProjectTrack(crm){
           <div class=\"tc-tags\">${overall}</div>
         </div>
         <div class=\"tc-meta\">
-          <span><span class=\"tc-meta-lbl\">模組 </span>${dp?.completed_modules??0}/${dp?.total_modules??mods.length}</span>
+          <span><span class=\"tc-meta-lbl\">工作包 </span>${dp?.completed_modules??0}/${dp?.total_modules??mods.length}</span>
           <span><span class=\"tc-meta-lbl\">更新 </span>${fmtTs(crm?.updated_at||"-")}</span>
         </div>
       </div>
-      ${mods.map(m=>`<div class=\"task-card\">
-        <div class=\"tc-top\">
-          <div class=\"tc-title\">${m.name}</div>
-          <div class=\"tc-tags\">
-            <span class=\"tag ${priClass(m.priority)}\">${m.priority||"-"}</span>
-            <span class=\"tag\">${m.status||"-"}</span>
-          </div>
-        </div>
-        ${m.description?`<div class=\"tc-next\">→ ${m.description}</div>`:""}
-      </div>`).join("")}
+      ${top.map(row).join("")}
     </div>
+    ${rest.length?`<details style=\"margin-top:10px\"><summary style=\"cursor:pointer;color:var(--muted);font-size:10px;letter-spacing:.12em;font-family:'JetBrains Mono',monospace\">其他工作包（${rest.length}）</summary>
+      <div class=\"task-list\" style=\"margin-top:10px\">${rest.map(row).join("")}</div>
+    </details>`:""}
   </div>`;
 }
 
