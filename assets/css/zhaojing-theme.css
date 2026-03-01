@@ -107,5 +107,24 @@ header .back{color:var(--zj-text-2)}
 header .back:hover{color:var(--zj-text)}
 header .sub{color:var(--zj-text-3)}
 
+/* unify logo sizing across zhaojing pages (override page-local .logo) */
+.zj-scope .logo{
+  width: var(--logo-size, 28px);
+  height: var(--logo-size, 28px);
+  border-radius: 999px;
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.zj-scope .logo img,
+.zj-scope .logo svg{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 999px;
+}
+
 /* Numeric alignment helpers */
 .num, td.num, th.num{text-align:right;font-variant-numeric:tabular-nums}

@@ -45,4 +45,13 @@
     .empty{color:var(--muted)}
 
     @media(max-width:860px){.grid3{grid-template-columns:1fr}.split{grid-template-columns:1fr}}
+
+    /* v1: force ecom to follow zj tokens (avoid hard-coded colors) */
+    body.zj-scope{ background: var(--zj-bg); color: var(--zj-text); }
+    body.zj-scope header{ background: var(--zj-surface); border-bottom: 1px solid var(--zj-border); }
+    body.zj-scope .card, body.zj-scope .panel{
+      background: var(--zj-surface);
+      border: 1px solid var(--zj-border);
+      color: var(--zj-text);
+    }
   
