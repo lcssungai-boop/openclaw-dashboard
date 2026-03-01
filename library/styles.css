@@ -25,7 +25,7 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans)}
 .item{padding:8px 10px;border-radius:10px;border:1px solid transparent;cursor:pointer}
 .item:hover{border-color:var(--border)}
 .item .t{font-size:13px;font-weight:500}
-.item .p{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:4px}
+.item .p{display:none}
 .doc{padding:16px;overflow:auto;white-space:normal;line-height:1.55}
 .doc pre{white-space:pre-wrap}
 
