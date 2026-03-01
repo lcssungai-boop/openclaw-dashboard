@@ -66,13 +66,25 @@ async function probeApiBase(base){
 }
 
 async function detectApi(){
-  // preferred: saved/query
+  // Prefer editable API on 8802 automatically (one-page UX).
+  // Fallback to same-origin read-only if 8802 is not running.
   const preferred = getPreferredApiBase();
+  const editable = `http://${location.hostname}:8802`;
+
   const candidates = [];
+  // 1) explicit ?api=...
+  const u = new URL(location.href);
+  const q = u.searchParams.get('api');
+  if(q) candidates.push(q);
+
+  // 2) if user saved a base before, try it next
   if(preferred) candidates.push(preferred);
+
+  // 3) auto: try 8802 first
+  candidates.push(editable);
+
+  // 4) finally, same-origin (read-only)
   candidates.push('');
-  // common editable server default
-  candidates.push(`http://${location.hostname}:8802`);
 
   for(const base of candidates){
     try{
