@@ -307,6 +307,7 @@ async function openDoc(id){
             <button class="btn btn-sm" id="aa_save">儲存指令</button>
             <button class="btn btn-sm" id="aa_fill_keep">一鍵保留</button>
             <button class="btn btn-sm" id="aa_fill_delete">一鍵刪除</button>
+            <span id="aa_status" class="aa-status"></span>
           </div>
         </div>
 
@@ -331,11 +332,13 @@ async function openDoc(id){
       const saveActBtn = $('aa_save');
       const oneKeep = $('aa_fill_keep');
       const oneDel = $('aa_fill_delete');
+      const statusEl = $('aa_status');
 
       if(ta) ta.value = md;
       if(sel) sel.value = act || '';
       if(tgt) tgt.value = target || '';
       if(noteEl) noteEl.value = note || '';
+      if(statusEl) statusEl.textContent = '';
 
       function setMode(mode){
         if(mode==='preview'){
@@ -354,10 +357,16 @@ async function openDoc(id){
 
       async function saveActionOnly(){
         if(!API_OK){
+          if(statusEl) statusEl.textContent = '無法寫入（8802 未連上）';
           alert('目前無法寫入（8802 未連上）。');
           return;
         }
         try{
+          if(statusEl) statusEl.textContent = '存檔中…';
+          if(saveActBtn) saveActBtn.disabled = true;
+          if(oneKeep) oneKeep.disabled = true;
+          if(oneDel) oneDel.disabled = true;
+
           const base = (ta?.value ?? md);
           const updated = upsertFrontmatter(base, {
             assistant_action: (sel?.value||'').trim(),
@@ -369,8 +378,14 @@ async function openDoc(id){
           if(ta) ta.value = md;
           const mdEl = $('doc').querySelector('.md');
           if(mdEl) mdEl.innerHTML = renderMarkdownBasic(md);
+          if(statusEl) statusEl.textContent = '已存';
         }catch(e){
+          if(statusEl) statusEl.textContent = '儲存失敗';
           alert('儲存失敗：'+(e?.message||e));
+        }finally{
+          if(saveActBtn) saveActBtn.disabled = false;
+          if(oneKeep) oneKeep.disabled = false;
+          if(oneDel) oneDel.disabled = false;
         }
       }
 
