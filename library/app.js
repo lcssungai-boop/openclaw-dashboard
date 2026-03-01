@@ -289,8 +289,8 @@ async function openDoc(id){
       editorEl.innerHTML = `
         <div class="row">
           <div class="seg" role="tablist" aria-label="view">
-            <button id="ed_tab_edit" class="on" type="button">編輯</button>
-            <button id="ed_tab_preview" type="button">預覽</button>
+            <button id="ed_tab_edit" type="button">編輯</button>
+            <button id="ed_tab_preview" class="on" type="button">預覽</button>
           </div>
           <button class="btn btn-sm" id="ed_save">儲存內容</button>
 
@@ -348,7 +348,7 @@ async function openDoc(id){
           if(wrap) wrap.style.display='block';
         }
       }
-      setMode('edit');
+      setMode('preview');
       if(tabEdit) tabEdit.onclick = ()=>setMode('edit');
       if(tabPrev) tabPrev.onclick = ()=>setMode('preview');
 
