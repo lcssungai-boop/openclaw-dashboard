@@ -193,6 +193,21 @@ main>div:nth-child(2){animation-delay:.08s}
 main>div:nth-child(3){animation-delay:.16s}
 main>div:nth-child(4){animation-delay:.24s}
 
+/* v1 hotfix: light mode should follow --zj-* (no hard-coded dark header) */
+body.zj-scope { background: var(--zj-bg); color: var(--zj-text); }
+
+body.zj-scope header {
+  background: var(--zj-surface);
+  border-bottom: 1px solid var(--zj-border);
+}
+
+body.zj-scope .card,
+body.zj-scope .panel {
+  background: var(--zj-surface);
+  border: 1px solid var(--zj-border);
+  color: var(--zj-text);
+}
+
 /* ── QUICK NAV ── */
 .qnav{
   display:flex;flex-wrap:wrap;gap:8px;
