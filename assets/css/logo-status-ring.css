@@ -1,0 +1,38 @@
+/* Global avatar/logo status ring (business subtle)
+   Classes applied by assets/js/status-ring.js
+   - .oc-status-ok   : green breath
+   - .oc-status-warn : amber breath
+   - .oc-status-bad  : red breath
+*/
+
+.logo.oc-status-ring{position:relative}
+.logo.oc-status-ring::after{
+  content:"";
+  position:absolute;
+  inset:-5px;
+  border-radius:14px;
+  pointer-events:none;
+  opacity:1;
+  /* baseline ring so it is always visible */
+  box-shadow:0 0 0 2px rgba(255,255,255,.10);
+}
+
+@keyframes ocBreathOK{
+  0%{box-shadow:0 0 0 2px rgba(110,200,150,.25)}
+  50%{box-shadow:0 0 0 5px rgba(110,200,150,.18)}
+  100%{box-shadow:0 0 0 2px rgba(110,200,150,.25)}
+}
+@keyframes ocBreathWarn{
+  0%{box-shadow:0 0 0 2px rgba(210,180,90,.22)}
+  50%{box-shadow:0 0 0 5px rgba(210,180,90,.14)}
+  100%{box-shadow:0 0 0 2px rgba(210,180,90,.22)}
+}
+@keyframes ocBreathBad{
+  0%{box-shadow:0 0 0 2px rgba(220,110,110,.28)}
+  50%{box-shadow:0 0 0 6px rgba(220,110,110,.16)}
+  100%{box-shadow:0 0 0 2px rgba(220,110,110,.28)}
+}
+
+.logo.oc-status-ok::after{animation:ocBreathOK 2.4s ease-in-out infinite}
+.logo.oc-status-warn::after{animation:ocBreathWarn 2.6s ease-in-out infinite}
+.logo.oc-status-bad::after{animation:ocBreathBad 1.8s ease-in-out infinite}

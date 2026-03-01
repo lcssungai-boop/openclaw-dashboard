@@ -1,0 +1,53 @@
+/* ZhaoJing theme tokens (dark business first)
+   Purpose: shared tokens + shared components for zhaojing pages.
+   Keep it as an overlay layer (do not replace core.css).
+*/
+
+:root{
+  --zj-bg:#0b0f14;
+  --zj-surface:#0f1620;
+  --zj-surface-2:#111b26;
+  --zj-border:rgba(255,255,255,.08);
+
+  --zj-text:rgba(255,255,255,.92);
+  --zj-text-2:rgba(255,255,255,.72);
+  --zj-text-3:rgba(255,255,255,.52);
+
+  --zj-radius:12px;
+  --zj-pad-md:16px;
+  --zj-gap:16px;
+
+  --zj-ok:#3ccf91;
+  --zj-warn:#f2c94c;
+  --zj-err:#ff5d5d;
+
+  --zj-ring-width:3px;
+}
+
+/* Optional: light mode tokens (only when a page uses data-theme="light") */
+body[data-theme="light"]{
+  --zj-bg:#f4f5f7;
+  --zj-surface:#ffffff;
+  --zj-surface-2:#f7f8fa;
+  --zj-border:rgba(18,22,32,0.10);
+
+  --zj-text:rgba(18,22,32,.92);
+  --zj-text-2:rgba(18,22,32,.72);
+  --zj-text-3:rgba(18,22,32,.56);
+}
+
+/* Shared components (safe, low-specificity) */
+.zj-card{border:1px solid var(--zj-border);border-radius:var(--zj-radius);background:var(--zj-surface)}
+.zj-muted{color:var(--zj-text-3)}
+.zj-dim{color:var(--zj-text-2)}
+
+/* Ecom page: map its existing classes to tokens (non-invasive overrides) */
+body{background:var(--zj-bg)}
+.card{background:var(--zj-surface);border:1px solid var(--zj-border)}
+.sec-lbl{color:var(--zj-text-3)}
+.note, th{color:var(--zj-text-3)}
+.kpi-val{color:var(--zj-text)}
+.pill{border-color:var(--zj-border)}
+
+/* Make numeric columns easier to scan (opt-in via class="num") */
+td.num, th.num{text-align:right;font-variant-numeric:tabular-nums}

@@ -9,31 +9,14 @@
   "use strict";
 
   function injectCss(){
-    if(document.getElementById('oc-status-ring-css')) return;
-    const css = document.createElement('style');
-    css.id = 'oc-status-ring-css';
-    css.textContent = `
-      /* Business subtle status ring */
-      .logo.oc-status-ring{position:relative}
-      .logo.oc-status-ring::after{
-        content:"";
-        position:absolute;
-        inset:-5px;
-        border-radius:14px;
-        pointer-events:none;
-        opacity:1;
-        box-shadow:0 0 0 2px rgba(255,255,255,.10);
-      }
-
-      @keyframes ocBreathOK{0%{box-shadow:0 0 0 2px rgba(110,200,150,.25)}50%{box-shadow:0 0 0 5px rgba(110,200,150,.18)}100%{box-shadow:0 0 0 2px rgba(110,200,150,.25)}}
-      @keyframes ocBreathWarn{0%{box-shadow:0 0 0 2px rgba(210,180,90,.22)}50%{box-shadow:0 0 0 5px rgba(210,180,90,.14)}100%{box-shadow:0 0 0 2px rgba(210,180,90,.22)}}
-      @keyframes ocBreathBad{0%{box-shadow:0 0 0 2px rgba(220,110,110,.28)}50%{box-shadow:0 0 0 6px rgba(220,110,110,.16)}100%{box-shadow:0 0 0 2px rgba(220,110,110,.28)}}
-
-      .logo.oc-status-ok::after{animation:ocBreathOK 2.4s ease-in-out infinite}
-      .logo.oc-status-warn::after{animation:ocBreathWarn 2.6s ease-in-out infinite}
-      .logo.oc-status-bad::after{animation:ocBreathBad 1.8s ease-in-out infinite}
-    `;
-    document.head.appendChild(css);
+    // Load shared CSS file (preferred). This avoids duplicating CSS across pages.
+    if(document.getElementById('oc-status-ring-css-link')) return;
+    const link = document.createElement('link');
+    link.id = 'oc-status-ring-css-link';
+    link.rel = 'stylesheet';
+    // Absolute path so it works from nested pages like /zhaojing/
+    link.href = '/assets/css/logo-status-ring.css';
+    document.head.appendChild(link);
   }
 
   function withTimeout(promise, ms){
