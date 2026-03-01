@@ -35,7 +35,7 @@ def client_allowed(addr: str) -> bool:
 
 
 class Handler(SimpleHTTPRequestHandler):
-    server_version = "OpenClawLibrary/0.1"
+    server_version = "OpenClawLibrary/0.2"
 
     def end_headers(self):
         # allow fetch from browsers (edit API can be called from a different port)
@@ -120,6 +120,36 @@ class Handler(SimpleHTTPRequestHandler):
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.end_headers()
             self.wfile.write(json.dumps({"ok": True, "saved": rel}, ensure_ascii=False).encode("utf-8"))
+            return
+
+        if self.path.startswith("/api/library/apply"):
+            if not client_allowed(self.client_address[0]):
+                return self._deny(403, "client_not_allowed")
+
+            # optional JSON body: {dry_run: bool}
+            n = int(self.headers.get("Content-Length") or "0")
+            body = {}
+            if n:
+                raw = self.rfile.read(n)
+                try:
+                    body = json.loads(raw.decode("utf-8"))
+                except Exception:
+                    body = {}
+
+            dry_run = bool(body.get("dry_run"))
+            # import helper (serve_editable may run as a standalone script)
+            import sys
+            import importlib
+            helper_dir = str(Path(__file__).parent.resolve())
+            if helper_dir not in sys.path:
+                sys.path.insert(0, helper_dir)
+            apply_actions = importlib.import_module("process_assistant_actions").apply_actions
+
+            result = apply_actions(self.lib_root, dry_run=dry_run)
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(json.dumps({"ok": True, **result}, ensure_ascii=False).encode("utf-8"))
             return
 
         return self._deny(404, "unknown_api")
