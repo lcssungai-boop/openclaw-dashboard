@@ -236,7 +236,7 @@ async function openDoc(id){
   const editorEl = $('editor');
   if(editorEl){ editorEl.style.display='none'; editorEl.innerHTML=''; }
   const actionEl = $('action');
-  if(actionEl){ actionEl.style.display='none'; actionEl.innerHTML=''; }
+  if(actionEl){ actionEl.style.display='none'; actionEl.innerHTML=''; } // legacy (unused)
 
   // render links panel first
   const outRels = (INDEX.links?.outbound?.[id]||[]);
@@ -280,18 +280,42 @@ async function openDoc(id){
     // editor panel (raw markdown)
     if(editorEl){
       editorEl.style.display='block';
+
+      const {fm} = parseFrontmatter(md);
+      const act = getFmValue(fm,'assistant_action');
+      const target = getFmValue(fm,'assistant_target');
+      const note = getFmValue(fm,'assistant_note');
+
       editorEl.innerHTML = `
         <div class="row">
           <div class="seg" role="tablist" aria-label="view">
             <button id="ed_tab_edit" class="on" type="button">編輯</button>
             <button id="ed_tab_preview" type="button">預覽</button>
           </div>
-          <button class="btn btn-sm" id="ed_save">儲存</button>
-          <div class="p" style="color:var(--muted);font-size:11px">（Markdown 語法直接改原檔）</div>
+          <button class="btn btn-sm" id="ed_save">儲存內容</button>
+
+          <div class="aa row" style="margin-left:auto">
+            <label>處理</label>
+            <select id="aa_action">
+              <option value="">（無）</option>
+              <option value="keep">保留</option>
+              <option value="delete">刪除</option>
+              <option value="move">移到…</option>
+              <option value="merge">合併到…</option>
+            </select>
+            <input id="aa_target" placeholder="move/merge 目標" style="min-width:200px" />
+            <button class="btn btn-sm" id="aa_save">儲存指令</button>
+            <button class="btn btn-sm" id="aa_fill_keep">一鍵保留</button>
+            <button class="btn btn-sm" id="aa_fill_delete">一鍵刪除</button>
+          </div>
         </div>
+
         <div id="ed_wrap" style="margin-top:10px">
           <textarea id="ed_text"></textarea>
-          <div class="hint" id="ed_hint" style="display:none">目前無法寫入：請先按下方「使用可編輯模式」或確認 8802 已開。</div>
+        </div>
+
+        <div class="aa" style="margin-top:10px">
+          <textarea id="aa_note" placeholder="備註（可留空）"></textarea>
         </div>
       `;
 
@@ -300,13 +324,20 @@ async function openDoc(id){
       const save = $('ed_save');
       const wrap = $('ed_wrap');
       const ta = $('ed_text');
-      const hint = $('ed_hint');
+
+      const sel = $('aa_action');
+      const tgt = $('aa_target');
+      const noteEl = $('aa_note');
+      const saveActBtn = $('aa_save');
+      const oneKeep = $('aa_fill_keep');
+      const oneDel = $('aa_fill_delete');
 
       if(ta) ta.value = md;
-      if(hint) hint.style.display = API_OK ? 'none' : 'block';
+      if(sel) sel.value = act || '';
+      if(tgt) tgt.value = target || '';
+      if(noteEl) noteEl.value = note || '';
 
       function setMode(mode){
-        // mode: edit|preview
         if(mode==='preview'){
           if(tabPrev) tabPrev.classList.add('on');
           if(tabEdit) tabEdit.classList.remove('on');
@@ -317,121 +348,48 @@ async function openDoc(id){
           if(wrap) wrap.style.display='block';
         }
       }
-
-      // default: edit (more direct)
       setMode('edit');
-
       if(tabEdit) tabEdit.onclick = ()=>setMode('edit');
       if(tabPrev) tabPrev.onclick = ()=>setMode('preview');
 
+      async function saveActionOnly(){
+        if(!API_OK){
+          alert('目前無法寫入（8802 未連上）。');
+          return;
+        }
+        try{
+          const base = (ta?.value ?? md);
+          const updated = upsertFrontmatter(base, {
+            assistant_action: (sel?.value||'').trim(),
+            assistant_target: (tgt?.value||'').trim(),
+            assistant_note: (noteEl?.value||'').trim(),
+          });
+          await apiWrite(d.rel_path, updated);
+          md = updated;
+          if(ta) ta.value = md;
+          const mdEl = $('doc').querySelector('.md');
+          if(mdEl) mdEl.innerHTML = renderMarkdownBasic(md);
+        }catch(e){
+          alert('儲存失敗：'+(e?.message||e));
+        }
+      }
+
+      if(saveActBtn) saveActBtn.onclick = saveActionOnly;
+      if(oneKeep) oneKeep.onclick = async ()=>{ if(sel) sel.value='keep'; await saveActionOnly(); };
+      if(oneDel) oneDel.onclick = async ()=>{ if(sel) sel.value='delete'; await saveActionOnly(); };
+
       if(save) save.onclick = async ()=>{
         if(!API_OK){
-          alert('目前無法寫入。請先按「使用可編輯模式」');
+          alert('目前無法寫入（8802 未連上）。');
           return;
         }
         try{
           const next = (ta?.value ?? '');
           await apiWrite(d.rel_path, next);
           md = next;
-          // re-render preview
           const mdEl = $('doc').querySelector('.md');
           if(mdEl) mdEl.innerHTML = renderMarkdownBasic(md);
           alert('已儲存');
-        }catch(e){
-          alert('儲存失敗：'+(e?.message||e));
-        }
-      };
-    }
-
-    // assistant action panel (YAML frontmatter)
-    if(actionEl){
-      const {fm} = parseFrontmatter(md);
-      const act = getFmValue(fm,'assistant_action');
-      const note = getFmValue(fm,'assistant_note');
-
-      actionEl.style.display='block';
-      actionEl.innerHTML = `
-        <div class="row">
-          <label>處理指令（給助理）</label>
-          <select id="aa_action">
-            <option value="">（無）</option>
-            <option value="keep">保留（已確認）</option>
-            <option value="delete">刪除</option>
-            <option value="move">移到…</option>
-            <option value="merge">合併到…</option>
-          </select>
-          <input id="aa_target" placeholder="目的地/目標檔（選 move/merge 時填）" style="min-width:260px;flex:1" />
-          <button class="btn btn-sm" id="aa_save">儲存指令</button>
-          <button class="btn btn-sm" id="aa_fill_delete">一鍵：刪除</button>
-          <button class="btn btn-sm" id="aa_api_use_8802" style="display:none">使用可編輯模式</button>
-        </div>
-        <div style="margin-top:10px">
-          <textarea id="aa_note" placeholder="說明（原因/要怎麼處理）"></textarea>
-          <div class="hint">會寫入 YAML 檔頭：assistant_action / assistant_target / assistant_note。真正刪除/搬移會由我批次執行。</div>
-          <div class="hint" id="aa_api_hint" style="display:none">提示：目前無法寫入（找不到可寫 API）。請先開啟可編輯模式（8802）或用參數 ?api=http://主機:8802</div>
-        </div>
-      `;
-
-      const sel = $('aa_action');
-      const tgt = $('aa_target');
-      const noteEl = $('aa_note');
-      if(sel) sel.value = act || '';
-      if(tgt) tgt.value = getFmValue(fm,'assistant_target') || '';
-      if(noteEl) noteEl.value = note || '';
-
-      const apiHint = $('aa_api_hint');
-      const use8802 = $('aa_api_use_8802');
-      if(use8802){
-        // show if we are in read-only mode; clicking sets API base to :8802 and reloads
-        use8802.style.display = API_OK ? 'none' : 'inline-flex';
-        use8802.onclick = ()=>{
-          const base = `http://${location.hostname}:8802`;
-          setPreferredApiBase(base);
-          location.reload();
-        };
-      }
-      if(apiHint && !API_OK) apiHint.style.display='block';
-
-      const fillDel = $('aa_fill_delete');
-      if(fillDel) fillDel.onclick = async ()=>{
-        // one-click delete = set action + save immediately
-        if(sel) sel.value='delete';
-        if(!API_OK){
-          alert('目前無法寫入（可編輯模式未啟用）。請先按「使用可編輯模式」。');
-          return;
-        }
-        try{
-          // reuse save logic by clicking save
-          const saveBtn = $('aa_save');
-          if(saveBtn) saveBtn.click();
-        }catch(e){
-          alert('一鍵刪除失敗：'+(e?.message||e));
-        }
-      };
-
-      const saveBtn = $('aa_save');
-      if(saveBtn) saveBtn.onclick = async ()=>{
-        const nextAct = (sel?.value||'').trim();
-        const nextTarget = (tgt?.value||'').trim();
-        const nextNote = (noteEl?.value||'').trim();
-
-        const updated = upsertFrontmatter(md, {
-          assistant_action: nextAct,
-          assistant_target: nextTarget,
-          assistant_note: nextNote,
-        });
-
-        if(!API_OK){
-          alert('目前是唯讀模式（沒有可寫 API）。請改用可編輯伺服器（serve_editable.py）再儲存。');
-          return;
-        }
-
-        try{
-          await apiWrite(d.rel_path, updated);
-          md = updated;
-          // re-render doc
-          $('doc').querySelector('.md').innerHTML = renderMarkdownBasic(md);
-          alert('已儲存處理指令');
         }catch(e){
           alert('儲存失敗：'+(e?.message||e));
         }

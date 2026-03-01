@@ -38,13 +38,13 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans)}
 .editor .seg button{border:0;background:transparent;color:var(--muted);height:30px;padding:0 10px}
 .editor .seg button.on{background:rgba(255,255,255,0.06);color:var(--text)}
 
-.action{border-top:1px solid var(--border);padding:12px 14px;background:rgba(255,255,255,0.02)}
-.action .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.action label{font-size:12px;color:var(--muted)}
-.action select,.action input,.action textarea{background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:8px 10px;font-size:12px}
-.action textarea{width:100%;min-height:64px;resize:vertical}
-.action .hint{font-size:11px;color:var(--muted);margin-top:6px}
-.action .btn-sm{height:30px;padding:0 10px;border-radius:10px}
+.action{display:none}
+
+/* assistant action controls merged into editor */
+.editor .aa{margin-top:10px}
+.editor .aa label{font-size:12px;color:var(--muted)}
+.editor .aa select,.editor .aa input,.editor .aa textarea{background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:8px 10px;font-size:12px}
+.editor .aa textarea{width:100%;min-height:64px;resize:vertical}
 
 .doc h1,.doc h2,.doc h3{margin:18px 0 8px 0}
 .doc a{color:#d0d0ff}
