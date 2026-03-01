@@ -313,7 +313,21 @@ async function openDoc(id){
       if(apiHint && !API_OK) apiHint.style.display='block';
 
       const fillDel = $('aa_fill_delete');
-      if(fillDel) fillDel.onclick = ()=>{ if(sel) sel.value='delete'; };
+      if(fillDel) fillDel.onclick = async ()=>{
+        // one-click delete = set action + save immediately
+        if(sel) sel.value='delete';
+        if(!API_OK){
+          alert('目前無法寫入（可編輯模式未啟用）。請先按「使用可編輯模式」。');
+          return;
+        }
+        try{
+          // reuse save logic by clicking save
+          const saveBtn = $('aa_save');
+          if(saveBtn) saveBtn.click();
+        }catch(e){
+          alert('一鍵刪除失敗：'+(e?.message||e));
+        }
+      };
 
       const saveBtn = $('aa_save');
       if(saveBtn) saveBtn.onclick = async ()=>{
