@@ -23,6 +23,79 @@ async function fetchText(u){
   return await r.text();
 }
 
+async function apiRead(rel){
+  const r = await fetch(cacheBust(`/api/library/read?rel=${encodeURIComponent(rel)}`));
+  if(!r.ok) throw new Error('api_read_failed');
+  const j = await r.json();
+  if(!j.ok) throw new Error(j.error||'api_read_failed');
+  return j.content;
+}
+
+async function apiWrite(rel, content){
+  const r = await fetch(`/api/library/write?_=${Date.now()}` ,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({rel_path: rel, content}),
+  });
+  if(!r.ok) throw new Error('api_write_failed');
+  const j = await r.json().catch(()=>({}));
+  if(j && j.ok===false) throw new Error(j.error||'api_write_failed');
+  return j;
+}
+
+let API_OK = false;
+async function detectApi(){
+  try{
+    await fetch(`/api/library/read?rel=${encodeURIComponent('00_Inbox/__nonexistent__.md')}&_=${Date.now()}`);
+    API_OK = true; // any response means route exists
+  }catch(e){
+    API_OK = false;
+  }
+}
+
+function parseFrontmatter(md){
+  const m = md.match(/^---\n([\s\S]*?)\n---\n?/);
+  if(!m) return { fm:null, body: md };
+  return { fm: m[1], body: md.slice(m[0].length) };
+}
+
+function getFmValue(fmText, key){
+  if(!fmText) return '';
+  const re = new RegExp(`^${key}:\\s*(.*)\\s*$`, 'm');
+  const m = fmText.match(re);
+  if(!m) return '';
+  return m[1].replace(/^"|"$/g,'').replace(/^'|'$/g,'');
+}
+
+function setFmValue(fmText, key, value){
+  const safe = value==='' ? '' : JSON.stringify(value);
+  if(!fmText){
+    if(value==='') return '';
+    return `${key}: ${safe}`;
+  }
+  const lines = fmText.split(/\n/);
+  let found=false;
+  const out=lines.map(line=>{
+    if(line.startsWith(key+':')){ found=true; return value==='' ? null : `${key}: ${safe}`; }
+    return line;
+  }).filter(x=>x!==null);
+  if(!found && value!=='') out.push(`${key}: ${safe}`);
+  return out.join('\n');
+}
+
+function upsertFrontmatter(md, updates){
+  const {fm, body} = parseFrontmatter(md);
+  let nextFm = fm || '';
+  for(const [k,v] of Object.entries(updates)){
+    nextFm = setFmValue(nextFm, k, v);
+  }
+  nextFm = nextFm.trim();
+  if(!nextFm){
+    return body.startsWith('\n')? body.slice(1) : body;
+  }
+  return `---\n${nextFm}\n---\n\n${body.replace(/^\n+/,'')}`;
+}
+
 function fmtTs(ts){
   if(!ts) return "-";
   const d = new Date(ts*1000);
@@ -112,6 +185,8 @@ async function openDoc(id){
   const d = ID2DOC[id];
   if(!d) return;
   $('doc').innerHTML = '<div class="p">載入中…</div>';
+  const actionEl = $('action');
+  if(actionEl){ actionEl.style.display='none'; actionEl.innerHTML=''; }
 
   // render links panel first
   const outRels = (INDEX.links?.outbound?.[id]||[]);
@@ -135,11 +210,93 @@ async function openDoc(id){
   `;
 
   try{
-    const md = await fetchText(d.doc_url || ('../data/library/docs/'+d.rel_path));
+    let md;
+    if(API_OK){
+      try{
+        md = await apiRead(d.rel_path);
+      }catch(e){
+        // fallback to static
+        md = await fetchText(d.doc_url || ('../data/library/docs/'+d.rel_path));
+      }
+    }else{
+      md = await fetchText(d.doc_url || ('../data/library/docs/'+d.rel_path));
+    }
+
     $('doc').innerHTML = `
       <div class="p" style="color:var(--muted);font-family:var(--mono);font-size:11px">${esc(d.rel_path)} · ${fmtTs(d.mtime)}</div>
       <div class="md">${renderMarkdownBasic(md)}</div>
     `;
+
+    // assistant action panel (YAML frontmatter)
+    if(actionEl){
+      const {fm} = parseFrontmatter(md);
+      const act = getFmValue(fm,'assistant_action');
+      const note = getFmValue(fm,'assistant_note');
+
+      actionEl.style.display='block';
+      actionEl.innerHTML = `
+        <div class="row">
+          <label>處理指令（給助理）</label>
+          <select id="aa_action">
+            <option value="">（無）</option>
+            <option value="keep">保留（已確認）</option>
+            <option value="delete">刪除</option>
+            <option value="move">移到…</option>
+            <option value="merge">合併到…</option>
+          </select>
+          <input id="aa_target" placeholder="目的地/目標檔（選 move/merge 時填）" style="min-width:260px;flex:1" />
+          <button class="btn btn-sm" id="aa_save">儲存指令</button>
+          <button class="btn btn-sm" id="aa_fill_delete">一鍵：刪除</button>
+        </div>
+        <div style="margin-top:10px">
+          <textarea id="aa_note" placeholder="說明（原因/要怎麼處理）"></textarea>
+          <div class="hint">會寫入 YAML 檔頭：assistant_action / assistant_target / assistant_note。真正刪除/搬移會由我批次執行。</div>
+          <div class="hint" id="aa_api_hint" style="display:none">提示：目前頁面是唯讀模式（沒有 /api/library/write）。如要在網頁上寫入，請用可編輯伺服器（serve_editable.py）。</div>
+        </div>
+      `;
+
+      const sel = $('aa_action');
+      const tgt = $('aa_target');
+      const noteEl = $('aa_note');
+      if(sel) sel.value = act || '';
+      if(tgt) tgt.value = getFmValue(fm,'assistant_target') || '';
+      if(noteEl) noteEl.value = note || '';
+
+      const apiHint = $('aa_api_hint');
+      if(apiHint && !API_OK) apiHint.style.display='block';
+
+      const fillDel = $('aa_fill_delete');
+      if(fillDel) fillDel.onclick = ()=>{ if(sel) sel.value='delete'; };
+
+      const saveBtn = $('aa_save');
+      if(saveBtn) saveBtn.onclick = async ()=>{
+        const nextAct = (sel?.value||'').trim();
+        const nextTarget = (tgt?.value||'').trim();
+        const nextNote = (noteEl?.value||'').trim();
+
+        const updated = upsertFrontmatter(md, {
+          assistant_action: nextAct,
+          assistant_target: nextTarget,
+          assistant_note: nextNote,
+        });
+
+        if(!API_OK){
+          alert('目前是唯讀模式（沒有可寫 API）。請改用可編輯伺服器（serve_editable.py）再儲存。');
+          return;
+        }
+
+        try{
+          await apiWrite(d.rel_path, updated);
+          md = updated;
+          // re-render doc
+          $('doc').querySelector('.md').innerHTML = renderMarkdownBasic(md);
+          alert('已儲存處理指令');
+        }catch(e){
+          alert('儲存失敗：'+(e?.message||e));
+        }
+      };
+    }
+
   }catch(e){
     $('doc').innerHTML = `<div class="p">無法載入全文（${esc(d.rel_path)}）</div>`;
   }
@@ -244,6 +401,8 @@ async function init(){
       setLeftMode('tree');
     });
   }
+
+  await detectApi();
 
   const idx = await fetchJson('../data/library/index.json');
   INDEX = idx;
