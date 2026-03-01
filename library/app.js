@@ -270,17 +270,21 @@ async function openDoc(id){
       editorEl.style.display='block';
       editorEl.innerHTML = `
         <div class="row">
-          <button class="btn btn-sm" id="ed_toggle">顯示編輯器</button>
-          <button class="btn btn-sm" id="ed_save" style="display:none">儲存內容</button>
-          <div class="p" style="color:var(--muted);font-size:11px">（支援 Markdown 語法；會直接改原檔）</div>
+          <div class="seg" role="tablist" aria-label="view">
+            <button id="ed_tab_edit" class="on" type="button">編輯</button>
+            <button id="ed_tab_preview" type="button">預覽</button>
+          </div>
+          <button class="btn btn-sm" id="ed_save">儲存</button>
+          <div class="p" style="color:var(--muted);font-size:11px">（Markdown 語法直接改原檔）</div>
         </div>
-        <div id="ed_wrap" style="display:none;margin-top:10px">
+        <div id="ed_wrap" style="margin-top:10px">
           <textarea id="ed_text"></textarea>
           <div class="hint" id="ed_hint" style="display:none">目前無法寫入：請先按下方「使用可編輯模式」或確認 8802 已開。</div>
         </div>
       `;
 
-      const toggle = $('ed_toggle');
+      const tabEdit = $('ed_tab_edit');
+      const tabPrev = $('ed_tab_preview');
       const save = $('ed_save');
       const wrap = $('ed_wrap');
       const ta = $('ed_text');
@@ -289,13 +293,24 @@ async function openDoc(id){
       if(ta) ta.value = md;
       if(hint) hint.style.display = API_OK ? 'none' : 'block';
 
-      let open=false;
-      if(toggle) toggle.onclick = ()=>{
-        open = !open;
-        if(wrap) wrap.style.display = open ? 'block' : 'none';
-        if(save) save.style.display = open ? 'inline-flex' : 'none';
-        if(toggle) toggle.textContent = open ? '隱藏編輯器' : '顯示編輯器';
-      };
+      function setMode(mode){
+        // mode: edit|preview
+        if(mode==='preview'){
+          if(tabPrev) tabPrev.classList.add('on');
+          if(tabEdit) tabEdit.classList.remove('on');
+          if(wrap) wrap.style.display='none';
+        }else{
+          if(tabEdit) tabEdit.classList.add('on');
+          if(tabPrev) tabPrev.classList.remove('on');
+          if(wrap) wrap.style.display='block';
+        }
+      }
+
+      // default: edit (more direct)
+      setMode('edit');
+
+      if(tabEdit) tabEdit.onclick = ()=>setMode('edit');
+      if(tabPrev) tabPrev.onclick = ()=>setMode('preview');
 
       if(save) save.onclick = async ()=>{
         if(!API_OK){
@@ -307,8 +322,9 @@ async function openDoc(id){
           await apiWrite(d.rel_path, next);
           md = next;
           // re-render preview
-          $('doc').querySelector('.md').innerHTML = renderMarkdownBasic(md);
-          alert('已儲存內容');
+          const mdEl = $('doc').querySelector('.md');
+          if(mdEl) mdEl.innerHTML = renderMarkdownBasic(md);
+          alert('已儲存');
         }catch(e){
           alert('儲存失敗：'+(e?.message||e));
         }
