@@ -99,6 +99,7 @@ def resolve_link(src_rel: str, href: str) -> str | None:
 class Doc:
     id: str
     rel_path: str
+    doc_url: str
     title: str
     mtime: float
     size: int
@@ -131,6 +132,7 @@ def scan_md(source_root: Path) -> Tuple[List[Doc], Dict[str, List[str]]]:
             Doc(
                 id=did,
                 rel_path=rel,
+                doc_url="../data/library/docs/"+rel,
                 title=title,
                 mtime=st.st_mtime,
                 size=st.st_size,

@@ -17,4 +17,5 @@ trap 'rm -f "$LOCK"' EXIT
 echo "[library] source=$SOURCE_ROOT"
 echo "[library] out=$OUT_FILE"
 
+/usr/bin/python3 scripts/library/sync_docs.py --source-root "$SOURCE_ROOT" --dest-root "data/library/docs" --exclude-rel ".obsidian"
 /usr/bin/python3 scripts/library/indexer.py --source-root "$SOURCE_ROOT" --out-file "$OUT_FILE"

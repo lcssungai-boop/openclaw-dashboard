@@ -1,9 +1,9 @@
-// Minimal Library UI (MVP)
+// Library UI (MVP -> Obsidian-like v0.2)
 
 const $ = (id)=>document.getElementById(id);
 
 function esc(s){
-  return String(s).replace(/[&<>\"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+  return String(s??'').replace(/[&<>\"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 }
 
 function cacheBust(u){
@@ -30,19 +30,19 @@ function fmtTs(ts){
 }
 
 function renderMarkdownBasic(md){
-  // very small renderer: headings + links + code fences
+  // small renderer: headings + links + code fences (enough for internal notes)
   let out = esc(md);
-  // code fences
   out = out.replace(/```([\s\S]*?)```/g, (m,code)=>`<pre><code>${code}</code></pre>`);
-  // headings
+  out = out.replace(/^######\s+(.+)$/gm, '<h6>$1</h6>');
+  out = out.replace(/^#####\s+(.+)$/gm, '<h5>$1</h5>');
+  out = out.replace(/^####\s+(.+)$/gm, '<h4>$1</h4>');
   out = out.replace(/^###\s+(.+)$/gm, '<h3>$1</h3>');
   out = out.replace(/^##\s+(.+)$/gm, '<h2>$1</h2>');
   out = out.replace(/^#\s+(.+)$/gm, '<h1>$1</h1>');
-  // links
   out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (m,t,href)=>{
-    return `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(t)}</a>`;
+    // internal md links: let us intercept later (we keep href as-is)
+    return `<a href="${esc(href)}">${esc(t)}</a>`;
   });
-  // newlines
   out = out.replace(/\n/g,'<br/>');
   return out;
 }
@@ -50,6 +50,7 @@ function renderMarkdownBasic(md){
 let INDEX=null;
 let DOCS=[];
 let ID2DOC={};
+let REL2ID={};
 
 function docItem(d){
   return `<div class="item" data-id="${d.id}">
@@ -63,47 +64,84 @@ function mountList(el, docs){
 }
 
 function buildTree(docs){
-  // simple folder summary (top-level)
-  const buckets = {};
+  // multi-level tree (folder-only nodes) up to N levels, simple HTML
+  const root = { name: '(root)', path: '', children: {}, count: 0 };
   docs.forEach(d=>{
-    const top = (d.rel_path.split('/')[0]||'').trim() || '(root)';
-    (buckets[top] ||= []).push(d);
+    const parts = d.rel_path.split('/');
+    let node = root;
+    node.count++;
+    for(let i=0;i<parts.length-1;i++){
+      const part = parts[i];
+      node.children[part] ||= { name: part, path: (node.path?node.path+'/':'')+part, children: {}, count: 0 };
+      node = node.children[part];
+      node.count++;
+    }
   });
-  const keys = Object.keys(buckets).sort();
-  return keys.map(k=>{
-    return `<div class="item" data-folder="${esc(k)}"><div class="t">${esc(k)}</div><div class="p">${buckets[k].length} docs</div></div>`;
-  }).join('');
+
+  function renderNode(node, depth){
+    const kids = Object.values(node.children).sort((a,b)=>a.name.localeCompare(b.name,'zh-Hant'));
+    if(node.path===''){
+      return kids.map(k=>renderNode(k,0)).join('');
+    }
+    const id = 'f_'+btoa(unescape(encodeURIComponent(node.path))).replace(/=+$/,'');
+    const inner = kids.length ? `<div class="kids" data-kids="${esc(node.path)}">${kids.map(k=>renderNode(k,depth+1)).join('')}</div>` : '';
+    return `
+      <div class="folder" style="padding-left:${8+depth*12}px">
+        <button class="twisty" data-toggle="${esc(node.path)}" aria-label="toggle">▸</button>
+        <div class="fitem" data-folder="${esc(node.path)}">
+          <div class="t">${esc(node.name)}</div>
+          <div class="p">${node.count} docs</div>
+        </div>
+      </div>
+      <div class="sub" id="${id}" data-sub="${esc(node.path)}" style="display:none">${inner}</div>
+    `;
+  }
+
+  return renderNode(root,0);
+}
+
+function toggleFolder(path){
+  const id = 'f_'+btoa(unescape(encodeURIComponent(path))).replace(/=+$/,'');
+  const el = document.getElementById(id);
+  if(!el) return;
+  const open = el.style.display !== 'none';
+  el.style.display = open ? 'none' : 'block';
 }
 
 async function openDoc(id){
   const d = ID2DOC[id];
   if(!d) return;
   $('doc').innerHTML = '<div class="p">載入中…</div>';
-  try{
-    // NOTE: we serve dashboard repo, not the iCloud root; so we show content from index excerpt only.
-    // Future: add a local file proxy or copy docs into repo.
-    const html = `<h1>${esc(d.title)}</h1>
-      <div class="p" style="color:var(--muted);font-family:var(--mono);font-size:11px">${esc(d.rel_path)} · ${fmtTs(d.mtime)}</div>
-      <div style="margin-top:12px">${esc(d.excerpt||'')}</div>
-      <div class="p" style="margin-top:10px;color:var(--muted)">（MVP：目前僅顯示摘錄；下一版可支援直接預覽原始 MD。）</div>`;
-    $('doc').innerHTML = html;
 
-    const out = (INDEX.links?.outbound?.[id]||[]).map(r=>{
-      const tid = (Object.values(ID2DOC).find(x=>x.rel_path===r)||{}).id;
-      return tid ? `<a href="#" data-open="${tid}">${esc(r)}</a>` : `<div style="color:var(--muted)">${esc(r)}</div>`;
-    });
-    const inn = (INDEX.links?.inbound?.[id]||[]).map(srcId=>{
-      const sd = ID2DOC[srcId];
-      return sd ? `<a href="#" data-open="${sd.id}">${esc(sd.title||sd.rel_path)}</a>` : '';
-    });
-    $('links').innerHTML = `
-      <div class="lbl">Outbound</div>
-      ${out.join('')||'<div style="color:var(--muted)">—</div>'}
-      <div class="lbl">Inbound</div>
-      ${inn.join('')||'<div style="color:var(--muted)">—</div>'}
+  // render links panel first
+  const outRels = (INDEX.links?.outbound?.[id]||[]);
+  const inIds = (INDEX.links?.inbound?.[id]||[]);
+
+  const out = outRels.map(r=>{
+    const tid = REL2ID[r];
+    return tid
+      ? `<a href="#" data-open="${tid}">${esc(r)}</a>`
+      : `<div style="color:var(--muted)">${esc(r)}</div>`;
+  });
+  const inn = inIds.map(srcId=>{
+    const sd = ID2DOC[srcId];
+    return sd ? `<a href="#" data-open="${sd.id}">${esc(sd.title||sd.rel_path)}</a>` : '';
+  });
+  $('links').innerHTML = `
+    <div class="lbl">Outbound</div>
+    ${out.join('')||'<div style="color:var(--muted)">—</div>'}
+    <div class="lbl">Inbound</div>
+    ${inn.join('')||'<div style="color:var(--muted)">—</div>'}
+  `;
+
+  try{
+    const md = await fetchText(d.doc_url || ('../data/library/docs/'+d.rel_path));
+    $('doc').innerHTML = `
+      <div class="p" style="color:var(--muted);font-family:var(--mono);font-size:11px">${esc(d.rel_path)} · ${fmtTs(d.mtime)}</div>
+      <div class="md">${renderMarkdownBasic(md)}</div>
     `;
   }catch(e){
-    $('doc').innerHTML = '<div class="p">載入失敗</div>';
+    $('doc').innerHTML = `<div class="p">無法載入全文（${esc(d.rel_path)}）</div>`;
   }
 }
 
@@ -115,17 +153,44 @@ function wireClicks(){
       openDoc(it.dataset.id);
       return;
     }
-    const f = ev.target.closest('.item[data-folder]');
+    const f = ev.target.closest('.fitem[data-folder]');
     if(f){
       const folder = f.dataset.folder;
-      const subset = DOCS.filter(d=>(d.rel_path.split('/')[0]||'(root)')===folder);
-      mountList($('results'), subset);
+      const subset = DOCS.filter(d=>d.rel_path.startsWith(folder+'/'));
+      $('results').style.display = 'block';
+      mountList($('results'), subset.slice(0,500));
       return;
     }
     const l = ev.target.closest('a[data-open]');
     if(l){
       ev.preventDefault();
       openDoc(l.dataset.open);
+      return;
+    }
+    const tgl = ev.target.closest('button[data-toggle]');
+    if(tgl){
+      ev.preventDefault();
+      toggleFolder(tgl.dataset.toggle);
+      return;
+    }
+
+    // intercept internal md links
+    const a = ev.target.closest('.md a[href]');
+    if(a){
+      const href = a.getAttribute('href')||'';
+      if(href.toLowerCase().endsWith('.md')){
+        ev.preventDefault();
+        const clean = href.split('#')[0].split('?')[0].replace(/^\//,'');
+        const id = REL2ID[clean];
+        if(id) openDoc(id);
+        return;
+      }
+      // external
+      if(href.startsWith('http://')||href.startsWith('https://')){
+        a.setAttribute('target','_blank');
+        a.setAttribute('rel','noopener');
+        return;
+      }
     }
   });
 }
@@ -135,6 +200,7 @@ function wireSearch(){
     const q = $('q').value.trim();
     if(!q){
       $('results').innerHTML = '';
+      $('results').style.display = 'none';
       return;
     }
     const qq = q.toLowerCase();
@@ -142,8 +208,11 @@ function wireSearch(){
       return (d.title||'').toLowerCase().includes(qq)
         || (d.rel_path||'').toLowerCase().includes(qq)
         || (d.excerpt||'').toLowerCase().includes(qq);
-    }).slice(0,50);
+    }).slice(0,200);
+    $('results').style.display = 'block';
     mountList($('results'), hits);
+    // auto scroll to results
+    $('results').scrollIntoView({behavior:'smooth', block:'start'});
   });
 }
 
@@ -154,8 +223,10 @@ async function init(){
   INDEX = idx;
   DOCS = idx.docs||[];
   ID2DOC = Object.fromEntries(DOCS.map(d=>[d.id,d]));
+  REL2ID = Object.fromEntries(DOCS.map(d=>[d.rel_path,d.id]));
   $('lib-meta').textContent = `docs=${idx.doc_count||DOCS.length} · gen=${idx.generated_at||'-'}`;
   $('tree').innerHTML = buildTree(DOCS);
+  $('results').style.display = 'none';
 }
 
 init().catch(err=>{
