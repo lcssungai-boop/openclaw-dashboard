@@ -287,6 +287,7 @@ main>div:nth-child(4){animation-delay:.24s}
 
 <div class="qnav">
   <div class="qnav-lbl">快速導航</div>
+  <a href="#" onclick="goEcom();return false;">電商推進</a>
   <a href="tenants.html">租客名單</a>
   <a href="property_ops.html">物業事件</a>
   <a href="../data/zhaojing/tenants.json" class="data" target="_blank">JSON: 租客</a>
@@ -294,6 +295,14 @@ main>div:nth-child(4){animation-delay:.24s}
 </div>
 
 <script>
+
+function goEcom(){
+  try{ switchTab('tasks'); }catch(e){}
+  setTimeout(()=>{
+    const el=document.getElementById('ecom');
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 50);
+}
 
 function tick(){
   const e=document.getElementById("clk");if(!e)return;
