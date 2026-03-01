@@ -316,7 +316,7 @@ async function openDoc(id){
         </div>
 
         <div class="aa" style="margin-top:10px">
-          <textarea id="aa_note" placeholder="備註（可留空）"></textarea>
+          <textarea id="aa_note" placeholder="備註（跟助理說明，可留空）"></textarea>
         </div>
       `;
 
