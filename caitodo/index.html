@@ -202,44 +202,34 @@ function taskCard(t){
   </div>`;
 }
 
-function renderCrmKpis(crm){
-  const s=(crm||{});
-  const leads=s?.leads?.summary?.total;
-  const follow=s?.followups?.summary?.pending;
-  const cand=s?.candidates?.summary?.total;
-  const match=s?.matches?.summary?.active;
-  const val=v=>(v===0?"0":(v?String(v):"-"));
-  const cards=[
-    {k:"Leads", v:val(leads)},
-    {k:"回訪", v:val(follow)},
-    {k:"人選", v:val(cand)},
-    {k:"媒合", v:val(match)},
-  ];
-  return `<div><div class="sec-lbl">CRM 快速數字</div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
-      ${cards.map(c=>`<div style="border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);padding:14px 16px">
-        <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'JetBrains Mono',monospace">${c.k}</div>
-        <div style="font-size:22px;font-weight:500;margin-top:6px">${c.v}</div>
-      </div>`).join("")}
-    </div>
-  </div>`;
-}
-
-function renderDevProgress(crm){
-  const mods=(crm?.dev_progress?.modules)||[];
+function renderProjectTrack(crm){
+  const dp=crm?.dev_progress;
+  const mods=(dp?.modules)||[];
   if(!mods.length) return "";
   const priClass=p=>p==="high"?"urgent":p==="normal"?"important":"";
-  return `<div><div class="sec-lbl">CRM 開發進度</div>
-    <div class="task-list">
-      ${mods.map(m=>`<div class="task-card">
-        <div class="tc-top">
-          <div class="tc-title">${m.name}</div>
-          <div class="tc-tags">
-            <span class="tag ${priClass(m.priority)}">${m.priority||"-"}</span>
-            <span class="tag">${m.status||"-"}</span>
+  const title=(dp?.project||"專案追蹤").replace(/\s+/g," ").trim();
+  const overall=dp?.status?`<span class=\"tag\">${dp.status}</span>`:"";
+  return `<div><div class=\"sec-lbl\">專案追蹤</div>
+    <div class=\"task-list\">
+      <div class=\"task-card\">
+        <div class=\"tc-top\">
+          <div class=\"tc-title\">${title}</div>
+          <div class=\"tc-tags\">${overall}</div>
+        </div>
+        <div class=\"tc-meta\">
+          <span><span class=\"tc-meta-lbl\">模組 </span>${dp?.completed_modules??0}/${dp?.total_modules??mods.length}</span>
+          <span><span class=\"tc-meta-lbl\">更新 </span>${fmtTs(crm?.updated_at||"-")}</span>
+        </div>
+      </div>
+      ${mods.map(m=>`<div class=\"task-card\">
+        <div class=\"tc-top\">
+          <div class=\"tc-title\">${m.name}</div>
+          <div class=\"tc-tags\">
+            <span class=\"tag ${priClass(m.priority)}\">${m.priority||"-"}</span>
+            <span class=\"tag\">${m.status||"-"}</span>
           </div>
         </div>
-        ${m.description?`<div class="tc-next">→ ${m.description}</div>`:""}
+        ${m.description?`<div class=\"tc-next\">→ ${m.description}</div>`:""}
       </div>`).join("")}
     </div>
   </div>`;
@@ -274,51 +264,88 @@ function parseMdTable(txt){
   return rows;
 }
 
+function sortCustomers(rows){
+  const po={A:0,B:1,C:2};
+  return [...(rows||[])].sort((a,b)=>{
+    const pa=(po[a.priority]??9)-(po[b.priority]??9);
+    if(pa!==0) return pa;
+    return (b.last_activity||"").localeCompare(a.last_activity||"");
+  });
+}
+
 function renderCustomers(rows){
-  const active=(rows||[]).filter(r=>(r.status||"")!="inactive");
+  const active=sortCustomers((rows||[]).filter(r=>(r.status||"")!="inactive"));
   if(!active.length) return "";
-  const top=active.slice(0,8);
-  return `<div><div class="sec-lbl">客戶總覽</div>
-    <div class="task-list">
-      ${top.map(r=>`<div class="task-card">
-        <div class="tc-top">
-          <div class="tc-title">${r.customer_name||"-"}</div>
-          <div class="tc-tags">
-            ${r.priority&&r.priority!=="-"?`<span class="tag ${r.priority==='A'?'urgent':r.priority==='B'?'important':''}">${r.priority}</span>`:""}
-            ${r.lead_source&&r.lead_source!=="-"?`<span class="tag">${r.lead_source}</span>`:""}
-          </div>
-        </div>
-        <div class="tc-meta">
-          <span><span class="tc-meta-lbl">ID </span>${r.customer_id||"-"}</span>
-          <span><span class="tc-meta-lbl">下次 </span>${r.followup_next||"-"}</span>
-          <span><span class="tc-meta-lbl">近況 </span>${r.last_activity||"-"}</span>
-        </div>
-      </div>`).join("")}
+  const top=active.slice(0,5);
+  const rest=active.slice(5);
+  const rowHtml=(r)=>`<div class="task-card">
+    <div class="tc-top">
+      <div class="tc-title">${r.customer_name||"-"}</div>
+      <div class="tc-tags">
+        ${r.priority&&r.priority!=="-"?`<span class="tag ${r.priority==='A'?'urgent':r.priority==='B'?'important':''}">${r.priority}</span>`:""}
+        ${r.lead_source&&r.lead_source!=="-"?`<span class="tag">${r.lead_source}</span>`:""}
+      </div>
     </div>
+    <div class="tc-meta">
+      <span><span class="tc-meta-lbl">ID </span>${r.customer_id||"-"}</span>
+      <span><span class="tc-meta-lbl">下次 </span>${r.followup_next||"-"}</span>
+      <span><span class="tc-meta-lbl">近況 </span>${r.last_activity||"-"}</span>
+    </div>
+    ${r.notes&&r.notes!=="-"?`<div class="tc-next">→ ${r.notes}</div>`:""}
+  </div>`;
+
+  return `<div><div class="sec-lbl">本週焦點（客戶）</div>
+    <div class="task-list">${top.map(rowHtml).join("")}</div>
+    ${rest.length?`<details style="margin-top:10px"><summary style="cursor:pointer;color:var(--muted);font-size:10px;letter-spacing:.12em;font-family:'JetBrains Mono',monospace">全部客戶（${rest.length}）</summary>
+      <div class="task-list" style="margin-top:10px">${rest.map(rowHtml).join("")}</div>
+    </details>`:""}
   </div>`;
 }
 
+function sortProjects(rows){
+  const stageOrder={active:0,planning:1};
+  const priOrder={high:0,A:0,medium:1,B:1,low:2,C:2};
+  const normStage=s=>String(s||"").toLowerCase();
+  const normDue=d=>{
+    if(!d||d==="-"||String(d).toUpperCase()==="TBD") return "9999-99-99";
+    return String(d);
+  };
+  return [...(rows||[])].sort((a,b)=>{
+    const sa=(stageOrder[normStage(a.stage)]??9)-(stageOrder[normStage(b.stage)]??9);
+    if(sa!==0) return sa;
+    const da=normDue(a.due_date||a.due);
+    const db=normDue(b.due_date||b.due);
+    if(da!==db) return da.localeCompare(db);
+    return (priOrder[a.priority]??9)-(priOrder[b.priority]??9);
+  });
+}
+
 function renderProjects(rows){
-  const active=(rows||[]).filter(r=>String(r.stage||"").toLowerCase()!=='archived');
+  const active=sortProjects((rows||[]).filter(r=>String(r.stage||"").toLowerCase()!=='archived'));
   if(!active.length) return "";
-  const top=active.slice(0,8);
-  return `<div><div class="sec-lbl">專案總覽</div>
-    <div class="task-list">
-      ${top.map(r=>`<div class="task-card">
-        <div class="tc-top">
-          <div class="tc-title">${r.project_name||r.project||"-"}</div>
-          <div class="tc-tags">
-            ${r.priority&&r.priority!=="-"?`<span class="tag ${r.priority==='A'?'urgent':r.priority==='B'?'important':''}">${r.priority}</span>`:""}
-            ${r.stage&&r.stage!=="-"?`<span class="tag">${r.stage}</span>`:""}
-          </div>
-        </div>
-        <div class="tc-meta">
-          <span><span class="tc-meta-lbl">ID </span>${r.project_id||"-"}</span>
-          <span><span class="tc-meta-lbl">截止 </span>${r.due_date||r.due||"-"}</span>
-          <span><span class="tc-meta-lbl">客戶 </span>${r.customer_name||r.customer||"-"}</span>
-        </div>
-      </div>`).join("")}
+  const top=active.slice(0,5);
+  const rest=active.slice(5);
+  const rowHtml=(r)=>`<div class="task-card">
+    <div class="tc-top">
+      <div class="tc-title">${r.project_name||r.project||"-"}</div>
+      <div class="tc-tags">
+        ${r.priority&&r.priority!=="-"?`<span class="tag ${r.priority==='high'?'urgent':r.priority==='medium'?'important':''}">${r.priority}</span>`:""}
+        ${r.stage&&r.stage!=="-"?`<span class="tag">${r.stage}</span>`:""}
+      </div>
     </div>
+    <div class="tc-meta">
+      <span><span class="tc-meta-lbl">ID </span>${r.project_id||"-"}</span>
+      <span><span class="tc-meta-lbl">截止 </span>${r.due_date||r.due||"-"}</span>
+      <span><span class="tc-meta-lbl">客戶 </span>${r.customer_id||r.customer_name||r.customer||"-"}</span>
+    </div>
+    ${r.notes&&r.notes!=="-"?`<div class="tc-next">→ ${r.notes}</div>`:""}
+  </div>`;
+
+  return `<div><div class="sec-lbl">本週焦點（專案）</div>
+    <div class="task-list">${top.map(rowHtml).join("")}</div>
+    ${rest.length?`<details style="margin-top:10px"><summary style="cursor:pointer;color:var(--muted);font-size:10px;letter-spacing:.12em;font-family:'JetBrains Mono',monospace">全部專案（${rest.length}）</summary>
+      <div class="task-list" style="margin-top:10px">${rest.map(rowHtml).join("")}</div>
+    </details>`:""}
   </div>`;
 }
 
@@ -366,12 +393,11 @@ async function init(){
     }
 
     renderSummary(d.tasks||[],d.updated_at);
-    const crmKpiHtml=renderCrmKpis(crm);
-    const devHtml=renderDevProgress(crm);
+    const projectTrackHtml=renderProjectTrack(crm);
     const custHtml=renderCustomers(customers);
     const projHtml=renderProjects(projects);
     const tasksHtml=renderTaskGroups(d.tasks||[]);
-    main.innerHTML=`${crmKpiHtml}${devHtml}${custHtml}${projHtml}${tasksHtml}`;
+    main.innerHTML=`${projectTrackHtml}${custHtml}${projHtml}${tasksHtml}`;
   }catch(e){
     main.innerHTML=`<div class="loading-wrap">無法載入資料</div>`;
   }
