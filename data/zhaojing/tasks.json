@@ -158,6 +158,20 @@
       "freq": "-",
       "updated_at": "2026-02-24T06:00:57Z",
       "source": "auto"
+    },
+    {
+      "title": "提醒：通知業主市場部負責人（兒子）週二需與會",
+      "status": "待處理",
+      "next_step": "明天先通知業主：請市場部負責人（其兒子）週二會議需出席（肚肚上線/電商推進對齊）",
+      "owner_role": "兆鯨顧問",
+      "blocked_reason": "-",
+      "priority": "important",
+      "type": "task",
+      "due": "2026/3/2",
+      "time": "-",
+      "freq": "-",
+      "updated_at": "2026-03-01T13:06:00Z",
+      "source": "user"
     }
   ]
 }
