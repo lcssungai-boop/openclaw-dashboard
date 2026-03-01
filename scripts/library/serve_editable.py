@@ -38,9 +38,18 @@ class Handler(SimpleHTTPRequestHandler):
     server_version = "OpenClawLibrary/0.1"
 
     def end_headers(self):
-        # allow fetch from same origin
+        # allow fetch from browsers (edit API can be called from a different port)
         self.send_header("Cache-Control", "no-store")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
         super().end_headers()
+
+    def do_OPTIONS(self):
+        # CORS preflight
+        self.send_response(204)
+        self.end_headers()
+        return
 
     @property
     def lib_root(self) -> Path:

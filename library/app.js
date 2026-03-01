@@ -23,8 +23,23 @@ async function fetchText(u){
   return await r.text();
 }
 
+let API_BASE = ''; // '' = same origin
+
+function getPreferredApiBase(){
+  const u = new URL(location.href);
+  const q = u.searchParams.get('api');
+  if(q) return q;
+  const saved = localStorage.getItem('library_api_base') || '';
+  return saved;
+}
+
+function setPreferredApiBase(base){
+  API_BASE = base || '';
+  localStorage.setItem('library_api_base', API_BASE);
+}
+
 async function apiRead(rel){
-  const r = await fetch(cacheBust(`/api/library/read?rel=${encodeURIComponent(rel)}`));
+  const r = await fetch(cacheBust(`${API_BASE}/api/library/read?rel=${encodeURIComponent(rel)}`));
   if(!r.ok) throw new Error('api_read_failed');
   const j = await r.json();
   if(!j.ok) throw new Error(j.error||'api_read_failed');
@@ -32,7 +47,7 @@ async function apiRead(rel){
 }
 
 async function apiWrite(rel, content){
-  const r = await fetch(`/api/library/write?_=${Date.now()}` ,{
+  const r = await fetch(`${API_BASE}/api/library/write?_=${Date.now()}` ,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify({rel_path: rel, content}),
@@ -44,13 +59,34 @@ async function apiWrite(rel, content){
 }
 
 let API_OK = false;
+async function probeApiBase(base){
+  const r = await fetch(`${base}/api/library/read?rel=${encodeURIComponent('00_Inbox/__nonexistent__.md')}&_=${Date.now()}`);
+  // 404 is fine; we only care that server responds with JSON
+  return r.ok || r.status === 404;
+}
+
 async function detectApi(){
-  try{
-    await fetch(`/api/library/read?rel=${encodeURIComponent('00_Inbox/__nonexistent__.md')}&_=${Date.now()}`);
-    API_OK = true; // any response means route exists
-  }catch(e){
-    API_OK = false;
+  // preferred: saved/query
+  const preferred = getPreferredApiBase();
+  const candidates = [];
+  if(preferred) candidates.push(preferred);
+  candidates.push('');
+  // common editable server default
+  candidates.push(`http://${location.hostname}:8802`);
+
+  for(const base of candidates){
+    try{
+      await probeApiBase(base);
+      setPreferredApiBase(base);
+      API_OK = true;
+      return;
+    }catch(e){
+      // continue
+    }
   }
+
+  setPreferredApiBase('');
+  API_OK = false;
 }
 
 function parseFrontmatter(md){
@@ -247,11 +283,12 @@ async function openDoc(id){
           <input id="aa_target" placeholder="目的地/目標檔（選 move/merge 時填）" style="min-width:260px;flex:1" />
           <button class="btn btn-sm" id="aa_save">儲存指令</button>
           <button class="btn btn-sm" id="aa_fill_delete">一鍵：刪除</button>
+          <button class="btn btn-sm" id="aa_api_use_8802" style="display:none">使用可編輯模式</button>
         </div>
         <div style="margin-top:10px">
           <textarea id="aa_note" placeholder="說明（原因/要怎麼處理）"></textarea>
           <div class="hint">會寫入 YAML 檔頭：assistant_action / assistant_target / assistant_note。真正刪除/搬移會由我批次執行。</div>
-          <div class="hint" id="aa_api_hint" style="display:none">提示：目前頁面是唯讀模式（沒有 /api/library/write）。如要在網頁上寫入，請用可編輯伺服器（serve_editable.py）。</div>
+          <div class="hint" id="aa_api_hint" style="display:none">提示：目前無法寫入（找不到可寫 API）。請先開啟可編輯模式（8802）或用參數 ?api=http://主機:8802</div>
         </div>
       `;
 
@@ -263,6 +300,16 @@ async function openDoc(id){
       if(noteEl) noteEl.value = note || '';
 
       const apiHint = $('aa_api_hint');
+      const use8802 = $('aa_api_use_8802');
+      if(use8802){
+        // show if we are in read-only mode; clicking sets API base to :8802 and reloads
+        use8802.style.display = API_OK ? 'none' : 'inline-flex';
+        use8802.onclick = ()=>{
+          const base = `http://${location.hostname}:8802`;
+          setPreferredApiBase(base);
+          location.reload();
+        };
+      }
       if(apiHint && !API_OK) apiHint.style.display='block';
 
       const fillDel = $('aa_fill_delete');
