@@ -1,0 +1,23 @@
+{
+  "updated_at": "2026-03-01T13:10:00Z",
+  "kpis": {
+    "week_focus": "主推品 3–5 個（補齊成本/售價/含稅）",
+    "profit_target": "—",
+    "engine": "LINE OA / 目錄 / 現場客轉單"
+  },
+  "launch_phase": {
+    "label": "肚肚上線期",
+    "phase": "教育期",
+    "date": "2026-03-03",
+    "notes": [
+      "教育期：先穩現場流程，電商先做資料與目錄 v1",
+      "適應期：再推 LINE OA 與第一次活動",
+      "穩定期：再拉六個月行銷計畫"
+    ]
+  },
+  "products": [],
+  "decisions": {
+    "you": [],
+    "owner": []
+  }
+}
