@@ -185,6 +185,8 @@ function taskCard(t){
   else if(t.type==="alert") tags.push(`<span class="tag alert-tag">提醒</span>`);
   if(isBlk) tags.push(`<span class="tag blocked-tag">阻塞</span>`);
   if(isDone) tags.push(`<span class="tag" style="opacity:.4">完成</span>`);
+  // user tags (optional)
+  (t.tags||[]).forEach(x=>{ if(x) tags.push(`<span class="tag">${x}</span>`); });
   const meta=[];
   if(t.time&&t.time!=="-") meta.push(`<span><span class="tc-meta-lbl">排程 </span>${t.time}</span>`);
   if(t.due&&t.due!=="-") meta.push(`<span><span class="tc-meta-lbl">截止 </span>${t.due}</span>`);
@@ -200,8 +202,50 @@ function taskCard(t){
   </div>`;
 }
 
-function renderTaskGroups(tasks,containerId){
-  const el=document.getElementById(containerId||"main");
+function renderCrmKpis(crm){
+  const s=(crm||{});
+  const leads=s?.leads?.summary?.total;
+  const follow=s?.followups?.summary?.pending;
+  const cand=s?.candidates?.summary?.total;
+  const match=s?.matches?.summary?.active;
+  const val=v=>(v===0?"0":(v?String(v):"-"));
+  const cards=[
+    {k:"Leads", v:val(leads)},
+    {k:"回訪", v:val(follow)},
+    {k:"人選", v:val(cand)},
+    {k:"媒合", v:val(match)},
+  ];
+  return `<div><div class="sec-lbl">CRM 快速數字</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+      ${cards.map(c=>`<div style="border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);padding:14px 16px">
+        <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'JetBrains Mono',monospace">${c.k}</div>
+        <div style="font-size:22px;font-weight:500;margin-top:6px">${c.v}</div>
+      </div>`).join("")}
+    </div>
+  </div>`;
+}
+
+function renderDevProgress(crm){
+  const mods=(crm?.dev_progress?.modules)||[];
+  if(!mods.length) return "";
+  const priClass=p=>p==="high"?"urgent":p==="normal"?"important":"";
+  return `<div><div class="sec-lbl">CRM 開發進度</div>
+    <div class="task-list">
+      ${mods.map(m=>`<div class="task-card">
+        <div class="tc-top">
+          <div class="tc-title">${m.name}</div>
+          <div class="tc-tags">
+            <span class="tag ${priClass(m.priority)}">${m.priority||"-"}</span>
+            <span class="tag">${m.status||"-"}</span>
+          </div>
+        </div>
+        ${m.description?`<div class="tc-next">→ ${m.description}</div>`:""}
+      </div>`).join("")}
+    </div>
+  </div>`;
+}
+
+function renderTaskGroups(tasks){
   const groups=[
     {label:"阻塞中",    fn:t=>t.status==="阻塞"},
     {label:"急件",      fn:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="urgent"},
@@ -210,20 +254,35 @@ function renderTaskGroups(tasks,containerId){
     {label:"已完成",    fn:t=>t.status==="已完成"},
   ];
   const html=groups.map(g=>{
-    const items=tasks.filter(g.fn);
+    const items=(tasks||[]).filter(g.fn);
     if(!items.length) return "";
     return `<div><div class="sec-lbl">${g.label}</div><div class="task-list">${items.map(taskCard).join("")}</div></div>`;
   }).join("");
-  el.innerHTML=html||`<div class="loading-wrap">— 目前無任務 —</div>`;
+  return html||`<div class="loading-wrap">— 目前無任務 —</div>`;
 }
+
 async function init(){
+  const main=document.getElementById("main");
   try{
-    const r=await fetch("../data/caitodo/tasks.json?_="+Date.now());
-    if(!r.ok) throw 0;
-    const d=await r.json();
+    const [taskRes,crmRes]=await Promise.allSettled([
+      fetch("../data/caitodo/tasks.json?_="+Date.now()),
+      fetch("../data/caitodo/crm.json?_="+Date.now()),
+    ]);
+    if(taskRes.status!=="fulfilled"||!taskRes.value.ok) throw 0;
+    const d=await taskRes.value.json();
+    let crm=null;
+    if(crmRes.status==="fulfilled" && crmRes.value.ok){
+      try{ crm=await crmRes.value.json(); }catch(e){}
+    }
+
     renderSummary(d.tasks||[],d.updated_at);
-    renderTaskGroups(d.tasks||[]);
-  }catch(e){document.getElementById("main").innerHTML=`<div class="loading-wrap">無法載入資料</div>`;}
+    const crmKpiHtml=renderCrmKpis(crm);
+    const devHtml=renderDevProgress(crm);
+    const tasksHtml=renderTaskGroups(d.tasks||[]);
+    main.innerHTML=`${crmKpiHtml}${devHtml}${tasksHtml}`;
+  }catch(e){
+    main.innerHTML=`<div class="loading-wrap">無法載入資料</div>`;
+  }
 }
 init();
 </script>

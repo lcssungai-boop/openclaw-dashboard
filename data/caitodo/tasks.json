@@ -12,7 +12,11 @@
       "due": "-",
       "time": "-",
       "freq": "-",
-      "updated_at": "2026-02-22T05:41:14Z"
+      "updated_at": "2026-02-22T05:41:14Z",
+      "tags": [
+        "BNI",
+        "例會"
+      ]
     },
     {
       "title": "才多多週會重點確認提醒",
@@ -26,7 +30,11 @@
       "time": "-",
       "freq": "-",
       "updated_at": "2026-02-24T06:00:57Z",
-      "source": "auto"
+      "source": "auto",
+      "tags": [
+        "週會",
+        "才多多"
+      ]
     },
     {
       "title": "三年免招募費專案追蹤提醒",
@@ -40,7 +48,11 @@
       "time": "-",
       "freq": "-",
       "updated_at": "2026-02-24T06:00:57Z",
-      "source": "auto"
+      "source": "auto",
+      "tags": [
+        "重點專案",
+        "週報"
+      ]
     },
     {
       "title": "才多多財務分析月報更新",
@@ -54,7 +66,11 @@
       "time": "-",
       "freq": "-",
       "updated_at": "2026-02-24T06:00:57Z",
-      "source": "auto"
+      "source": "auto",
+      "tags": [
+        "財務",
+        "月初"
+      ]
     }
   ]
 }
