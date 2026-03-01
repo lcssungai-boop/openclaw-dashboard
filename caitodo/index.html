@@ -247,19 +247,23 @@ function renderDevProgress(crm){
 
 function parseMdTable(txt){
   const lines=(txt||"").split(/\r?\n/);
-  let i=lines.findIndex(l=>/^\|/.test(l.trim()));
-  if(i<0||i+1>=lines.length) return [];
-  // find header + separator
-  while(i+1<lines.length && !/^\|\s*---/.test(lines[i+1].trim())) i++;
-  if(i<=0) return [];
-  const header=lines[i-1].trim();
-  const sep=lines[i].trim();
-  if(!/^\|\s*---/.test(sep)) return [];
-  const cols=header.split("|").map(s=>s.trim()).filter(Boolean);
+  // Find the first markdown table header row that is immediately followed by a separator row.
+  // We can't assume the first "|" line is the separator.
+  let headerIdx=-1, sepIdx=-1;
+  for(let i=0;i<lines.length-1;i++){
+    const a=lines[i].trim();
+    const b=lines[i+1].trim();
+    if(/^\|/.test(a) && /^\|\s*---/.test(b)) { headerIdx=i; sepIdx=i+1; break; }
+  }
+  if(headerIdx<0 || sepIdx<0) return [];
+
+  const cols=lines[headerIdx].trim().split("|").map(s=>s.trim()).filter(Boolean);
   const rows=[];
-  for(let j=i+1;j<lines.length;j++){
+  for(let j=sepIdx+1;j<lines.length;j++){
     const line=lines[j].trim();
     if(!/^\|/.test(line)) break;
+    // skip separator-like lines
+    if(/^\|\s*---/.test(line)) continue;
     const cells=line.split("|").map(s=>s.trim());
     const vals=cells.slice(1,-1);
     if(vals.length!==cols.length) continue;
