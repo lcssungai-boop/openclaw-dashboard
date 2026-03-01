@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>資訊資料庫 · Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="hdr">
+    <div class="hdr-left">
+      <a class="back" href="../">‹ 返回</a>
+      <div class="brand">Library</div>
+      <div class="sub">資訊資料庫（Markdown）</div>
+    </div>
+    <div class="hdr-right">
+      <div id="lib-meta" class="meta">載入中…</div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="pane left">
+      <div class="search">
+        <input id="q" placeholder="搜尋（檔名 / 標題 / 內容摘錄）" />
+      </div>
+      <div id="tree" class="tree"></div>
+      <div id="results" class="results"></div>
+    </aside>
+
+    <main class="pane mid">
+      <div id="doc" class="doc">選擇左側文件</div>
+    </main>
+
+    <aside class="pane right">
+      <div class="sec">
+        <div class="sec-title">Links</div>
+        <div class="sec-sub">Out / In</div>
+        <div id="links" class="links">—</div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
