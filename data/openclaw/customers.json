@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-03-02T12:00:35Z",
+  "updated_at": "2026-03-02T12:04:04Z",
   "source_sqlite": "/Users/sung/.openclaw/workspace/biz.db",
   "summary": {
-    "total_customers": 3
+    "total_customers": 2
   },
   "customers": [
     {
@@ -31,22 +31,6 @@
       "phone": "-",
       "email": "-",
       "source": "openclaw",
-      "tier": "-",
-      "owner": "-",
-      "status": "active",
-      "tags": [],
-      "note": ""
-    },
-    {
-      "row_no": 3,
-      "date": "2026-03-02",
-      "name": "XYZ金控",
-      "type": "客戶",
-      "tax_id": "-",
-      "contact": "陳副總",
-      "phone": "-",
-      "email": "chen@xyz.com",
-      "source": "客戶",
       "tier": "-",
       "owner": "-",
       "status": "active",

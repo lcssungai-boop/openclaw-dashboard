@@ -1,42 +1,13 @@
 {
-  "updated_at": "2026-03-02T12:00:35Z",
+  "updated_at": "2026-03-02T12:04:04Z",
   "source_sqlite": "/Users/sung/.openclaw/workspace/biz.db",
   "summary": {
-    "total_items": 47,
-    "total_customers": 2,
-    "total_projects": 3,
+    "total_items": 46,
+    "total_customers": 1,
+    "total_projects": 2,
     "overdue_items": 0
   },
   "customers": [
-    {
-      "customer": "XYZ金控",
-      "task_count": 1,
-      "overdue_count": 0,
-      "projects": [
-        {
-          "project": "XYZ金控聯貸案",
-          "task_count": 1,
-          "overdue_count": 0,
-          "items": [
-            {
-              "row_no": 47,
-              "date": "2026-03-13",
-              "customer": "XYZ金控",
-              "project": "XYZ金控聯貸案",
-              "subproject": "-",
-              "type": "task",
-              "status": "待處理",
-              "owner": "-",
-              "due": "2026-03-13",
-              "priority": "urgent",
-              "next_step": "-",
-              "note": "截止：下週五前完成",
-              "overdue": false
-            }
-          ]
-        }
-      ]
-    },
     {
       "customer": "內部專案",
       "task_count": 46,

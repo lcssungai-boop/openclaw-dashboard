@@ -1,23 +1,7 @@
 {
-  "updated_at": "2026-03-02T12:00:35Z",
+  "updated_at": "2026-03-02T12:04:04Z",
   "source_sqlite": "/Users/sung/.openclaw/workspace/biz.db",
   "tasks": [
-    {
-      "title": "準備XYZ聯貸案風險評估報告",
-      "status": "待處理",
-      "next_step": "-",
-      "owner_role": "-",
-      "blocked_reason": "-",
-      "priority": "urgent",
-      "type": "task",
-      "due": "2026-03-13",
-      "time": "-",
-      "freq": "-",
-      "updated_at": "2026-03-02 11:28:34",
-      "source": "biz.db",
-      "project": "XYZ金控聯貸案",
-      "customer": "XYZ金控"
-    },
     {
       "title": "cron 每日任務自動化（重設狀態）",
       "status": "已完成",
