@@ -1,10 +1,10 @@
 {
-  "updated_at": "2026-03-02T12:16:54Z",
+  "updated_at": "2026-03-02T13:09:50Z",
   "source_sqlite": "/Users/sung/.openclaw/workspace/biz.db",
   "summary": {
     "total_items": 46,
     "total_customers": 1,
-    "total_projects": 2,
+    "total_projects": 3,
     "overdue_items": 0
   },
   "customers": [
@@ -716,6 +716,12 @@
               "overdue": false
             }
           ]
+        },
+        {
+          "project": "才多多CRM建立",
+          "task_count": 0,
+          "overdue_count": 0,
+          "items": []
         }
       ]
     }
