@@ -681,6 +681,14 @@ function safeStr(v,fallback="-"){
   const s=String(v).trim();
   return s?s:fallback;
 }
+function escHtml(s){
+  return String(s??"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#39;");
+}
 function normStatus(v){
   const s=safeStr(v,"待處理");
   return (s==="待處理"||s==="阻塞"||s==="已完成")?s:"待處理";
