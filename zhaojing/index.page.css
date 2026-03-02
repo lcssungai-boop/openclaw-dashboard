@@ -9,7 +9,7 @@
   --dim: rgba(255,255,255,0.78);
   --muted: rgba(255,255,255,0.62);
   --bright: rgba(255,255,255,0.96);
-  --accent: #6C5CFF;
+  --accent: #C7C7CC;
 }
 body[data-theme="light"]{
   --bg: #f4f5f7;
@@ -21,7 +21,7 @@ body[data-theme="light"]{
   --dim: rgba(18,22,32,0.80);
   --muted: rgba(18,22,32,0.56);
   --bright: rgba(18,22,32,0.96);
-  --accent: #5b6b7a; /* grey-blue low saturation */
+  --accent: #7A7A7C;
 }
 
 /* Theme toggle button */
@@ -44,9 +44,9 @@ body[data-theme="light"]{
   --urgent-bg:#2A1E0E;--urgent-bd:#9A6830;--urgent-text:#F0A840;
   --blocked-bg:#0E1C2A;--blocked-bd:#406888;--blocked-text:#74BADF;
   --remit-bg:#201C14;--remit-bd:#7A6848;--remit-text:#D0A878;
-  --inc:#5BBB78;--inc-bg:#1A2A20;--inc-bd:#2A4A30;
+  --inc:#C7C7CC;--inc-bg:#1A1A1C;--inc-bd:#585859;
   --exp:#D97070;--exp-bg:#2A1616;--exp-bd:#4A2828;
-  --green:#5BBB78;--green-dim:#1A2A1E;
+  --green:#C7C7CC;--green-dim:#1A2A1E;
   --radius:10px;--radius-xs:5px;
 }
 
@@ -115,7 +115,7 @@ main{max-width:860px;margin:0 auto;padding:40px 32px;display:flex;flex-direction
 .tag.important{border-color:var(--border2);color:var(--dim)}
 .tag.blocked-tag{border-color:var(--blocked-bd);color:var(--blocked-text)}
 .tag.remittance{border-color:var(--remit-bd);color:var(--remit-text)}
-.tag.alert-tag{border-color:#2A5030;color:var(--green)}
+.tag.alert-tag{border-color:var(--border2);color:var(--dim)}
 .tc-meta{display:flex;gap:18px;font-size:10px;color:var(--muted);
   font-family:"JetBrains Mono",monospace;font-weight:300}
 .tc-meta-lbl{font-size:8px;opacity:.6;margin-right:3px}
@@ -157,7 +157,7 @@ main{max-width:860px;margin:0 auto;padding:40px 32px;display:flex;flex-direction
 .pc-addr,.tc-name{font-size:14px;font-weight:400;color:var(--bright);flex:1;letter-spacing:.02em}
 .status-badge{font-size:8px;padding:2px 8px;border:1px solid var(--border);
   color:var(--muted);border-radius:1px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
-.status-badge.已出租,.status-badge.正常{border-color:#1E3A1E;color:var(--green)}
+.status-badge.已出租,.status-badge.正常{border-color:var(--border2);color:var(--dim)}
 .status-badge.招租中,.status-badge.欠租{border-color:var(--urgent-bd);color:var(--urgent-text)}
 .status-badge.無合約{border-color:var(--blocked-bd);color:var(--blocked-text)}
 .status-badge.協商中{border-color:var(--remit-bd);color:var(--remit-text)}
