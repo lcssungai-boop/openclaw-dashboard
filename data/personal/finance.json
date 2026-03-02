@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-28T22:50:00Z",
+  "updated_at": "2026-03-02T11:02:11Z",
   "net_worth": 1276644,
   "available_cash": 161690,
   "stocks_value": 429514,
@@ -57,7 +57,7 @@
     },
     {
       "name": "才多多公司零用金（代保管）",
-      "amount": 18486,
+      "amount": 24486,
       "type": "custody",
       "due": "-"
     },
@@ -108,11 +108,29 @@
   "custody": [
     {
       "name": "才多多公司零用金",
-      "amount": 18486,
+      "amount": 24486,
       "note": "暫存於個人帳戶，非個人資產"
     }
   ],
   "transactions": [
+    {
+      "date": "2026-03-02",
+      "category": "公司零用金",
+      "item": "成大獎金（暫收現金）",
+      "income": 6000,
+      "expense": 0,
+      "payment": "現金",
+      "note": "公司零用金暫收；待對帳；非個人資產"
+    },
+    {
+      "date": "2026-03-02",
+      "category": "餐飲",
+      "item": "中餐-7-11",
+      "income": 0,
+      "expense": 99,
+      "payment": "LINE Pay（綁國泰）",
+      "note": "午餐"
+    },
     {
       "date": "2026-03-01",
       "category": "訂閱",
