@@ -211,6 +211,15 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
   background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
   box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden;
 }
+.brief-details{display:block}
+.brief-details > summary{list-style:none}
+.brief-details > summary::-webkit-details-marker{display:none}
+.brief-summary{cursor:pointer;user-select:none}
+.brief-title{padding:10px 18px 0;font-size:14px;font-weight:600;color:var(--bright)}
+.brief-toggle{padding:8px 18px 14px;font-size:10px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.brief-expand{display:none}
+.brief-details.open .brief-expand{display:block}
+.brief-md{padding:12px 18px;font-size:13px;color:var(--text);white-space:pre-wrap;line-height:1.6}
 .brief-header{
   padding:14px 18px 12px;border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -699,6 +708,7 @@ const AREAS=[
 
 const DATA={};
 const ARCH={customer:null,project:null,knowledge:null};
+let TODAY_MEMO=null;
 const PRI_LBL={urgent:"急件",important:"重要",normal:"一般"};
 const TYPE_LBL={remittance:"匯款",alert:"提醒",task:"任務"};
 const INDEX_SOURCES={
@@ -815,6 +825,16 @@ async function loadArchitectureMeta(){
     loadIndexMeta("knowledge",INDEX_SOURCES.knowledge),
   ]);
   ARCH.customer=c;ARCH.project=p;ARCH.knowledge=k;
+}
+
+async function loadTodayMemo(){
+  try{
+    const r=await fetch('data/index/today_memo.json?_='+Date.now());
+    if(!r.ok) throw 0;
+    TODAY_MEMO=await r.json();
+  }catch(e){
+    TODAY_MEMO=null;
+  }
 }
 
 // ── ALERT STRIP ───────────────────────────────────────────────────
@@ -1017,8 +1037,8 @@ function renderBrief(){
     if(ab!==bb) return ab-bb;
     return (pri[a.t.priority]??2)-(pri[b.t.priority]??2);
   });
-  let top3=sorted.filter(({t})=>t.priority==="urgent"||t.priority==="important"||t.status==="阻塞").slice(0,3);
-  if(!top3.length) top3=sorted.slice(0,3);
+  let top5=sorted.filter(({t})=>t.priority==="urgent"||t.priority==="important"||t.status==="阻塞").slice(0,5);
+  if(!top5.length) top5=sorted.slice(0,5);
 
   const schedBlock=schedItems.length?`
     <div class="brief-block">
@@ -1035,8 +1055,8 @@ function renderBrief(){
 
   const workBlock=`
     <div class="brief-block">
-      <div class="brief-block-hdr">工作待辦 Top 3</div>
-      ${top3.length?top3.map(({t,area})=>`
+      <div class="brief-block-hdr">今日待辦 Top 5</div>
+      ${top5.length?top5.map(({t,area})=>`
         <div class="brief-line">
           <span class="brief-time">${t.priority==="urgent"?"●":t.priority==="important"?"○":"·"}</span>
           <span class="brief-text">${t.title}
@@ -1048,13 +1068,31 @@ function renderBrief(){
         `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">— 暫無待處理事項 —</span></div>`}
     </div>`;
 
+  const memo=TODAY_MEMO||{};
+  const memoTitle=safeStr(memo.headline,"今日備忘卡");
+  const memoSummary=Array.isArray(memo.summary)?memo.summary:[];
+  const memoDetail=(memo.details_md||"").trim();
+  const memoSummaryHtml=memoSummary.length?memoSummary.slice(0,3).map(s=>`<div class="brief-line"><span class="brief-text">${s}</span></div>`).join(""):
+    `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">— 尚未設定備忘 —</span></div>`;
+  const memoDetailHtml=memoDetail?`<div class="brief-block"><div class="brief-block-hdr">詳細備忘</div><div class="brief-md">${escHtml(memoDetail)}</div></div>`:"";
+
   wrap.innerHTML=`
-    <div class="brief-header">
-      <span class="brief-date">${dateStr}</span>
-      ${luckHtml}
-    </div>
-    <div class="brief-body">${schedBlock}${workBlock}</div>`;
+    <details class="brief-details" open>
+      <summary class="brief-summary" onclick="event.preventDefault();this.parentElement.classList.toggle('open');">
+        <div class="brief-header">
+          <span class="brief-date">${dateStr}</span>
+          ${luckHtml}
+        </div>
+        <div class="brief-title">${memoTitle}</div>
+        <div class="brief-body">${memoSummaryHtml}</div>
+        <div class="brief-toggle">點一下展開/收合</div>
+      </summary>
+      <div class="brief-expand">
+        <div class="brief-body">${schedBlock}${workBlock}${memoDetailHtml}</div>
+      </div>
+    </details>`;
 }
+
 
 // ── ACCORDION (全區總覽) ──────────────────────────────────────────
 function renderAccordion(){
@@ -1131,6 +1169,7 @@ async function init(){
   const [results]=await Promise.all([
     Promise.all(AREAS.map(loadArea)),
     loadArchitectureMeta(),
+    loadTodayMemo(),
   ]);
   AREAS.forEach((a,i)=>{DATA[a.key]=results[i]||normalizeDataset(null);});
   renderKPIs();
