@@ -32,7 +32,7 @@
   --blocked-bd:#406888;
   --blocked-text:#74BADF;
 
-  --green:#5BBB78;
+  --green:#9FB0C3;
   --green-dim:#1A2A1E;
 
   --radius:12px;
@@ -157,11 +157,11 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
   padding:2px 8px;color:var(--dim);background:var(--bg3);
 }
 .trace-badge.warn{border-color:var(--urgent-bd);color:var(--urgent-text);background:transparent}
-.trace-badge.ok{border-color:#2A5030;color:var(--green);background:transparent}
+.trace-badge.ok{border-color:var(--border2);color:var(--dim);background:transparent}
 /* trace-card links: make the whole card clickable without blue underline */
 .trace-card{color:inherit;text-decoration:none;cursor:pointer}
 .trace-card:visited{color:inherit}
-.trace-card:hover{border-color:#7da7ff}
+.trace-card:hover{border-color:#3a4554}
 /* Force visited state to not tint (Safari can show purple on anchor text) */
 .trace-card, .trace-card:visited{color:var(--text)}
 .trace-card:visited .trace-name{color:var(--bright)}
@@ -224,7 +224,7 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
   font-size:9px;padding:2px 7px;border-radius:20px;font-weight:600;flex-shrink:0;
   border:1px solid;letter-spacing:.3px;
 }
-.sched-status.ok{background:transparent;color:var(--green);border-color:#2A5030}
+.sched-status.ok{background:transparent;color:var(--dim);border-color:var(--border2)}
 .sched-status.warn{background:transparent;color:var(--urgent-text);border-color:var(--urgent-bd)}
 
 /* ── WARN CARDS ── */
@@ -324,7 +324,7 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
 .t-pri.urgent{border-color:var(--urgent-bd);color:var(--urgent-text);background:transparent}
 .t-pri.important{border-color:var(--border2);color:var(--text);background:var(--bg4)}
 .t-type{font-size:9px;padding:2px 8px;background:var(--bg4);color:var(--dim);border-radius:20px;white-space:nowrap;border:1px solid var(--border)}
-.t-type.alert{background:transparent;color:var(--green);border-color:#2A5030}
+.t-type.alert{background:transparent;color:var(--dim);border-color:var(--border2)}
 .t-type.remittance{background:transparent;color:var(--remit-text);border-color:var(--remit-bd)}
 .t-status{font-size:9px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);color:var(--dim);white-space:nowrap;background:var(--bg3)}
 .t-status.blocked{border-color:var(--blocked-bd);color:var(--blocked-text);background:transparent}
