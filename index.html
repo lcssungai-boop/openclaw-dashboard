@@ -54,7 +54,7 @@ body{
   -webkit-font-smoothing:antialiased;
   line-height:1.5;
 }
-header,#info-bar,#alert-strip{position:sticky}
+header,#info-bar{position:sticky}
 
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -104,37 +104,6 @@ header.scrolled{
 .ib-weather b{color:var(--bright);font-weight:500}
 .ib-lunar{font-size:10px;color:var(--muted);letter-spacing:.3px}
 
-/* ── ALERT STRIP ── */
-#alert-strip{
-  background:var(--panel);border-bottom:1px solid var(--border);
-  padding:0 24px;height:var(--strip-h);
-  display:flex;align-items:center;
-  overflow-x:auto;white-space:nowrap;scrollbar-width:none;
-  top:calc(var(--hdr-h) + var(--info-h));z-index:190;
-  transition:background .2s,border-color .2s,top .3s ease;
-}
-#alert-strip::-webkit-scrollbar{display:none}
-#alert-strip.live{background:var(--bg2);border-bottom-color:var(--urgent-bd)}
-.a-lbl{
-  font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--muted);flex-shrink:0;margin-right:14px;
-  font-family:"JetBrains Mono",monospace;
-}
-.a-lbl.hot{color:var(--urgent-text)}
-.a-chip{
-  display:inline-flex;align-items:center;gap:5px;flex-shrink:0;
-  font-size:10px;font-weight:400;
-  border:1px solid var(--border2);background:var(--bg3);color:var(--dim);
-  padding:3px 10px 3px 7px;border-radius:20px;margin-right:6px;
-}
-.a-chip.u{border-color:var(--urgent-bd);background:transparent;color:var(--urgent-text)}
-.a-chip.b{border-color:var(--blocked-bd);background:transparent;color:var(--blocked-text)}
-.a-chip.r{border-color:var(--remit-bd);background:transparent;color:var(--remit-text)}
-.a-chip svg{vertical-align:middle}
-.a-area{font-size:9px;color:inherit;opacity:.55;margin-left:2px}
-.a-sep{width:1px;height:12px;background:var(--border);flex-shrink:0;margin:0 4px}
-.a-none{font-size:11px;color:var(--muted);font-weight:300}
-
 /* ── MAIN ── */
 main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction:column;gap:24px}
 
@@ -149,7 +118,7 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
 .sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
 
 /* ── KPI STRIP ── */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .kpi-card{
   background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
   padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.04);
@@ -368,7 +337,7 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
   :root{--hdr-h:64px;--info-h:32px;--strip-h:40px}
 
   header{padding:0 56px}
-  #info-bar,#alert-strip{padding:0 56px}
+  #info-bar{padding:0 56px}
   .hdr-name{font-size:17px}
   .hdr-clock{font-size:12px}
   #info-bar{font-size:12px}
@@ -499,7 +468,7 @@ main>section:nth-child(5){animation-delay:.33s}
 @media(max-width:640px){
   :root{--hdr-h:52px;--info-h:26px;--strip-h:36px}
   header{padding:0 16px}
-  #info-bar,#alert-strip{padding:0 16px}
+  #info-bar{padding:0 16px}
   main{padding:16px 16px;gap:18px}
   .hdr-name{font-size:16px}
   .hdr-sub{font-size:12px}
@@ -567,11 +536,6 @@ main>section:nth-child(5){animation-delay:.33s}
   <div class="ib-lunar" id="ib-lunar">農曆載入中</div>
 </div>
 
-<!-- ALERT STRIP -->
-<div id="alert-strip">
-  <span class="a-lbl" id="a-lbl">急件</span>
-  <span id="a-items" class="a-none">載入中…</span>
-</div>
 
 <main>
 
@@ -600,13 +564,6 @@ main>section:nth-child(5){animation-delay:.33s}
         <div class="kpi-val" id="kpi-blocked">—</div>
         <div class="kpi-sub">需立即處理</div>
         <div class="kpi-hint" id="kpi-blocked-hint"></div>
-      </div>
-      <div class="kpi-card" id="kpi-card-urgent">
-        <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-        <div class="kpi-lbl">急件</div>
-        <div class="kpi-val" id="kpi-urgent">—</div>
-        <div class="kpi-sub">urgent 優先度</div>
-        <div class="kpi-hint" id="kpi-urgent-hint"></div>
       </div>
     </div>
   </section>
@@ -839,24 +796,7 @@ async function loadTodayMemo(){
 
 // ── ALERT STRIP ───────────────────────────────────────────────────
 function renderStrip(){
-  const strip=document.getElementById("alert-strip");
-  const lbl=document.getElementById("a-lbl");
-  const el=document.getElementById("a-items");
-  const items=[];
-  AREAS.forEach(area=>{(DATA[area.key]?.tasks||[]).filter(isWarn).forEach(t=>items.push({t,area}));});
-  if(!items.length){
-    strip.classList.remove("live");lbl.classList.remove("hot");
-    lbl.textContent="急件";el.className="a-none";
-    el.textContent="目前無急件・無待匯款・無阻塞";return;
-  }
-  strip.classList.add("live");lbl.classList.add("hot");
-  lbl.textContent=`急件 (${items.length})`;el.className="";
-  el.innerHTML=items.map(({t,area},i)=>`
-    ${i>0?'<span class="a-sep"></span>':''}
-    <span class="a-chip ${chipCls(t)}">
-      ${chipIcon(t)} ${t.title}
-      <span class="a-area">[${area.name}]</span>
-    </span>`).join("");
+  // removed
 }
 
 // ── WARNING CARDS ─────────────────────────────────────────────────
