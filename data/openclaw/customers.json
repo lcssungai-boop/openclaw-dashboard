@@ -1,37 +1,58 @@
 {
-  "updated_at": "2026-02-26T16:57:40Z",
-  "source_csv": "/Users/sung/Library/Mobile Documents/com~apple~CloudDocs/caiduo才多_工作空間/昌松_客戶專案帳務/昌松_客戶主檔.csv",
+  "updated_at": "2026-03-02T12:00:35Z",
+  "source_sqlite": "/Users/sung/.openclaw/workspace/biz.db",
   "summary": {
-    "total_customers": 1,
-    "tier_counts": {
-      "A": 1
-    },
-    "status_counts": {
-      "active": 1
-    }
+    "total_customers": 3
   },
   "customers": [
     {
-      "row_no": 2,
+      "row_no": 1,
       "date": "2026-02-27",
       "name": "兆鯨物業",
       "type": "客戶",
       "tax_id": "-",
-      "contact": "待補",
+      "contact": "兆鯨物業",
       "phone": "-",
       "email": "-",
       "source": "顧問服務",
-      "tier": "A",
-      "owner": "大總管",
+      "tier": "-",
+      "owner": "-",
       "status": "active",
-      "tags": [
-        "物業",
-        "顧問",
-        "貸款整合"
-      ],
+      "tags": [],
       "note": "客戶主檔初始化"
+    },
+    {
+      "row_no": 2,
+      "date": "-",
+      "name": "內部專案",
+      "type": "客戶",
+      "tax_id": "-",
+      "contact": "內部專案",
+      "phone": "-",
+      "email": "-",
+      "source": "openclaw",
+      "tier": "-",
+      "owner": "-",
+      "status": "active",
+      "tags": [],
+      "note": ""
+    },
+    {
+      "row_no": 3,
+      "date": "2026-03-02",
+      "name": "XYZ金控",
+      "type": "客戶",
+      "tax_id": "-",
+      "contact": "陳副總",
+      "phone": "-",
+      "email": "chen@xyz.com",
+      "source": "客戶",
+      "tier": "-",
+      "owner": "-",
+      "status": "active",
+      "tags": [],
+      "note": ""
     }
   ],
-  "source": "dashboard:/Users/sung/Documents/線上儀表板",
-  "schema_version": "2026-02"
+  "schema_version": "2026-03"
 }
