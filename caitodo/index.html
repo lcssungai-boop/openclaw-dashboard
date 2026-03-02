@@ -203,6 +203,9 @@ function taskCard(t){
 }
 
 function renderProjectTrack(crm){
+  // CRM 專案本週由同事主責處理；此儀表板不再展開 CRM 任務清單（僅保留單一專案追蹤在其他區塊）。
+  return "";
+
   const dp=crm?.dev_progress;
   const mods=(dp?.modules)||[];
   if(!mods.length) return "";
