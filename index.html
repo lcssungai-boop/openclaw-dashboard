@@ -411,7 +411,6 @@ main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction
   border-radius:999px;padding:6px 10px;display:inline-flex;align-items:center;gap:6px;
 }
 .subtabs a:hover{color:var(--bright);border-color:#3a4554}
-.subtabs .group{font-size:10px;color:var(--muted);padding:6px 2px}
 
 /* ── FOOTER ── */
 footer{
@@ -540,34 +539,6 @@ main>section:nth-child(5){animation-delay:.33s}
 <main>
 
 
-  <!-- 今日概況 -->
-  <section>
-    <div class="sec-lbl">今日概況</div>
-    <div class="kpi-grid">
-      <div class="kpi-card" id="kpi-card-sched">
-        <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-        <div class="kpi-lbl">今日排程</div>
-        <div class="kpi-val" id="kpi-sched">—</div>
-        <div class="kpi-sub" id="kpi-sched-sub">載入中</div>
-        <div class="kpi-hint" id="kpi-sched-hint"></div>
-      </div>
-      <div class="kpi-card" id="kpi-card-pending">
-        <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-        <div class="kpi-lbl">待處理</div>
-        <div class="kpi-val" id="kpi-pending">—</div>
-        <div class="kpi-sub">所有區域合計</div>
-        <div class="kpi-hint" id="kpi-pending-hint"></div>
-      </div>
-      <div class="kpi-card" id="kpi-card-blocked">
-        <div class="kpi-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
-        <div class="kpi-lbl">阻塞</div>
-        <div class="kpi-val" id="kpi-blocked">—</div>
-        <div class="kpi-sub">需立即處理</div>
-        <div class="kpi-hint" id="kpi-blocked-hint"></div>
-      </div>
-    </div>
-  </section>
-
   <!-- 今日提醒 -->
   <section>
     <div class="sec-lbl">今日提醒</div>
@@ -576,55 +547,33 @@ main>section:nth-child(5){animation-delay:.33s}
     </div>
   </section>
 
-  <!-- 重點警示 -->
+  <!-- 本週 / 逾期（簡版） -->
   <section>
-    <div class="sec-lbl">重點警示</div>
-    <div class="warn-grid" id="warn-grid">
+    <div class="sec-lbl">逾期</div>
+    <div class="warn-grid" id="overdue-grid">
       <div class="warn-empty">載入中…</div>
     </div>
   </section>
 
-  <!-- 全區總覽 -->
-  <section id="sec-overview">
-    <div class="sec-lbl">全區總覽</div>
-    <div class="acc-wrap" id="acc-wrap">
-      <div style="padding:20px;font-size:11px;color:var(--muted)">載入中…</div>
+  <section>
+    <div class="sec-lbl">本週</div>
+    <div class="warn-grid" id="week-grid">
+      <div class="warn-empty">載入中…</div>
     </div>
   </section>
-
-  <!-- 資料一致性追蹤 -->
-  <section id="sec-trace">
-    <div class="sec-lbl">資料一致性追蹤</div>
-    <div class="trace-grid" id="trace-grid">
-      <div class="trace-card"><div class="trace-name">載入中…</div></div>
-    </div>
-  </section>
-
 
 </main>
 
 <div class="subtabs" id="subtabs">
-  <span class="group">子分頁</span>
   <a href="caitodo/" target="_blank">才多多</a>
-  <a href="zhaojing/" target="_blank">兆鯨顧問</a>
-  <a href="finance/" target="_blank">理財分析師</a>
-  <a href="personal/" target="_blank">個人財務</a>
+  <a href="zhaojing/" target="_blank">兆鯨</a>
   <a href="openclaw/" target="_blank">OpenClaw</a>
-  <a href="library/" target="_blank">資訊資料庫（Library）</a>
-  <span class="group">核對資料</span>
-  <a href="verify/" target="_blank">統一核對頁</a>
-  <a href="data/zhaojing/tasks.json" target="_blank">原始 JSON: 兆鯨</a>
-  <span class="group">兆鯨物業</span>
-  <a href="zhaojing/tenants.html">租客名單</a>
-  <a href="zhaojing/property_ops.html">物業事件</a>
-  <a href="data/zhaojing/tenants.json" target="_blank">原始 JSON: 租客</a>
-  <a href="data/zhaojing/property_ops.json" target="_blank">原始 JSON: 物業事件</a>
-  <a href="data/finance/tasks.json" target="_blank">原始 JSON: 理財</a>
-  <a href="data/personal/tasks.json" target="_blank">原始 JSON: 個人</a>
-  <a href="data/openclaw/tasks.json" target="_blank">原始 JSON: OpenClaw</a>
+  <a href="library/" target="_blank">Library</a>
+  <a href="verify/" target="_blank">核對</a>
+  <a href="personal/" target="_blank">個人財務</a>
 </div>
 
-<footer id="footer-meta">Open Claw &nbsp;·&nbsp; 每日自動更新 &nbsp;·&nbsp; 資料來源 tasks.json</footer>
+<footer id="footer-meta">Open Claw</footer>
 
 <script>
 // ── SCROLL: shrink header ─────────────────────────────────────────
@@ -950,6 +899,62 @@ const LUCKY=[
 ];
 
 // ── DAILY BRIEF ───────────────────────────────────────────────────
+function parseDateOnly(s){
+  const m=String(s||"").match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(!m) return null;
+  const d=new Date(Number(m[1]), Number(m[2])-1, Number(m[3]));
+  d.setHours(0,0,0,0);
+  return d;
+}
+function startOfWeek(d){
+  const x=new Date(d);x.setHours(0,0,0,0);
+  const day=x.getDay();
+  const diff=(day===0?6:day-1);
+  x.setDate(x.getDate()-diff);
+  return x;
+}
+function endOfWeek(d){
+  const s=startOfWeek(d);
+  const e=new Date(s);
+  e.setDate(e.getDate()+6);
+  e.setHours(23,59,59,999);
+  return e;
+}
+function renderOverdueWeek(){
+  const og=document.getElementById('overdue-grid');
+  const wg=document.getElementById('week-grid');
+  if(!og || !wg) return;
+  const now=new Date(); now.setHours(0,0,0,0);
+  const sow=startOfWeek(now);
+  const eow=endOfWeek(now);
+
+  const items=[];
+  AREAS.forEach(area=>{
+    (DATA[area.key]?.tasks||[]).forEach(t=>{
+      if(t.status==='已完成') return;
+      const due=parseDateOnly(t.due);
+      if(!due) return;
+      items.push({t,area,due});
+    });
+  });
+  const overdue=items.filter(x=>x.due<now).sort((a,b)=>a.due-b.due).slice(0,5);
+  const week=items.filter(x=>x.due>=sow && x.due<=eow).sort((a,b)=>a.due-b.due).slice(0,5);
+
+  const row=(x)=>`<div class="warn-card">
+    <div class="wc-top">
+      <div class="wc-title">${escHtml(x.t.title)}</div>
+      <div class="wc-tags"><span class="tag tag-area">${x.area.name}</span></div>
+    </div>
+    <div class="wc-meta">
+      <span><span class="wc-meta-lbl">截止 </span>${escHtml(x.t.due||'-')}</span>
+      <span><span class="wc-meta-lbl">狀態 </span>${escHtml(x.t.status||'-')}</span>
+    </div>
+  </div>`;
+
+  og.innerHTML = overdue.length? overdue.map(row).join('') : '<div class="warn-empty">— 無逾期 —</div>';
+  wg.innerHTML = week.length? week.map(row).join('') : '<div class="warn-empty">— 本週無到期事項 —</div>';
+}
+
 function renderBrief(){
   const wrap=document.getElementById("brief-wrap");
   const now=new Date();
@@ -1120,12 +1125,8 @@ async function init(){
     loadTodayMemo(),
   ]);
   AREAS.forEach((a,i)=>{DATA[a.key]=results[i]||normalizeDataset(null);});
-  renderKPIs();
-  renderStrip();
-  renderTraceability();
-  renderWarnings();
   renderBrief();
-  renderAccordion();
+  renderOverdueWeek();
 }
 
 // ── LUNAR ─────────────────────────────────────────────────────────
