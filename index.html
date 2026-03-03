@@ -252,7 +252,7 @@
           type: r.type || r.category || '提醒'
         }));
 
-      const schedules = (todayOnly.length ? todayOnly : (reminderPool.length ? reminderPool : pool));
+      const schedules = todayOnly;
 
       // 固定「全立祥送工」第一位
       schedules.sort((a,b)=>{
