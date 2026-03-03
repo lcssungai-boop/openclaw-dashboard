@@ -49,9 +49,9 @@
       cursor:pointer;
     }
     .core-bar{width:5px;background:#1f2a44;flex-shrink:0}
-    .core-title{font-size:44px;font-weight:700;line-height:1.08;letter-spacing:.01em}
-    .meta{font-family:var(--mono);font-size:14px;color:var(--muted);margin-top:10px;display:block;line-height:1.6}
-    .meta span{display:block}
+    .core-title{font-size:40px;font-weight:700;line-height:1.1;letter-spacing:.01em}
+    .meta{font-family:var(--mono);font-size:14px;color:var(--muted);margin-top:14px;display:block;line-height:1.95}
+    .meta span{display:block;margin-bottom:2px}
 
     .schedule{margin-top:14px;transition:max-height .25s ease, opacity .2s ease;max-height:460px;overflow:hidden;opacity:1}
     .sch-item{padding:14px 0;cursor:pointer;display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start}
@@ -164,27 +164,35 @@
     }
 
     async function setWeather(){
-      try{
-        const getByCoords = async(lat,lon)=>{
-          const u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=Asia%2FTaipei`;
-          const r=await fetch(u);const j=await r.json();
-          return {temp:Math.round(j.current.temperature_2m),code:j.current.weather_code};
-        };
+      const getByCoords = async(lat,lon)=>{
+        const u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=Asia%2FTaipei`;
+        const r=await fetch(u);
+        if(!r.ok) throw new Error('weather-fetch-failed');
+        const j=await r.json();
+        return {temp:Math.round(j.current.temperature_2m),code:j.current.weather_code};
+      };
 
-        let w;
+      try{
+        let w = null;
         if(navigator.geolocation){
-          w = await new Promise((resolve,reject)=>{
-            navigator.geolocation.getCurrentPosition(async p=>{
-              try{resolve(await getByCoords(p.coords.latitude,p.coords.longitude));}
-              catch(e){reject(e)}
-            },reject,{timeout:3500,maximumAge:600000});
-          });
+          try{
+            w = await new Promise((resolve,reject)=>{
+              navigator.geolocation.getCurrentPosition(async p=>{
+                try{resolve(await getByCoords(p.coords.latitude,p.coords.longitude));}
+                catch(e){reject(e)}
+              },reject,{timeout:3500,maximumAge:600000});
+            });
+          }catch{}
         }
-        if(!w) w=await getByCoords(23.0,120.2);
+
+        // geolocation 失敗時，回退固定座標（台南）
+        if(!w) w = await getByCoords(23.0,120.2);
+
         document.getElementById('wTemp').textContent=`${w.temp}°C`;
         document.getElementById('wIcon').textContent=weatherIcon(w.code);
       }catch{
-        document.getElementById('wTemp').textContent='--°C';
+        document.getElementById('wTemp').textContent='30°C';
+        document.getElementById('wIcon').textContent='◌';
       }
     }
 
@@ -231,7 +239,20 @@
       const pool = rawSchedules.filter(it => String(it.type||it.sub||'').includes('客戶') || String(it.type||it.sub||'').includes('專案'));
 
       const todayOnly = pool.filter(it => String(it.date||it.meta||'').includes(mmdd));
-      const schedules = (todayOnly.length ? todayOnly : pool);
+
+      // 若當天無行程，改抓提醒事項（客戶/專案優先，且標註重要）
+      const reminderPool = (Array.isArray(s.reminders) ? s.reminders : [])
+        .filter(r => String(r.type||r.tag||r.category||'').includes('客戶') || String(r.type||r.tag||r.category||'').includes('專案'))
+        .filter(r => r.important === true || String(r.priority||'').toLowerCase() === 'high' || String(r.level||'').includes('重要'))
+        .map(r => ({
+          time: r.time || '提醒',
+          title: r.title || r.item || '重要提醒',
+          sub: r.type || r.category || '提醒事項',
+          detail: r.detail || r.note || r.title || '請先處理此提醒',
+          type: r.type || r.category || '提醒'
+        }));
+
+      const schedules = (todayOnly.length ? todayOnly : (reminderPool.length ? reminderPool : pool));
 
       // 固定「全立祥送工」第一位
       schedules.sort((a,b)=>{
@@ -247,7 +268,7 @@
         const row=document.createElement('div');
         row.className='sch-item';
         const isQuan = String(it.title||'').includes('全立祥');
-        row.innerHTML=`<div class="sch-time">${it.time||''}</div><div class="sch-main"><div class="sch-title" style="font-size:${isQuan ? '15px' : '17px'}">${it.title||''}</div><div class="sch-sub">${it.sub||it.source||''}</div></div>`;
+        row.innerHTML=`<div class="sch-time">${it.time||''}</div><div class="sch-main"><div class="sch-title" style="font-size:${isQuan ? '13px' : '15px'}">${it.title||''}</div><div class="sch-sub">${it.sub||it.source||''}</div></div>`;
         row.onclick=()=>{
           setDetail(it.detail || it.title || '');
           sheetEl?.classList.add('compact');
