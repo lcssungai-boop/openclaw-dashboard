@@ -270,6 +270,7 @@
         const isQuan = String(it.title||'').includes('全立祥');
         row.innerHTML=`<div class="sch-time">${it.time||''}</div><div class="sch-main"><div class="sch-title" style="font-size:${isQuan ? '13px' : '15px'}">${it.title||''}</div><div class="sch-sub">${it.sub||it.source||''}</div></div>`;
         row.onclick=()=>{
+          updateCoreCard(it);
           setDetail(it.detail || it.title || '');
           sheetEl?.classList.add('compact');
         };
@@ -291,6 +292,18 @@
     }
 
     function setDetail(text){ document.getElementById('detailText').textContent = text || ''; }
+
+    function updateCoreCard(item){
+      const truncate = (txt, n) => {
+        const arr = [...String(txt || '')];
+        return arr.length > n ? arr.slice(0, n).join('') : arr.join('');
+      };
+      document.getElementById('coreTitle').textContent = truncate(item.title || '今日重點', 7);
+      document.getElementById('coreDate').textContent = `日期：${item.time || item.date || '—'}`;
+      const hintSrc = item.sub || item.type || item.source || '提醒事項';
+      document.getElementById('coreHint').textContent = `提醒：${truncate(hintSrc, 15)}`;
+    }
+
     document.getElementById('detailText')?.addEventListener('click',()=>{
       document.querySelector('#page-today .sheet')?.classList.remove('compact');
     });
