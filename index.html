@@ -1,1191 +1,366 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Open Claw · 全儀表板</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#272729;
-  --bg2:#323234;
-  --bg3:#3D3D3F;
-  --bg4:#484849;
-  --panel:#323234;
-  --border:#585859;
-  --border2:#7A7A7C;
-  --text:#F2F2F7;
-  --dim:#C7C7CC;
-  --muted:#AEAEB2;
-  --bright:#FFFFFF;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenClaw · 個人指揮台</title>
 
-  --urgent-bg:#2A1E0E;
-  --urgent-bd:#9A6830;
-  --urgent-text:#F0A840;
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
 
-  --remit-bg:#201C14;
-  --remit-bd:#7A6848;
-  --remit-text:#D0A878;
+  <style>
+    /* ═══ TOKENS (Japanese minimal) ═══════════════════════════════ */
+    :root{
+      --bg:#F2F1EE;
+      --paper:#FDFCFA;
+      --l1:#E4E2DC;
+      --l2:#C8C5BC;
+      --l3:#9B9890;
+      --ink:#3a3a36;
+      --ink2:#4A4840;
+      --ink3:#88857D;
 
-  --blocked-bg:#0E1C2A;
-  --blocked-bd:#406888;
-  --blocked-text:#74BADF;
+      --mono:'DM Mono', monospace;
+      --body:'Noto Sans TC', sans-serif;
+      --rad:8px;
 
-  --green:#9FB0C3;
-  --green-dim:#1A2A1E;
+      /* only when truly urgent */
+      --urgent:#3a3a36;
+    }
 
-  --radius:12px;
-  --radius-sm:8px;
-  --radius-xs:6px;
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--bg);
+      color:var(--ink);
+      font-family:var(--body);
+      font-size:14px;
+      line-height:1.65;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+      padding-bottom:72px;
+    }
+    button{font-family:inherit;cursor:pointer;border:none;background:none}
 
-  --hdr-h:58px;
-  --info-h:28px;
-  --strip-h:36px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:"Noto Sans TC",sans-serif;
-  font-weight:400;
-  min-height:100vh;
-  -webkit-font-smoothing:antialiased;
-  line-height:1.5;
-}
-header,#info-bar{position:sticky}
+    /* pages */
+    .page{display:none;animation:fu .18s ease}
+    .page.active{display:block}
+    @keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-::-webkit-scrollbar{width:3px;height:3px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+    /* hero (no grain) */
+    .hero{
+      background:var(--ink);
+      color:#fff;
+      padding:26px 20px 22px;
+    }
+    .hero-eyebrow{
+      font-size:10px;
+      font-family:var(--mono);
+      opacity:.45;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+    .hero-date{
+      font-size:15px;
+      font-family:var(--mono);
+      opacity:.65;
+      letter-spacing:.08em;
+      line-height:1.3;
+    }
 
-/* ── HEADER ── */
-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;height:var(--hdr-h);
-  background:rgba(39,39,41,.95);
-  border-bottom:1px solid var(--border);
-  top:0;
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  box-shadow:none;
-  transition:height .3s ease,box-shadow .3s ease;
-}
-header.scrolled{
-  height:48px;
-  box-shadow:0 1px 0 var(--border);
-}
-.hdr-l{display:flex;align-items:center;gap:12px}
-.logo{
-  width:34px;height:34px;border-radius:50%;
-  overflow:hidden;border:1.5px solid var(--border2);
-  flex-shrink:0;background:var(--bg3);
-  display:flex;align-items:center;justify-content:center;font-size:14px;
-}
-.logo img{width:100%;height:100%;object-fit:cover;object-position:top center}
-.hdr-name{font-size:15px;font-weight:700;color:var(--bright);letter-spacing:.3px}
-.hdr-sub{font-size:10px;color:var(--muted);font-weight:300;margin-top:1px}
-.hdr-clock{
-  font-family:"JetBrains Mono",monospace;
-  font-size:11px;color:var(--dim);text-align:right;line-height:1.7;
-}
+    /* section */
+    .sec{padding:0 20px;margin:22px 0}
+    .sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .sec-l{
+      font-size:10px;
+      font-family:var(--mono);
+      color:var(--l3);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    .sec-r{font-size:10px;font-family:var(--mono);color:var(--l3);cursor:pointer}
 
-/* ── INFO BAR ── */
-#info-bar{
-  background:var(--bg2);border-bottom:1px solid var(--border);
-  padding:0 24px;height:var(--info-h);
-  display:flex;align-items:center;justify-content:space-between;
-  top:var(--hdr-h);z-index:195;
-  font-size:11px;color:var(--dim);
-  white-space:nowrap;overflow:hidden;
-  transition:top .3s ease;
-}
-.ib-weather{display:flex;align-items:center;gap:5px}
-.ib-weather b{color:var(--bright);font-weight:500}
-.ib-lunar{font-size:10px;color:var(--muted);letter-spacing:.3px}
+    /* card */
+    .card{
+      background:var(--paper);
+      border:1px solid var(--l1);
+      border-radius:var(--rad);
+      padding:13px 15px;
+      display:flex;
+      gap:11px;
+      align-items:flex-start;
+      transition:border-color .12s;
+    }
+    .card:hover{border-color:var(--l2)}
 
-/* ── MAIN ── */
-main{max-width:900px;margin:0 auto;padding:24px 24px;display:flex;flex-direction:column;gap:24px}
+    .c-bar{width:2px;align-self:stretch;min-height:32px;border-radius:2px;flex-shrink:0;background:var(--l2)}
+    .c-bar.urgent{background:var(--urgent)}
 
-/* ── SECTION LABEL ── */
-.sec-lbl{
-  font-size:12px;letter-spacing:2px;font-weight:700;color:var(--muted);
-  text-transform:uppercase;margin-bottom:14px;
-  display:flex;align-items:center;gap:12px;
-  font-family:"JetBrains Mono",monospace;
-}
-.sec-lbl::before{content:"";width:3px;height:12px;background:var(--border2);border-radius:2px;flex-shrink:0}
-.sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
+    .c-body{flex:1;min-width:0}
+    .c-title{font-size:15px;font-weight:600;line-height:1.35}
+    .c-meta{font-size:10px;font-family:var(--mono);color:var(--l3);margin-top:6px}
+    .c-desc{font-size:12px;color:var(--ink2);margin-top:8px;line-height:1.55}
 
-/* ── KPI STRIP ── */
-.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.kpi-card{
-  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
-  padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.04);
-  display:flex;flex-direction:column;gap:4px;
-}
-.kpi-card.kpi-hot{border-color:var(--urgent-text);background:var(--panel)}
-.kpi-card.kpi-blocked{border-color:var(--blocked-text);background:var(--panel)}
-.kpi-icon{
-  width:26px;height:26px;border-radius:6px;
-  background:var(--bg2);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--dim);margin-bottom:6px;align-self:flex-start;
-}
-.kpi-card.kpi-hot .kpi-icon{background:var(--bg2);border-color:var(--urgent-bd);color:var(--urgent-text)}
-.kpi-card.kpi-blocked .kpi-icon{background:var(--bg2);border-color:var(--blocked-bd);color:var(--blocked-text)}
-.kpi-lbl{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-family:"JetBrains Mono",monospace}
-.kpi-val{font-size:34px;font-weight:700;color:var(--bright);font-family:"JetBrains Mono",monospace;line-height:1.1}
-.kpi-card.kpi-hot .kpi-val{color:var(--urgent-text)}
-.kpi-card.kpi-blocked .kpi-val{color:var(--blocked-text)}
-.kpi-sub{font-size:12px;color:var(--dim);margin-top:1px}
-.kpi-hint{display:none}
+    /* quote block (minimal) */
+    .quote{
+      background:var(--paper);
+      border:1px solid var(--l1);
+      border-radius:var(--rad);
+      padding:14px 16px;
+      border-left:2px solid var(--ink);
+    }
+    .quote-text{font-size:15px;font-weight:500;line-height:1.55;color:var(--ink)}
+    .quote-src{font-size:10px;font-family:var(--mono);color:var(--l3);margin-top:8px}
 
-/* ── TRACEABILITY ── */
-.trace-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.trace-card{
-  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
-  padding:12px 14px;display:flex;flex-direction:column;gap:7px;
-}
-.trace-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.trace-name{font-size:13px;color:var(--bright);font-weight:600}
-.trace-upd{font-size:10px;color:var(--muted);font-family:"JetBrains Mono",monospace}
-.trace-path{font-size:10px;color:var(--dim);font-family:"JetBrains Mono",monospace;word-break:break-all}
-.trace-metrics{display:flex;flex-wrap:wrap;gap:6px}
-.trace-badge{
-  font-size:10px;border:1px solid var(--border);border-radius:20px;
-  padding:2px 8px;color:var(--dim);background:var(--bg3);
-}
-.trace-badge.warn{border-color:var(--urgent-bd);color:var(--urgent-text);background:transparent}
-.trace-badge.ok{border-color:var(--border2);color:var(--dim);background:transparent}
-/* trace-card links: make the whole card clickable without blue underline */
-.trace-card{color:inherit;text-decoration:none;cursor:pointer}
-.trace-card:visited{color:inherit}
-.trace-card:hover{border-color:#3a4554}
-/* Force visited state to not tint (Safari can show purple on anchor text) */
-.trace-card, .trace-card:visited{color:var(--text)}
-.trace-card:visited .trace-name{color:var(--bright)}
-.trace-card:visited .trace-upd{color:var(--muted)}
-.trace-card:visited .trace-path{color:var(--dim)}
-.trace-card{-webkit-tap-highlight-color: transparent}
+    /* small pill (only when urgent) */
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:10px;
+      font-family:var(--mono);
+      padding:3px 8px;
+      border-radius:3px;
+      border:1px solid var(--l1);
+      color:var(--ink3);
+      background:var(--bg);
+      white-space:nowrap;
+    }
+    .pill.urgent{border-color:var(--ink);color:var(--ink);background:var(--paper)}
+    .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.9}
 
-.trace-card:focus{outline:none}
-.trace-card:focus-visible{outline:none}
-.trace-card a{color:inherit;text-decoration:none}
-.trace-card a:hover{text-decoration:none}
+    /* bottom nav */
+    .bnav{
+      position:fixed;
+      bottom:0;left:0;right:0;
+      height:60px;
+      background:var(--paper);
+      border-top:1px solid var(--l1);
+      display:flex;
+      z-index:300;
+    }
+    .bn{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:3px;
+      cursor:pointer;
+      color:var(--l2);
+      font-size:9px;
+      font-family:var(--mono);
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      transition:color .12s;
+      user-select:none;
+      position:relative;
+    }
+    .bn.on{color:var(--ink)}
+    .bn.on::after{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--ink);border-radius:0 0 2px 2px}
+    .bn-ico{width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+    .bn-ico svg{width:18px;height:18px;fill:currentColor}
 
-
-/* ── BRIEF ── */
-.brief-wrap{
-  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
-  box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden;
-}
-.brief-details{display:block}
-.brief-details > summary{list-style:none}
-.brief-details > summary::-webkit-details-marker{display:none}
-.brief-summary{cursor:pointer;user-select:none}
-.brief-title{padding:10px 18px 0;font-size:14px;font-weight:600;color:var(--bright)}
-.brief-toggle{padding:8px 18px 14px;font-size:10px;color:var(--muted);font-family:"JetBrains Mono",monospace}
-.brief-expand{display:none}
-.brief-details.open .brief-expand{display:block}
-.brief-md{padding:12px 18px;font-size:13px;color:var(--text);white-space:pre-wrap;line-height:1.6}
-.brief-header{
-  padding:14px 18px 12px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  flex-wrap:wrap;
-}
-.brief-date{font-size:11px;font-weight:700;color:var(--bright);letter-spacing:.5px;font-family:"JetBrains Mono",monospace}
-.brief-luck{display:flex;align-items:center;gap:10px}
-.luck-lbl{font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);font-family:"JetBrains Mono",monospace;flex-shrink:0}
-.luck-item{display:inline-flex;align-items:center;gap:4px;font-size:9px;color:var(--dim)}
-.luck-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;box-shadow:0 0 4px currentColor}
-.brief-block{display:flex;flex-direction:column}
-.brief-block-hdr{
-  padding:10px 18px 8px;
-  font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--muted);font-family:"JetBrains Mono",monospace;
-  border-bottom:1px solid var(--border);background:var(--bg2);
-}
-.brief-line{
-  display:flex;align-items:center;gap:10px;
-  padding:11px 18px;border-bottom:1px solid var(--border);
-  font-size:13px;color:var(--dim);
-  transition:background .1s;
-}
-.brief-line:last-child{border-bottom:none}
-.brief-line:hover{background:var(--bg3)}
-.brief-time{font-size:11px;font-weight:700;color:var(--muted);min-width:28px;flex-shrink:0;font-family:"JetBrains Mono",monospace}
-.brief-text{flex:1;color:var(--text);line-height:1.5}
-.b-blk{font-size:9px;color:var(--blocked-text);background:transparent;border:1px solid var(--blocked-bd);border-radius:4px;padding:1px 6px;margin-left:4px}
-.b-urg{font-size:9px;color:var(--urgent-text);background:transparent;border:1px solid var(--urgent-bd);border-radius:4px;padding:1px 6px;margin-left:4px}
-.b-due{font-size:9px;color:var(--muted);margin-left:4px;font-family:"JetBrains Mono",monospace}
-.b-area{font-size:9px;color:var(--muted);margin-left:2px}
-.sched-status{
-  font-size:9px;padding:2px 7px;border-radius:20px;font-weight:600;flex-shrink:0;
-  border:1px solid;letter-spacing:.3px;
-}
-.sched-status.ok{background:transparent;color:var(--dim);border-color:var(--border2)}
-.sched-status.warn{background:transparent;color:var(--urgent-text);border-color:var(--urgent-bd)}
-
-/* ── WARN CARDS ── */
-.warn-grid{display:flex;flex-direction:column;gap:8px}
-.warn-card{
-  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
-  padding:14px 16px 14px 20px;display:flex;flex-direction:column;gap:8px;
-  position:relative;transition:background .15s;
-}
-.warn-card::before{
-  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:var(--border2);border-radius:var(--radius) 0 0 var(--radius);
-}
-.warn-card:hover{background:var(--bg3)}
-.warn-card.urgent{background:var(--panel);border-color:var(--border)}
-.warn-card.blocked{background:var(--panel);border-color:var(--border)}
-.warn-card.remittance{background:var(--panel);border-color:var(--border)}
-.warn-card.urgent::before{background:var(--urgent-text)}
-.warn-card.blocked::before{background:var(--blocked-text)}
-.warn-card.remittance::before{background:var(--remit-text)}
-.wc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.wc-title{font-size:15px;font-weight:500;color:var(--bright);flex:1;line-height:1.45}
-.wc-tags{display:flex;gap:5px;flex-shrink:0;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-.tag{font-size:10px;padding:3px 9px;border-radius:20px;white-space:nowrap;font-weight:500}
-.tag-area{background:var(--bg4);color:var(--dim);border:1px solid var(--border)}
-.tag-pri{border:1px solid var(--border);color:var(--dim);background:var(--bg3)}
-.tag-pri.urgent{border-color:var(--urgent-bd);color:var(--urgent-text);background:transparent}
-.tag-pri.important{border-color:var(--border2);color:var(--text);background:var(--bg4)}
-.tag-status{border:1px solid var(--border);color:var(--dim);background:var(--bg3)}
-.tag-status.blocked{border-color:var(--blocked-bd);color:var(--blocked-text);background:transparent}
-.wc-meta{display:flex;gap:14px;font-size:12px;color:var(--dim);flex-wrap:wrap}
-.wc-meta-lbl{font-size:9px;color:var(--muted);margin-right:3px}
-.wc-next{font-size:12px;color:var(--dim);border-top:1px solid var(--border);padding-top:8px}
-.wc-blocked{font-size:12px;color:var(--blocked-text);border-top:1px solid var(--blocked-bd);padding-top:8px}
-.warn-empty{
-  font-size:12px;color:var(--muted);padding:24px;text-align:center;
-  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
-}
-
-/* ── ACCORDION ── */
-.acc-wrap{
-  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
-  overflow:hidden;
-}
-.acc-item{border-bottom:1px solid var(--border)}
-.acc-item:last-child{border-bottom:none}
-.acc-hdr{
-  display:flex;align-items:center;padding:0;cursor:pointer;user-select:none;
-  transition:background .12s;
-}
-.acc-hdr:hover{background:var(--bg3)}
-.acc-toggle{
-  width:42px;height:52px;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;font-size:16px;color:var(--muted);
-  transition:transform .2s;font-family:"JetBrains Mono",monospace;
-}
-.acc-toggle.open{transform:rotate(90deg)}
-.acc-icon-col{
-  width:36px;height:36px;border-radius:8px;
-  background:var(--bg2);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;color:var(--dim);margin-right:12px;
-}
-.acc-info{flex:1;padding:12px 0;min-width:0}
-.acc-name{font-size:14px;font-weight:600;color:var(--bright)}
-.acc-role{font-size:10px;color:var(--muted);font-weight:300;margin-top:2px}
-.acc-counts{display:flex;gap:6px;padding:10px 0 10px 8px;flex-shrink:0;align-items:center}
-.cnt-badge{
-  display:flex;flex-direction:column;align-items:center;
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-xs);
-  padding:6px 12px;min-width:48px;
-}
-.cnt-badge.hot{border-color:var(--blocked-text);background:var(--panel)}
-.cnt-val{font-size:18px;font-weight:700;color:var(--bright);line-height:1;font-family:"JetBrains Mono",monospace}
-.cnt-badge.hot .cnt-val{color:var(--blocked-text)}
-.cnt-lbl{font-size:8px;color:var(--muted);font-weight:600;margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
-.acc-link{
-  display:flex;align-items:center;justify-content:center;
-  width:42px;height:52px;flex-shrink:0;
-  font-size:16px;color:var(--muted);text-decoration:none;
-  transition:color .12s,background .12s;
-  border-left:1px solid var(--border);
-  font-family:"JetBrains Mono",monospace;
-}
-.acc-link:hover{color:var(--bright);background:var(--bg4)}
-.acc-body{border-top:1px solid var(--border);display:none}
-.acc-body.open{display:block}
-.acc-tbl{width:100%;border-collapse:collapse}
-.acc-tbl td{
-  padding:9px 14px;border-bottom:1px solid var(--border);
-  font-size:11px;vertical-align:middle;font-weight:300;
-}
-.acc-tbl tr:last-child td{border-bottom:none}
-.acc-tbl tr:hover td{background:var(--bg3)}
-.ov-ttl{color:var(--text);font-weight:400;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.t-pri{font-size:9px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);color:var(--dim);white-space:nowrap;background:var(--bg3)}
-.t-pri.urgent{border-color:var(--urgent-bd);color:var(--urgent-text);background:transparent}
-.t-pri.important{border-color:var(--border2);color:var(--text);background:var(--bg4)}
-.t-type{font-size:9px;padding:2px 8px;background:var(--bg4);color:var(--dim);border-radius:20px;white-space:nowrap;border:1px solid var(--border)}
-.t-type.alert{background:transparent;color:var(--dim);border-color:var(--border2)}
-.t-type.remittance{background:transparent;color:var(--remit-text);border-color:var(--remit-bd)}
-.t-status{font-size:9px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);color:var(--dim);white-space:nowrap;background:var(--bg3)}
-.t-status.blocked{border-color:var(--blocked-bd);color:var(--blocked-text);background:transparent}
-.t-status.done{color:var(--muted);opacity:.6}
-.t-due{font-size:10px;color:var(--muted);white-space:nowrap;font-family:"JetBrains Mono",monospace}
-.acc-empty{padding:14px 18px;font-size:11px;color:var(--muted)}
-
-/* ── 2K DESKTOP (≥1400px) ── */
-@media(min-width:1400px){
-  :root{--hdr-h:64px;--info-h:32px;--strip-h:40px}
-
-  header{padding:0 56px}
-  #info-bar{padding:0 56px}
-  .hdr-name{font-size:17px}
-  .hdr-clock{font-size:12px}
-  #info-bar{font-size:12px}
-  .ib-lunar{font-size:11px}
-  .a-lbl{font-size:10px}
-  .a-chip{font-size:11px}
-
-  main{
-    max-width:1760px;
-    padding:32px 56px;
-    display:grid;
-    grid-template-columns:minmax(0,1fr) minmax(0,3.5fr);
-    gap:28px 36px;
-    align-items:start;
-  }
-  main>section:nth-child(1){grid-column:1;grid-row:1/span 4}
-  main>section:nth-child(2){grid-column:2;grid-row:1}
-  main>section:nth-child(3){grid-column:2;grid-row:2}
-  main>section:nth-child(4){grid-column:2;grid-row:3}
-  main>section:nth-child(5){grid-column:2;grid-row:4}
-
-  .kpi-grid{grid-template-columns:1fr;gap:8px}
-  .kpi-card{padding:12px 14px}
-  .kpi-val{font-size:28px}
-  .kpi-sub{font-size:11px}
-  .kpi-icon{width:22px;height:22px;margin-bottom:5px}
-  .kpi-lbl{font-size:10px}
-  .kpi-hint{
-    display:block;margin-top:8px;padding-top:8px;
-    border-top:1px solid var(--border);
-    font-size:10px;color:var(--muted);line-height:1.5;
-    overflow:hidden;
-  }
-  .kpi-hint span{
-    display:block;white-space:nowrap;overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .kpi-card.kpi-hot .kpi-hint{border-top-color:var(--urgent-bd);color:var(--urgent-text);opacity:.75}
-  .kpi-card.kpi-blocked .kpi-hint{border-top-color:var(--blocked-bd);color:var(--blocked-text);opacity:.75}
-  .trace-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-
-  .sec-lbl{margin-bottom:16px}
-
-  .brief-line{font-size:14px;padding:12px 20px}
-  .brief-time{font-size:12px}
-  .brief-date{font-size:13px}
-  .brief-block-hdr{padding:10px 20px 8px}
-
-  .wc-title{font-size:16px}
-  .wc-meta{font-size:13px}
-  .wc-next,.wc-blocked{font-size:13px}
-
-  .acc-name{font-size:15px}
-  .acc-role{font-size:11px}
-  .cnt-val{font-size:20px}
-  .acc-tbl td{font-size:12px;padding:10px 16px}
-  .ov-ttl{max-width:500px}
-  .t-pri,.t-type,.t-status{font-size:10px}
-  .t-due{font-size:11px}
-}
-
-
-/* ── BOTTOM SUBTABS ── */
-.subtabs{
-  margin:10px auto 0;max-width:1300px;padding:0 12px 12px;
-  display:flex;flex-wrap:wrap;gap:8px;
-}
-.subtabs a{
-  font-size:11px;text-decoration:none;color:var(--dim);
-  border:1px solid var(--border);background:var(--panel);
-  border-radius:999px;padding:6px 10px;display:inline-flex;align-items:center;gap:6px;
-}
-.subtabs a:hover{color:var(--bright);border-color:#3a4554}
-
-/* ── FOOTER ── */
-footer{
-  text-align:center;padding:20px 24px;
-  font-size:10px;color:var(--muted);
-  border-top:1px solid var(--border);
-  background:var(--bg2);
-  font-family:"JetBrains Mono",monospace;
-  letter-spacing:.5px;position:relative;z-index:1;
-}
-
-/* ── ANIMATIONS ── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-main>section{animation:fadeUp .4s ease both}
-main>section:nth-child(1){animation-delay:.05s}
-main>section:nth-child(2){animation-delay:.12s}
-main>section:nth-child(3){animation-delay:.19s}
-main>section:nth-child(4){animation-delay:.26s}
-main>section:nth-child(5){animation-delay:.33s}
-
-/* ── TABLET (≤1024px) ── */
-@media(max-width:1024px){
-  .hdr-name{font-size:18px}
-  .hdr-sub{font-size:13px}
-  .hdr-clock{font-size:13px}
-  #info-bar{font-size:14px}
-  .ib-lunar{font-size:13px}
-  .a-lbl{font-size:12px}
-  .a-chip{font-size:13px;padding:4px 12px 4px 9px}
-  .a-none{font-size:13px}
-  .sec-lbl{font-size:12px}
-  .kpi-val{font-size:28px}
-  .kpi-sub{font-size:13px}
-  .kpi-lbl{font-size:10px}
-  .wc-title{font-size:18px;line-height:1.5}
-  .wc-meta{font-size:14px}
-  .wc-meta-lbl{font-size:12px}
-  .wc-next,.wc-blocked{font-size:14px}
-  .tag{font-size:13px;padding:3px 11px}
-  .brief-date{font-size:15px}
-  .brief-line{font-size:16px;padding:13px 18px}
-  .brief-time{font-size:14px;min-width:36px}
-  .acc-name{font-size:17px}
-  .acc-role{font-size:13px}
-  .cnt-val{font-size:22px}
-  .cnt-lbl{font-size:10px}
-  .acc-tbl td{font-size:14px;padding:10px 14px}
-  .t-pri,.t-type,.t-status{font-size:12px;padding:3px 10px}
-  .t-due{font-size:13px}
-  .ov-ttl{max-width:none}
-}
-
-/* ── PHONE (≤640px) ── */
-@media(max-width:640px){
-  :root{--hdr-h:52px;--info-h:26px;--strip-h:36px}
-  header{padding:0 16px}
-  #info-bar{padding:0 16px}
-  main{padding:16px 16px;gap:18px}
-  .hdr-name{font-size:16px}
-  .hdr-sub{font-size:12px}
-  .hdr-clock{font-size:12px}
-  .ib-lunar{display:none}
-  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:10px}
-  .kpi-card{padding:14px 16px}
-  .kpi-val{font-size:32px}
-  .kpi-lbl{font-size:11px}
-  .kpi-sub{font-size:13px}
-  .kpi-icon{width:24px;height:24px;margin-bottom:6px}
-  .trace-grid{grid-template-columns:1fr}
-  .wc-title{font-size:17px}
-  .wc-meta{font-size:14px;gap:10px}
-  .wc-meta-lbl{font-size:12px}
-  .wc-next,.wc-blocked{font-size:14px}
-  .tag{font-size:13px;padding:3px 10px}
-  .brief-header{flex-direction:column;align-items:flex-start;gap:8px;padding:14px 16px 12px}
-  .brief-block-hdr{padding:10px 16px 8px;font-size:11px}
-  .brief-line{font-size:16px;padding:12px 16px}
-  .brief-time{font-size:14px;min-width:28px}
-  .brief-date{font-size:14px}
-  .b-blk,.b-urg,.b-due,.b-area{font-size:12px}
-  .acc-counts{display:none}
-  .acc-icon-col{display:none}
-  .acc-toggle{width:40px;height:52px}
-  .acc-info{padding:12px 0}
-  .acc-name{font-size:17px}
-  .acc-role{font-size:13px}
-  .acc-link{width:40px;height:52px}
-  .acc-tbl td{font-size:14px;padding:10px 12px}
-  .t-pri,.t-type,.t-status{font-size:13px;padding:3px 9px}
-  .t-due{font-size:13px}
-  .ov-ttl{max-width:none;white-space:normal}
-  .a-chip{font-size:13px;padding:4px 10px 4px 7px}
-  .a-lbl{font-size:12px}
-  .a-none{font-size:13px}
-  .warn-card{padding:14px 16px}
-  .sec-lbl{font-size:11px;letter-spacing:1.5px}
-  .luck-lbl{font-size:11px}
-  .luck-item{font-size:12px}
-  .sched-status{font-size:11px;padding:3px 9px}
-}
-</style>
+    /* responsive */
+    @media (max-width:380px){
+      .hero{padding:24px 18px 20px}
+      .sec{padding:0 18px}
+    }
+  </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header id="main-header">
-  <div class="hdr-l">
-    <div class="logo">
-      <img src="assets/avatar.png" alt="OC" onerror="this.style.display='none';this.parentElement.textContent='◈'">
+  <!-- PAGE: HOME (minimal) -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <div class="hero-eyebrow">OPENCLAW · 個人指揮台</div>
+      <div class="hero-date" id="heroDate"></div>
     </div>
-    <div>
-      <div class="hdr-name">Open Claw</div>
-      <div class="hdr-sub">全儀表板</div>
+
+    <div class="sec">
+      <div class="sec-h"><div class="sec-l">每日一句</div><div class="sec-r" id="quoteHint"></div></div>
+      <div class="quote">
+        <div class="quote-text" id="dailyQuote">載入中…</div>
+        <div class="quote-src" id="dailyQuoteSource"></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><div class="sec-l">One Thing</div></div>
+      <div class="card">
+        <div class="c-bar"></div>
+        <div class="c-body">
+          <div class="c-title" id="oneThingTitle">（待填）今天最重要的事</div>
+          <div class="c-meta" id="oneThingMeta">截止 — · 兆鯨</div>
+          <div class="c-desc" id="oneThingDesc">把今天的決定寫成一句話，明天就能直接推進。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h">
+        <div class="sec-l">待決策</div>
+        <div class="sec-r" id="decisionMore"></div>
+      </div>
+      <div id="decisionList" style="display:flex;flex-direction:column;gap:8px"></div>
     </div>
   </div>
-  <div id="clk" class="hdr-clock"></div>
-</header>
 
-<!-- INFO BAR -->
-<div id="info-bar">
-  <div class="ib-weather" id="ib-weather">⋯ 天氣載入中</div>
-  <div class="ib-lunar" id="ib-lunar">農曆載入中</div>
-</div>
-
-
-<main>
-
-
-  <!-- 今日提醒 -->
-  <section>
-    <div class="sec-lbl">今日提醒</div>
-    <div id="brief-wrap" class="brief-wrap">
-      <div class="brief-header"><span class="brief-date">載入中…</span></div>
+  <!-- PAGE: LINKS (kept simple; can grow later) -->
+  <div class="page" id="page-links">
+    <div class="hero">
+      <div class="hero-eyebrow">ZHAOJING · LINKS</div>
+      <div class="hero-date">入口 / 常用連結</div>
     </div>
-  </section>
-
-  <!-- 本週 / 逾期（簡版） -->
-  <section>
-    <div class="sec-lbl">逾期</div>
-    <div class="warn-grid" id="overdue-grid">
-      <div class="warn-empty">載入中…</div>
+    <div class="sec" style="display:flex;flex-direction:column;gap:10px">
+      <a class="card" href="./ecom.html" style="text-decoration:none;color:inherit">
+        <div class="c-bar"></div>
+        <div class="c-body"><div class="c-title">電商</div><div class="c-meta">進度 / 清單</div></div>
+      </a>
+      <a class="card" href="./property_ops.html" style="text-decoration:none;color:inherit">
+        <div class="c-bar"></div>
+        <div class="c-body"><div class="c-title">物業管理</div><div class="c-meta">租務 / 代辦</div></div>
+      </a>
+      <a class="card" href="./tenants.html" style="text-decoration:none;color:inherit">
+        <div class="c-bar"></div>
+        <div class="c-body"><div class="c-title">房客 / 名單</div><div class="c-meta">資料索引</div></div>
+      </a>
     </div>
-  </section>
+  </div>
 
-  <section>
-    <div class="sec-lbl">本週</div>
-    <div class="warn-grid" id="week-grid">
-      <div class="warn-empty">載入中…</div>
+  <!-- bottom nav -->
+  <nav class="bnav">
+    <div class="bn on" onclick="nav('home',this)">
+      <div class="bn-ico"><svg viewBox="0 0 20 20"><path d="M3 9.5L10 3l7 6.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg></div>
+      首頁
     </div>
-  </section>
+    <div class="bn" onclick="nav('links',this)">
+      <div class="bn-ico"><svg viewBox="0 0 20 20"><path d="M4 4h5v5H4zM11 4h5v5h-5zM4 11h5v5H4zM11 11h5v5h-5z"/></svg></div>
+      入口
+    </div>
+  </nav>
 
-</main>
+  <script>
+    // ── date
+    const days=['日','一','二','三','四','五','六'];
+    const n=new Date();
+    document.getElementById('heroDate').textContent = `${n.getFullYear()} / ${String(n.getMonth()+1).padStart(2,'0')} / ${String(n.getDate()).padStart(2,'0')}  週${days[n.getDay()]}`;
 
-<div class="subtabs" id="subtabs">
-  <a href="caitodo/" target="_blank">才多多</a>
-  <a href="zhaojing/" target="_blank">兆鯨</a>
-  <a href="openclaw/" target="_blank">OpenClaw</a>
-  <a href="library/" target="_blank">Library</a>
-  <a href="verify/" target="_blank">核對</a>
-  <a href="personal/" target="_blank">個人財務</a>
-</div>
+    // ── nav
+    function nav(k,el){
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.querySelectorAll('.bn').forEach(b=>b.classList.remove('on'));
+      document.getElementById('page-'+k).classList.add('active');
+      el.classList.add('on');
+      window.scrollTo(0,0);
+    }
 
-<footer id="footer-meta">Open Claw</footer>
+    // ── decisions (loaded from data/openclaw_public_state.json)
+    // We will load this dynamically
+    const STATE_URL = '../data/openclaw_public_state.json';
 
-<script>
-// ── SCROLL: shrink header ─────────────────────────────────────────
-(function(){
-  const hdr=document.getElementById("main-header");
-  const info=document.getElementById("info-bar");
-  const strip=document.getElementById("alert-strip");
-  let ticking=false;
-  function update(){
-    const s=window.scrollY>30;
-    hdr.classList.toggle("scrolled",s);
-    const hh=s?48:parseInt(getComputedStyle(document.documentElement).getPropertyValue("--hdr-h"));
-    const ih=parseInt(getComputedStyle(document.documentElement).getPropertyValue("--info-h"));
-    if(info) info.style.top=hh+"px";
-    if(strip) strip.style.top=(hh+ih)+"px";
-    ticking=false;
-  }
-  window.addEventListener("scroll",()=>{if(!ticking){requestAnimationFrame(update);ticking=true;}},{passive:true});
-})();
-
-// ── ICONS ─────────────────────────────────────────────────────────
-const IC={
-  caitodo:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
-  zhaojing:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>`,
-  finance:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
-  personal:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>`,
-  openclaw:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
-};
-
-// ── AREAS ─────────────────────────────────────────────────────────
-const AREAS=[
-  {key:"caitodo",  name:"才多多",    role:"移工・僑外生・派遣", icon:IC.caitodo,  path:"caitodo/",  data:"data/caitodo/tasks.json"},
-  {key:"zhaojing", name:"兆鯨顧問",  role:"顧問・物業・電商",   icon:IC.zhaojing, path:"zhaojing/", data:"data/zhaojing/tasks.json"},
-  {key:"finance",  name:"理財分析師",role:"股票・帳務・KDJ",    icon:IC.finance,  path:"finance/",  data:"data/finance/tasks.json"},
-  {key:"personal", name:"個人財務",  role:"大總管",             icon:IC.personal, path:"personal/", data:"data/personal/tasks.json"},
-  {key:"openclaw", name:"OpenClaw",  role:"開發優化師",         icon:IC.openclaw, path:"openclaw/", data:"data/openclaw/tasks.json"},
-];
-
-const DATA={};
-const ARCH={customer:null,project:null,knowledge:null};
-let TODAY_MEMO=null;
-const PRI_LBL={urgent:"急件",important:"重要",normal:"一般"};
-const TYPE_LBL={remittance:"匯款",alert:"提醒",task:"任務"};
-const INDEX_SOURCES={
-  customer:"data/index/customer_index.md",
-  project:"data/index/project_index.md",
-  knowledge:"data/index/knowledge_index.md",
-};
-const VERIFY_LINKS={caitodo:'verify/?src=caitodo',zhaojing:'verify/?src=zhaojing',finance:'verify/?src=finance',personal:'verify/?src=personal',openclaw:'verify/?src=openclaw'};
-const INDEX_LINKS={customer:'index/customer.html',project:'index/project.html',knowledge:'index/knowledge2.html'};
-
-function safeStr(v,fallback="-"){
-  if(v===undefined||v===null) return fallback;
-  const s=String(v).trim();
-  return s?s:fallback;
-}
-function escHtml(s){
-  return String(s??"")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#39;");
-}
-function normStatus(v){
-  const s=safeStr(v,"待處理");
-  return (s==="待處理"||s==="阻塞"||s==="已完成")?s:"待處理";
-}
-function normPriority(v){
-  const s=safeStr(v,"normal");
-  return (s==="urgent"||s==="important"||s==="normal")?s:"normal";
-}
-function normType(v){
-  const s=safeStr(v,"task");
-  return (s==="task"||s==="alert"||s==="remittance")?s:"task";
-}
-function normalizeTask(raw){
-  const t=raw||{};
-  const fallbackUsed=[
-    !safeStr(t.title,""),
-    !safeStr(t.status,""),
-    !safeStr(t.owner_role,""),
-    !safeStr(t.updated_at,""),
-  ].filter(Boolean).length;
-  return {
-    title:safeStr(t.title,"(未命名任務)"),
-    status:normStatus(t.status),
-    next_step:safeStr(t.next_step),
-    owner_role:safeStr(t.owner_role),
-    blocked_reason:safeStr(t.blocked_reason),
-    priority:normPriority(t.priority),
-    type:normType(t.type),
-    due:safeStr(t.due),
-    time:safeStr(t.time),
-    freq:safeStr(t.freq),
-    updated_at:safeStr(t.updated_at),
-    source:safeStr(t.source,"unknown"),
-    _fallbackUsed:fallbackUsed,
-  };
-}
-function normalizeDataset(raw){
-  const src=raw||{};
-  const tasks=Array.isArray(src.tasks)?src.tasks.map(normalizeTask):[];
-  const fallbackCount=tasks.reduce((n,t)=>n+t._fallbackUsed,0)+(Array.isArray(src.tasks)?0:1);
-  const sourceTagged=tasks.filter(t=>t.source!=="unknown").length;
-  const sourceCoverage=tasks.length?Math.round((sourceTagged/tasks.length)*100):0;
-  return {
-    updated_at:safeStr(src.updated_at,null),
-    tasks,
-    meta:{fallbackCount,sourceTagged,sourceCoverage},
-  };
-}
-
-function isWarn(t){
-  if(!t||t.status==="已完成") return false;
-  return t.priority==="urgent"||t.type==="remittance"||t.status==="阻塞";
-}
-function isSched(t){return t.time&&t.time!=="-"&&t.freq&&t.freq!=="-";}
-function chipCls(t){return t.type==="remittance"?"r":t.status==="阻塞"?"b":"u";}
-function chipIcon(t){
-  if(t.type==="remittance") return `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>`;
-  if(t.status==="阻塞") return `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>`;
-  return `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
-}
-function fmtTs(iso){
-  if(!iso||iso==="-") return "-";
-  const d=new Date(iso);if(isNaN(d)) return iso;
-  const now=new Date();
-  if(d.toDateString()===now.toDateString())
-    return d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
-  return d.toLocaleDateString("zh-TW",{month:"2-digit",day:"2-digit"});
-}
-function counts(tasks){
-  const c={pending:0,blocked:0,done:0};
-  tasks.forEach(t=>{
-    if(t.status==="已完成") c.done++;
-    else if(t.status==="阻塞") c.blocked++;
-    else c.pending++;
-  });
-  return c;
-}
-
-async function loadIndexMeta(type,path){
-  try{
-    const r=await fetch(path+"?_="+Date.now());
-    if(!r.ok) throw 0;
-    const txt=await r.text();
-    const updated=(txt.match(/- updated_at:\s*([^\n]+)/)||[])[1]?.trim()||"-";
-    const rowRx=type==="customer"?/^\|\s*C-\d{4}\s*\|/gm
-      :type==="project"?/^\|\s*P-\d{4}\s*\|/gm
-      :/^\|\s*K-\d{8}-\d{3}\s*\|/gm;
-    const rows=(txt.match(rowRx)||[]).length;
-    return {updated_at:updated,rows,path};
-  }catch(e){
-    return {updated_at:"-",rows:0,path,error:true};
-  }
-}
-
-async function loadArchitectureMeta(){
-  const [c,p,k]=await Promise.all([
-    loadIndexMeta("customer",INDEX_SOURCES.customer),
-    loadIndexMeta("project",INDEX_SOURCES.project),
-    loadIndexMeta("knowledge",INDEX_SOURCES.knowledge),
-  ]);
-  ARCH.customer=c;ARCH.project=p;ARCH.knowledge=k;
-}
-
-async function loadTodayMemo(){
-  try{
-    const r=await fetch('data/index/today_memo.json?_='+Date.now());
-    if(!r.ok) throw 0;
-    TODAY_MEMO=await r.json();
-  }catch(e){
-    TODAY_MEMO=null;
-  }
-}
-
-// ── ALERT STRIP ───────────────────────────────────────────────────
-function renderStrip(){
-  // removed
-}
-
-// ── WARNING CARDS ─────────────────────────────────────────────────
-function renderWarnings(){
-  const grid=document.getElementById("warn-grid");
-  const items=[];
-  AREAS.forEach(area=>{(DATA[area.key]?.tasks||[]).filter(isWarn).forEach(t=>items.push({t,area}));});
-  if(!items.length){
-    grid.innerHTML='<div class="warn-empty">— 目前無急件、匯款或阻塞項目 —</div>';return;
-  }
-  grid.innerHTML=items.map(({t,area})=>{
-    const cls=t.type==="remittance"?"remittance":t.status==="阻塞"?"blocked":"urgent";
-    const remitWarn=t.type==="remittance"&&(!t.due||t.due==="-"||!t.owner_role||t.owner_role==="-")
-      ?`<div class="wc-blocked">⚠ 匯款缺少 due / owner_role</div>`:"";
-    return `
-    <div class="warn-card ${cls}">
-      <div class="wc-top">
-        <div class="wc-title">${t.title}</div>
-        <div class="wc-tags">
-          <span class="tag tag-area">${area.name}</span>
-          <span class="tag tag-pri ${t.priority||''}">${PRI_LBL[t.priority]||t.priority||"-"}</span>
-          ${t.status==="阻塞"?`<span class="tag tag-status blocked">阻塞</span>`:""}
-        </div>
-      </div>
-      <div class="wc-meta">
-        <span><span class="wc-meta-lbl">負責人 </span>${t.owner_role||"-"}</span>
-        <span><span class="wc-meta-lbl">截止 </span>${t.due&&t.due!=="-"?t.due:"-"}</span>
-        <span><span class="wc-meta-lbl">更新 </span>${fmtTs(t.updated_at)}</span>
-      </div>
-      ${t.blocked_reason&&t.blocked_reason!=="-"
-        ?`<div class="wc-blocked">阻塞 — ${t.blocked_reason}</div>`
-        :t.next_step&&t.next_step!=="-"
-          ?`<div class="wc-next">→ ${t.next_step}</div>`:""}
-      ${remitWarn}
-    </div>`;
-  }).join("");
-}
-
-// ── KPIs ──────────────────────────────────────────────────────────
-function hint(items,max=3){
-  if(!items.length) return "";
-  return items.slice(0,max).map(({t,area})=>`<span>${t.title}<span style="opacity:.5"> [${area.name}]</span></span>`).join("");
-}
-function renderKPIs(){
-  const isMonday=new Date().getDay()===1;
-  let totalPending=0,totalBlocked=0,totalUrgent=0,totalSched=0;
-  const schedList=[],pendingList=[],blockedList=[],urgentList=[];
-  AREAS.forEach(area=>{
-    (DATA[area.key]?.tasks||[]).forEach(t=>{
-      if(t.status==="已完成") return;
-      if(t.status==="阻塞"){totalBlocked++;blockedList.push({t,area});}
-      else{totalPending++;pendingList.push({t,area});}
-      if(t.priority==="urgent"){totalUrgent++;urgentList.push({t,area});}
-      if(isSched(t)){
-        const f=t.freq;
-        if(f==="daily"||(f==="weekly-mon"&&isMonday)||f==="weekly"){totalSched++;schedList.push({t,area});}
+    function applyState(state){
+      // One Thing
+      if(state?.oneThing){
+        document.getElementById('oneThingTitle').textContent = state.oneThing.title || '（待填）今天最重要的事';
+        document.getElementById('oneThingMeta').textContent = state.oneThing.meta || '截止 — · 兆鯨';
+        document.getElementById('oneThingDesc').textContent = state.oneThing.desc || '';
       }
-    });
-  });
-  schedList.sort((a,b)=>a.t.time.localeCompare(b.t.time));
-  pendingList.sort((a,b)=>{const p={urgent:0,important:1,normal:2};return (p[a.t.priority]??2)-(p[b.t.priority]??2);});
 
-  document.getElementById("kpi-sched").textContent=totalSched;
-  document.getElementById("kpi-sched-sub").textContent=totalSched?"項排程任務":"今日無排程";
-  document.getElementById("kpi-sched-hint").innerHTML=hint(schedList.map(({t,area})=>({t:{...t,title:t.time+" "+t.title},area})));
-  document.getElementById("kpi-pending").textContent=totalPending;
-  document.getElementById("kpi-pending-hint").innerHTML=hint(pendingList);
-  document.getElementById("kpi-blocked").textContent=totalBlocked;
-  document.getElementById("kpi-blocked-hint").innerHTML=hint(blockedList);
-  document.getElementById("kpi-urgent").textContent=totalUrgent;
-  document.getElementById("kpi-urgent-hint").innerHTML=hint(urgentList);
-  if(totalBlocked>0) document.getElementById("kpi-card-blocked").className="kpi-card kpi-blocked";
-  if(totalUrgent>0) document.getElementById("kpi-card-urgent").className="kpi-card kpi-hot";
-}
+      // Decisions
+      const decisions = Array.isArray(state?.decisions) ? state.decisions : [];
+      renderDecisions(decisions);
+    }
 
-function getFinanceRefreshSummary(tasks){
-  const active=(tasks||[]).filter(t=>t.status!=="已完成");
-  const daily=active.filter(t=>t.freq==="daily").length;
-  const weekly=active.filter(t=>t.freq==="weekly"||t.freq==="weekly-mon").length;
-  const monthly=active.filter(t=>t.freq==="monthly").length;
-  return `daily ${daily} / weekly ${weekly} / monthly ${monthly}`;
-}
+    function renderDecisions(decisions){
+      const list = document.getElementById('decisionList');
+      const more = document.getElementById('decisionMore');
 
-function getZhaojingFlowSummary(tasks){
-  const flowRx=/租|欠租|續約|招租|修繕|開票|庫存|導入|貸款|調解/;
-  const active=(tasks||[]).filter(t=>t.status!=="已完成");
-  const matched=active.filter(t=>flowRx.test(t.title)).length;
-  return `${matched}/${active.length||0} 任務已掛流程關鍵字`;
-}
+      const show = decisions.slice(0,3);
+      const rest = decisions.length - show.length;
 
-function renderTraceability(){
-  const grid=document.getElementById("trace-grid");
-  const areaCards=AREAS.map(area=>{
-    const d=DATA[area.key]||normalizeDataset(null);
-    const upd=fmtTs(d.updated_at)||"-";
-    const tagRate=d.meta?.sourceCoverage??0;
-    const fallbackCnt=d.meta?.fallbackCount??0;
-    return `<div class="trace-card" onclick="jumpToArea('${area.key}')">
-      <div class="trace-top">
-        <div class="trace-name">${area.name}</div>
-        <div class="trace-upd">更新 ${upd}</div>
-      </div>
-      <div class="trace-path">點擊開啟該區資料檢視頁</div>
-      <div class="trace-metrics">
-        <span class="trace-badge ${tagRate>=80?"ok":"warn"}">source 標記 ${tagRate}%</span>
-        <span class="trace-badge ${fallbackCnt===0?"ok":"warn"}">fallback ${fallbackCnt}</span>
-        <span class="trace-badge">任務 ${d.tasks.length}</span>
-      </div>
-    </div>`;
-  });
-  const archCards=[["客戶索引","customer",ARCH.customer],["專案索引","project",ARCH.project],["知識索引","knowledge",ARCH.knowledge]].map(([name,key,m])=>`
-    <a class="trace-card" href="${INDEX_LINKS[key]}" target="_blank" rel="noopener">
-      <div class="trace-top"><div class="trace-name">${name}</div><div class="trace-upd">更新 ${m?.updated_at||"-"}</div></div>
-      <div class="trace-path">點擊開啟索引子分頁</div>
-      <div class="trace-metrics"><span class="trace-badge ${m?.rows?"ok":"warn"}">索引列數 ${m?.rows??0}</span></div>
-    </a>`).join("");
-  const zjSummary=getZhaojingFlowSummary(DATA.zhaojing?.tasks||[]);
-  const finSummary=getFinanceRefreshSummary(DATA.finance?.tasks||[]);
-  const flowCard=`<a class="trace-card" href="flow-kpi.html" target="_blank" rel="noopener">
-    <div class="trace-top"><div class="trace-name">流程 KPI 摘要</div><div class="trace-upd">跨域一致性</div></div>
-    <div class="trace-path">點擊開啟流程 KPI 詳細頁（摘要非核對檢視）</div>
-    <div class="trace-metrics">
-      <span class="trace-badge">${zjSummary}</span>
-      <span class="trace-badge">${finSummary}</span>
-    </div>
-  </a>`;
-  grid.innerHTML=[...areaCards,archCards,flowCard].join("");
-  const footer=document.getElementById("footer-meta");
-  if(footer){
-    footer.innerHTML=`Open Claw &nbsp;·&nbsp; 每日自動更新 &nbsp;·&nbsp; 來源 ${AREAS.length} JSON + 3 Index`;
-  }
-}
+      list.innerHTML = show.map(d => {
+        const urgent = !!d.urgent;
+        const pill = urgent ? `<span class="pill urgent"><span class="dot"></span>緊急</span>` : '';
+        const due = d.due ? `截止 ${d.due}` : '截止 —';
+        return `
+          <div class="card">
+            <div class="c-bar ${urgent ? 'urgent' : ''}"></div>
+            <div class="c-body">
+              <div class="c-title">${d.title || '（未命名決策）'}</div>
+              <div class="c-meta">${due}</div>
+            </div>
+            ${pill}
+          </div>
+        `;
+      }).join('');
 
-// ── LUCKY COLORS ──────────────────────────────────────────────────
-const LUCKY=[
-  [{name:"紅色",hex:"#C0392B"},{name:"橙色",hex:"#E67E22"}],
-  [{name:"白色",hex:"#AEABA4"},{name:"金色",hex:"#D4AF37"}],
-  [{name:"粉紅",hex:"#D4608A"},{name:"白色",hex:"#AEABA4"}],
-  [{name:"黑色",hex:"#3A3A38"},{name:"藍色",hex:"#4A6878"}],
-  [{name:"綠色",hex:"#4A8C62"},{name:"青色",hex:"#1A9080"}],
-  [{name:"金色",hex:"#D4AF37"},{name:"白色",hex:"#AEABA4"}],
-  [{name:"黃色",hex:"#C8A830"},{name:"棕色",hex:"#8A6A40"}],
-];
+      more.textContent = rest > 0 ? `+${rest} 更多 ›` : '';
+    }
 
-// ── DAILY BRIEF ───────────────────────────────────────────────────
-function parseDateOnly(s){
-  const m=String(s||"").match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if(!m) return null;
-  const d=new Date(Number(m[1]), Number(m[2])-1, Number(m[3]));
-  d.setHours(0,0,0,0);
-  return d;
-}
-function startOfWeek(d){
-  const x=new Date(d);x.setHours(0,0,0,0);
-  const day=x.getDay();
-  const diff=(day===0?6:day-1);
-  x.setDate(x.getDate()-diff);
-  return x;
-}
-function endOfWeek(d){
-  const s=startOfWeek(d);
-  const e=new Date(s);
-  e.setDate(e.getDate()+6);
-  e.setHours(23,59,59,999);
-  return e;
-}
-function renderOverdueWeek(){
-  const og=document.getElementById('overdue-grid');
-  const wg=document.getElementById('week-grid');
-  if(!og || !wg) return;
-  const now=new Date(); now.setHours(0,0,0,0);
-  const sow=startOfWeek(now);
-  const eow=endOfWeek(now);
-
-  const items=[];
-  AREAS.forEach(area=>{
-    (DATA[area.key]?.tasks||[]).forEach(t=>{
-      if(t.status==='已完成') return;
-      const due=parseDateOnly(t.due);
-      if(!due) return;
-      items.push({t,area,due});
-    });
-  });
-  const overdue=items.filter(x=>x.due<now).sort((a,b)=>a.due-b.due).slice(0,5);
-  const week=items.filter(x=>x.due>=sow && x.due<=eow).sort((a,b)=>a.due-b.due).slice(0,5);
-
-  const row=(x)=>`<div class="warn-card">
-    <div class="wc-top">
-      <div class="wc-title">${escHtml(x.t.title)}</div>
-      <div class="wc-tags"><span class="tag tag-area">${x.area.name}</span></div>
-    </div>
-    <div class="wc-meta">
-      <span><span class="wc-meta-lbl">截止 </span>${escHtml(x.t.due||'-')}</span>
-      <span><span class="wc-meta-lbl">狀態 </span>${escHtml(x.t.status||'-')}</span>
-    </div>
-  </div>`;
-
-  og.innerHTML = overdue.length? overdue.map(row).join('') : '<div class="warn-empty">— 無逾期 —</div>';
-  wg.innerHTML = week.length? week.map(row).join('') : '<div class="warn-empty">— 本週無到期事項 —</div>';
-}
-
-function renderBrief(){
-  const wrap=document.getElementById("brief-wrap");
-  const now=new Date();
-  const days=["日","一","二","三","四","五","六"];
-  const dateStr=`${now.getFullYear()} / ${String(now.getMonth()+1).padStart(2,"0")} / ${String(now.getDate()).padStart(2,"0")} &nbsp;週${days[now.getDay()]}`;
-  const isMonday=now.getDay()===1;
-  const lc=LUCKY[now.getDay()];
-  const luckHtml=`<div class="brief-luck">
-    <span class="luck-lbl">開運色</span>
-    ${lc.map(c=>`<span class="luck-item"><span class="luck-dot" style="background:${c.hex}"></span>${c.name}</span>`).join("")}
-  </div>`;
-
-  const schedItems=[];
-  AREAS.forEach(area=>{
-    (DATA[area.key]?.tasks||[]).filter(t=>{
-      if(isSched(t)&&t.status!=="已完成"){
-        const f=t.freq;
-        return f==="daily"||(f==="weekly-mon"&&isMonday)||f==="weekly";
-      }
-      return false;
-    }).forEach(t=>schedItems.push({t,area}));
-  });
-  schedItems.sort((a,b)=>a.t.time.localeCompare(b.t.time));
-
-  const workItems=[];
-  AREAS.forEach(area=>{
-    (DATA[area.key]?.tasks||[]).filter(t=>!isSched(t)&&t.status!=="已完成")
-      .forEach(t=>workItems.push({t,area}));
-  });
-  const sorted=[...workItems].sort((a,b)=>{
-    const pri={urgent:0,important:1,normal:2};
-    const ab=a.t.status==="阻塞"?-1:0,bb=b.t.status==="阻塞"?-1:0;
-    if(ab!==bb) return ab-bb;
-    return (pri[a.t.priority]??2)-(pri[b.t.priority]??2);
-  });
-  let top5=sorted.filter(({t})=>t.priority==="urgent"||t.priority==="important"||t.status==="阻塞").slice(0,5);
-  if(!top5.length) top5=sorted.slice(0,5);
-
-  const schedBlock=schedItems.length?`
-    <div class="brief-block">
-      <div class="brief-block-hdr">早班排程</div>
-      ${schedItems.map(({t,area})=>{
-        const w=t.status==="阻塞";
-        return `<div class="brief-line">
-          <span class="brief-time">${t.time}</span>
-          <span class="brief-text">${t.title}<span class="b-area">[${area.name}]</span></span>
-          <span class="sched-status ${w?"warn":"ok"}">${w?"需關注":"正常"}</span>
-        </div>`;
-      }).join("")}
-    </div>`:"";
-
-  const workBlock=`
-    <div class="brief-block">
-      <div class="brief-block-hdr">今日待辦 Top 5</div>
-      ${top5.length?top5.map(({t,area})=>`
-        <div class="brief-line">
-          <span class="brief-time">${t.priority==="urgent"?"●":t.priority==="important"?"○":"·"}</span>
-          <span class="brief-text">${t.title}
-            <span class="b-area">[${area.name}]</span>
-            ${t.status==="阻塞"?`<span class="b-blk">阻塞</span>`:""}
-            ${t.due&&t.due!=="-"?`<span class="b-due">${t.due}</span>`:""}
-          </span>
-        </div>`).join(""):
-        `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">— 暫無待處理事項 —</span></div>`}
-    </div>`;
-
-  const memo=TODAY_MEMO||{};
-  const memoTitle=safeStr(memo.headline,"今日備忘卡");
-  const memoSummary=Array.isArray(memo.summary)?memo.summary:[];
-  const memoDetail=(memo.details_md||"").trim();
-  const memoSummaryHtml=memoSummary.length?memoSummary.slice(0,3).map(s=>`<div class="brief-line"><span class="brief-text">${s}</span></div>`).join(""):
-    `<div class="brief-line"><span class="brief-text" style="color:var(--muted)">— 尚未設定備忘 —</span></div>`;
-  const memoDetailHtml=memoDetail?`<div class="brief-block"><div class="brief-block-hdr">詳細備忘</div><div class="brief-md">${escHtml(memoDetail)}</div></div>`:"";
-
-  wrap.innerHTML=`
-    <details class="brief-details" open>
-      <summary class="brief-summary" onclick="event.preventDefault();this.parentElement.classList.toggle('open');">
-        <div class="brief-header">
-          <span class="brief-date">${dateStr}</span>
-          ${luckHtml}
-        </div>
-        <div class="brief-title">${memoTitle}</div>
-        <div class="brief-body">${memoSummaryHtml}</div>
-        <div class="brief-toggle">點一下展開/收合</div>
-      </summary>
-      <div class="brief-expand">
-        <div class="brief-body">${schedBlock}${workBlock}${memoDetailHtml}</div>
-      </div>
-    </details>`;
-}
-
-
-// ── ACCORDION (全區總覽) ──────────────────────────────────────────
-function renderAccordion(){
-  const wrap=document.getElementById("acc-wrap");
-  wrap.className="acc-wrap";
-  wrap.innerHTML=AREAS.map((area,aIdx)=>{
-    const d=DATA[area.key];
-    const tasks=d?.tasks||[];
-    const c=counts(tasks);
-    const hot=c.blocked>0;
-    const updStr=d?.updated_at?fmtTs(d.updated_at):"-";
-    const activeTasks=tasks.filter(t=>t.status!=="已完成");
-    const taskRows=activeTasks.length
-      ?activeTasks.map(t=>`
-        <tr>
-          <td><span class="ov-ttl">${t.title}</span></td>
-          <td><span class="t-pri ${t.priority||''}">${PRI_LBL[t.priority]||"-"}</span></td>
-          <td><span class="t-type ${t.type||''}">${TYPE_LBL[t.type]||t.type||"-"}</span></td>
-          <td><span class="t-status ${t.status==="阻塞"?"blocked":""}">${t.status||"-"}</span></td>
-          <td class="t-due">${t.due&&t.due!=="-"?t.due:"-"}</td>
-        </tr>`).join("")
-      :`<tr><td colspan="5" class="acc-empty">— 無待處理任務 —</td></tr>`;
-    return `
-    <div class="acc-item">
-      <div class="acc-hdr" onclick="toggleAcc(${aIdx})">
-        <div class="acc-toggle" id="tgl-${aIdx}">›</div>
-        <div class="acc-icon-col">${area.icon}</div>
-        <div class="acc-info">
-          <div class="acc-name">${area.name}</div>
-          <div class="acc-role">${area.role}${updStr!=="-"?` &nbsp;·&nbsp; 更新 ${updStr}`:""}</div>
-        </div>
-        <div class="acc-counts">
-          ${hot?`<div class="cnt-badge hot"><div class="cnt-val">${c.blocked}</div><div class="cnt-lbl">阻塞</div></div>`:""}
-          <div class="cnt-badge"><div class="cnt-val">${c.pending}</div><div class="cnt-lbl">待處理</div></div>
-          <div class="cnt-badge"><div class="cnt-val">${c.done}</div><div class="cnt-lbl">完成</div></div>
-        </div>
-        <a class="acc-link" href="${area.path}index.html" onclick="event.stopPropagation()">›</a>
-      </div>
-      <div class="acc-body" id="acc-body-${aIdx}">
-        <table class="acc-tbl"><tbody>${taskRows}</tbody></table>
-      </div>
-    </div>`;
-  }).join("");
-}
-
-function toggleAcc(idx){
-  const body=document.getElementById(`acc-body-${idx}`);
-  const tgl=document.getElementById(`tgl-${idx}`);
-  if(!body) return;
-  const open=body.classList.toggle("open");
-  if(tgl) tgl.classList.toggle("open",open);
-}
-
-// ── FETCH ─────────────────────────────────────────────────────────
-async function loadArea(area){
-  try{
-    const r=await fetch(area.data+"?_="+Date.now());
-    if(!r.ok) throw 0;
-    return normalizeDataset(await r.json());
-  }catch(e){return normalizeDataset(null);}
-}
-
-function jumpToOverview(){
-  const sec=document.getElementById('sec-overview');
-  if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
-}
-function jumpToArea(key){
-  const url=VERIFY_LINKS[key];
-  if(url){ window.open(url,'_blank'); return; }
-  jumpToOverview();
-}
-
-async function init(){
-  const [results]=await Promise.all([
-    Promise.all(AREAS.map(loadArea)),
-    loadArchitectureMeta(),
-    loadTodayMemo(),
-  ]);
-  AREAS.forEach((a,i)=>{DATA[a.key]=results[i]||normalizeDataset(null);});
-  renderBrief();
-  renderOverdueWeek();
-}
-
-// ── LUNAR ─────────────────────────────────────────────────────────
-function renderLunar(){
-  const el=document.getElementById("ib-lunar");if(!el)return;
-  try{
-    const f=new Intl.DateTimeFormat("zh-TW-u-ca-chinese",{year:"numeric",month:"long",day:"numeric"});
-    const raw=f.format(new Date());
-    const m=raw.match(/([甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]年.*)/);
-    el.textContent=m?"農曆 "+m[1]:raw;
-  }catch(e){el.textContent="";}
-}
-
-// ── WEATHER ───────────────────────────────────────────────────────
-const WMO={
-  0:{i:"☀",d:"晴"},1:{i:"🌤",d:"晴時多雲"},2:{i:"⛅",d:"多雲"},3:{i:"☁",d:"陰"},
-  45:{i:"🌫",d:"霧"},48:{i:"🌫",d:"霧"},
-  51:{i:"🌦",d:"毛毛雨"},61:{i:"🌧",d:"小雨"},63:{i:"🌧",d:"中雨"},65:{i:"🌧",d:"大雨"},
-  80:{i:"🌦",d:"陣雨"},81:{i:"🌧",d:"中陣雨"},95:{i:"⛈",d:"雷陣雨"}
-};
-async function fetchWeather(){
-  const el=document.getElementById("ib-weather");if(!el)return;
-  try{
-    let lat=22.9999,lon=120.2269,city="台南";
-    try{
-      const c=JSON.parse(localStorage.getItem("oc_geo")||"null");
-      if(c&&Date.now()-c.ts<43200000){lat=c.lat;lon=c.lon;city="";}
-      else if(navigator.geolocation){
-        await new Promise(res=>{
-          navigator.geolocation.getCurrentPosition(p=>{
-            lat=p.coords.latitude;lon=p.coords.longitude;city="";
-            localStorage.setItem("oc_geo",JSON.stringify({lat,lon,ts:Date.now()}));res();
-          },()=>res(),{timeout:5000});
+    async function loadState(){
+      try{
+        const res = await fetch(STATE_URL, { cache: 'no-store' });
+        if(!res.ok) throw new Error('state fetch failed');
+        const state = await res.json();
+        applyState(state);
+      }catch(e){
+        console.error('Failed to load state:', e);
+        // fallback: render empty but stable UI
+        applyState({
+          oneThing: { title: '（待填）今天最重要的事', meta: '截止 — · 兆鯨', desc: '' },
+          decisions: []
         });
       }
-    }catch(e){}
-    const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode&timezone=Asia/Taipei`);
-    if(!r.ok) throw 0;
-    const d=await r.json();
-    const cur=d.current;const w=WMO[cur.weathercode]||{i:"🌡",d:""};
-    el.innerHTML=`<span style="font-size:14px">${w.i}</span> <b>${Math.round(cur.temperature_2m)}°</b> <span>${w.d}${city?" · "+city:""}</span>`;
-  }catch(e){el.textContent="—";}
-}
+    }
 
-// ── CLOCK ─────────────────────────────────────────────────────────
-function tick(){
-  const e=document.getElementById("clk");if(!e)return;
-  const n=new Date();
-  const days=["日","一","二","三","四","五","六"];
-  const d=`${String(n.getMonth()+1).padStart(2,"0")}/${String(n.getDate()).padStart(2,"0")} 週${days[n.getDay()]}`;
-  const t=n.toLocaleTimeString("zh-TW",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"});
-  e.innerHTML=`${t}<br>${d}`;
-}
-tick();setInterval(tick,1000);
-renderLunar();
-fetchWeather();
-init();
-</script>
-<script src="assets/js/status-ring.js"></script>
+    // ── daily quote (Option B)
+    async function loadDailyQuote(){
+      const today = new Date().toISOString().slice(0,10);
+      const cached = (()=>{ try{return JSON.parse(localStorage.getItem('daily_quote')||'{}')}catch{return {}} })();
 
+      if(cached && cached.date === today && cached.text){
+        applyQuote(cached);
+        document.getElementById('quoteHint').textContent = '今日已載入';
+        return;
+      }
+
+      // Strategy: fetch once per day from public quote API (CORS)
+      // Note: This is the display layer only. Archiving to「資訊資料庫」will be done by a separate daily job.
+      try{
+        const res = await fetch('https://api.quotable.io/random?tags=business|wisdom|famous-quotes');
+        if(!res.ok) throw new Error('quotable API error');
+        const q = await res.json();
+
+        const data = {
+          date: today,
+          text: q.content,
+          source: q.author,
+          category: 'business',
+          fetched_from: 'api.quotable.io',
+          fetched_at: new Date().toISOString()
+        };
+
+        localStorage.setItem('daily_quote', JSON.stringify(data));
+        applyQuote(data);
+        document.getElementById('quoteHint').textContent = '每日更新';
+      }catch(e){
+        console.error('Failed to load quote:', e);
+        document.getElementById('dailyQuote').textContent = '—';
+        document.getElementById('dailyQuoteSource').textContent = '';
+        document.getElementById('quoteHint').textContent = '來源不可用';
+      }
+    }
+
+    function applyQuote(q){
+      document.getElementById('dailyQuote').textContent = `「${q.text}」`;
+      document.getElementById('dailyQuoteSource').textContent = `— ${q.source || '—'} · ${q.category || ''}`.trim();
+    }
+
+    loadDailyQuote();
+    loadState(); // Load the state after setting up the quote loader
+  </script>
 </body>
 </html>
