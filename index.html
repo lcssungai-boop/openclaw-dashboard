@@ -194,7 +194,7 @@
       // 只保留 客戶 / 專案 / 物業，並直接採用 SQL 產生的接下來事件
       const wanted = (txt) => {
         const t = String(txt || '');
-        return t.includes('客戶') || t.includes('專案') || t.includes('物業');
+        return t.includes('客戶') || t.includes('專案') || t.includes('物業') || t.includes('顧問');
       };
       const findMMDD = (obj) => {
         const src = `${obj.date||''} ${obj.meta||''} ${obj.time||''} ${obj.title||''}`;
