@@ -55,8 +55,9 @@
 
     .schedule{margin-top:14px;transition:max-height .25s ease, opacity .2s ease;max-height:460px;overflow:hidden;opacity:1}
     .sch-item{padding:14px 0;cursor:pointer;display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:start}
-    .sch-time{font-family:var(--mono);font-size:14px;color:#222;padding-top:2px}
-    .sch-title{font-size:17px;line-height:1.25;margin-top:0;font-weight:700}
+    .sch-time{font-family:var(--mono);font-size:14px;color:#222;padding-top:2px;text-align:right;padding-right:10px}
+    .sch-main{border-left:3px solid #e1e5ec;padding-left:10px}
+    .sch-title{font-size:15px;line-height:1.25;margin-top:0;font-weight:700}
     .sch-sub{font-size:13px;line-height:1.35;color:var(--muted);margin-top:3px}
 
     .detail{margin-top:14px;padding-top:10px;border-top:1px solid var(--line);transition:margin-top .25s ease}
@@ -239,7 +240,8 @@
       schedules.forEach(it=>{
         const row=document.createElement('div');
         row.className='sch-item';
-        row.innerHTML=`<div class="sch-time">${it.time||''}</div><div><div class="sch-title">${it.title||''}</div><div class="sch-sub">${it.sub||it.source||''}</div></div>`;
+        const isQuan = String(it.title||'').includes('全立祥');
+        row.innerHTML=`<div class="sch-time">${it.time||''}</div><div class="sch-main"><div class="sch-title" style="font-size:${isQuan ? '15px' : '17px'}">${it.title||''}</div><div class="sch-sub">${it.sub||it.source||''}</div></div>`;
         row.onclick=()=>{
           setDetail(it.detail || it.title || '');
           sheetEl?.classList.add('compact');
