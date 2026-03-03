@@ -182,7 +182,7 @@
       };
 
       document.getElementById('coreTitle').textContent = core.title;
-      document.getElementById('coreDate').textContent = `日期：${core.date}`;
+      document.getElementById('coreDate').textContent = `日期：${to24hLabel(core.date)}`;
       document.getElementById('coreHint').textContent = `提醒：${core.hint}`;
 
       const rawSchedules = s.schedules || [
@@ -257,7 +257,7 @@
         const row=document.createElement('div');
         row.className='sch-item';
         const isQuan = String(it.title||'').includes('全立祥');
-        row.innerHTML=`<div class="sch-time">${it.time||''}</div><div class="sch-main"><div class="sch-title" style="font-size:${isQuan ? '13px' : '15px'}">${it.title||''}</div><div class="sch-sub">${it.sub||it.source||''}</div></div>`;
+        row.innerHTML=`<div class="sch-time">${to24hLabel(it.time||'')}</div><div class="sch-main"><div class="sch-title" style="font-size:${isQuan ? '13px' : '15px'}">${it.title||''}</div><div class="sch-sub">${it.sub||it.source||''}</div></div>`;
         row.onclick=()=>{
           updateCoreCard(it);
           setDetail(it.detail || it.title || '');
@@ -281,7 +281,7 @@
       // 右滑第一分頁：顯示明天之後行程/提醒（最多6項）
       const futureMapped = futureItems.map(it => ({
         title: it.title,
-        meta: `${findMMDD(it) || ''} ${it.time || ''} · ${it.sub || it.type || ''}`.trim()
+        meta: `${findMMDD(it) || ''} ${to24hLabel(it.time || '')} · ${it.sub || it.type || ''}`.trim()
       }));
       renderLines(document.getElementById('tasksPane'), futureMapped.slice(0, 6));
 
@@ -298,13 +298,24 @@
       el.innerHTML = esc.replace(/\n/g,'<br>');
     }
 
+    function to24hLabel(raw){
+      const s = String(raw || '').trim();
+      // e.g. "5 am10:00" / "3/26 pm09:00" / "am10:00"
+      return s.replace(/\b(am|pm)\s*(\d{1,2})(?::(\d{2}))?/ig, (_, ap, hh, mm) => {
+        let h = parseInt(hh,10) % 12;
+        if (String(ap).toLowerCase() === 'pm') h += 12;
+        const m = (mm || '00').padStart(2,'0');
+        return `${String(h).padStart(2,'0')}:${m}`;
+      });
+    }
+
     function updateCoreCard(item){
       const truncate = (txt, n) => {
         const arr = [...String(txt || '')];
         return arr.length > n ? arr.slice(0, n).join('') : arr.join('');
       };
       document.getElementById('coreTitle').textContent = truncate(item.title || '今日重點', 7);
-      document.getElementById('coreDate').textContent = `日期：${item.time || item.date || '—'}`;
+      document.getElementById('coreDate').textContent = `日期：${to24hLabel(item.time || item.date || '—')}`;
       const hintSrc = item.sub || item.type || item.source || '提醒事項';
       document.getElementById('coreHint').textContent = `提醒：${truncate(hintSrc, 15)}`;
     }
