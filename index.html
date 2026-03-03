@@ -17,6 +17,13 @@
       --mono:'DM Mono',monospace;
       --body:'Noto Sans TC',sans-serif;
     }
+    body.theme-dark{
+      --top:#121418;
+      --panel:#171a20;
+      --line:#2a313c;
+      --ink:#e9edf5;
+      --muted:#9aa5b5;
+    }
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:var(--body);color:var(--ink);background:var(--top);overflow-x:hidden}
 
@@ -26,6 +33,12 @@
     .page{min-width:100%;min-height:100vh;scroll-snap-align:start;background:var(--top);position:relative}
 
     .top{padding:calc(24px + env(safe-area-inset-top)) 18px 64px;position:relative}
+    .theme-toggle{
+      position:absolute;right:14px;top:calc(10px + env(safe-area-inset-top));
+      width:28px;height:28px;border-radius:999px;border:1px solid var(--line);
+      background:transparent;color:var(--ink);display:grid;place-items:center;
+      font-size:14px;line-height:1;cursor:pointer;
+    }
     .month{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:.05em}
     .date{margin-top:22px;font-size:50px;line-height:.95;font-weight:700;letter-spacing:.005em}
     .motto{margin-top:14px;font-size:16px;line-height:1.5;font-weight:500;max-width:84%;color:#555c67}
@@ -53,13 +66,13 @@
 
     .schedule{margin-top:14px;transition:max-height .25s ease, opacity .2s ease;max-height:460px;overflow:hidden;opacity:1}
     .sch-item{padding:14px 0;cursor:pointer;display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start}
-    .sch-time{font-family:var(--mono);font-size:14px;color:#222;padding-top:2px;text-align:right;padding-right:14px}
+    .sch-time{font-family:var(--mono);font-size:14px;color:var(--ink);padding-top:2px;text-align:right;padding-right:14px}
     .sch-main{border-left:3px solid #e1e5ec;padding-left:14px}
     .sch-title{font-size:13px;line-height:1.25;margin-top:0;font-weight:700}
     .sch-sub{font-size:13px;line-height:1.35;color:var(--muted);margin-top:3px}
 
     .detail{margin-top:14px;padding-top:10px;border-top:1px solid var(--line);transition:margin-top .25s ease}
-    .detail-text{font-size:14px;line-height:1.6;color:#2b313b;white-space:pre-line}
+    .detail-text{font-size:14px;line-height:1.6;color:var(--ink);white-space:pre-line}
     .sheet.compact .schedule{max-height:0;opacity:0;margin-top:0}
     .sheet.compact .detail{margin-top:4px}
 
@@ -83,6 +96,7 @@
       <!-- Today -->
       <section class="page" id="page-today">
         <div class="top">
+          <button class="theme-toggle" id="themeToggle" aria-label="日夜切換">☾</button>
           <div class="month" id="monthText"></div>
           <div class="date" id="dateText"></div>
           <div class="motto" id="mottoText"></div>
@@ -327,6 +341,23 @@
     const carousel=document.getElementById('carousel');
     function goHome(){ carousel.scrollTo({left:0,behavior:'smooth'}); }
 
+    function applyTheme(theme){
+      const dark = theme === 'dark';
+      document.body.classList.toggle('theme-dark', dark);
+      const btn = document.getElementById('themeToggle');
+      if(btn) btn.textContent = dark ? '☀' : '☾';
+    }
+    function initTheme(){
+      const saved = localStorage.getItem('oc_theme') || 'light';
+      applyTheme(saved);
+      const btn = document.getElementById('themeToggle');
+      btn?.addEventListener('click',()=>{
+        const next = document.body.classList.contains('theme-dark') ? 'light' : 'dark';
+        localStorage.setItem('oc_theme', next);
+        applyTheme(next);
+      });
+    }
+
     function updatePageState(){
       const idx=Math.round(carousel.scrollLeft / carousel.clientWidth);
       const key=PAGE_KEYS[idx] || 'today';
@@ -341,6 +372,7 @@
       ticking=true;
     },{passive:true});
 
+    initTheme();
     setDateAndMotto();
     loadState();
     updatePageState();
