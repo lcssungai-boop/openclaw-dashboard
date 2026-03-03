@@ -270,7 +270,8 @@
       }
 
       const weekly = s.weeklyFocus || core.desc || '本週重點：聚焦可直接交付的成果。';
-      setDetail(weekly);
+      // 首頁預設就顯示當前主卡詳細說明（不是覆蓋成簡短 weekly）
+      setDetail(core.desc || weekly);
       sheetEl?.classList.remove('compact');
       document.getElementById('coreCard').onclick=()=>{
         setDetail(core.desc || weekly);
