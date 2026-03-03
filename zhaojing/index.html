@@ -1,461 +1,333 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>兆鯨顧問 · Open Claw</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@200;300;400;500;700&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/zhaojing-theme.css">
-<link rel="stylesheet" href="./index.page.css">
-<!--
-<style>
-/* Theme tokens (default: dark) */
-:root{
-  --bg: #0b1020;
-  --panel: rgba(255,255,255,0.03);
-  --panel2: rgba(255,255,255,0.02);
-  --border: rgba(255,255,255,0.08);
-  --border2: rgba(255,255,255,0.16);
-  --text: rgba(255,255,255,0.92);
-  --dim: rgba(255,255,255,0.78);
-  --muted: rgba(255,255,255,0.62);
-  --bright: rgba(255,255,255,0.96);
-  --accent: #6C5CFF;
-}
-body[data-theme="light"]{
-  --bg: #f4f5f7;
-  --panel: #ffffff;
-  --panel2: #f7f8fa;
-  --border: rgba(18,22,32,0.10);
-  --border2: rgba(18,22,32,0.18);
-  --text: rgba(18,22,32,0.92);
-  --dim: rgba(18,22,32,0.80);
-  --muted: rgba(18,22,32,0.56);
-  --bright: rgba(18,22,32,0.96);
-  --accent: #5b6b7a; /* grey-blue low saturation */
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>兆鯨 · 企業管理備忘</title>
 
-/* Theme toggle button */
-.theme-toggle{
-  margin-left:auto;
-  border:1px solid var(--border);
-  background:var(--panel);
-  color:var(--dim);
-  border-radius:999px;
-  padding:6px 10px;
-  font-size:11px;
-  cursor:pointer;
-}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
 
+  <style>
+    /* ═══ TOKENS (Japanese minimal) ═══════════════════════════════ */
+    :root{
+      --bg:#F2F1EE;
+      --paper:#FDFCFA;
+      --l1:#E4E2DC;
+      --l2:#C8C5BC;
+      --l3:#9B9890;
+      --ink:#3a3a36;
+      --ink2:#4A4840;
+      --ink3:#88857D;
 
-:root{
-  --bg:#272729;--bg2:#323234;--bg3:#3D3D3F;--bg4:#484849;
-  --panel:#323234;--border:#585859;--border2:#7A7A7C;
-  --text:#F2F2F7;--dim:#C7C7CC;--muted:#AEAEB2;--bright:#FFFFFF;
-  --urgent-bg:#2A1E0E;--urgent-bd:#9A6830;--urgent-text:#F0A840;
-  --blocked-bg:#0E1C2A;--blocked-bd:#406888;--blocked-text:#74BADF;
-  --remit-bg:#201C14;--remit-bd:#7A6848;--remit-text:#D0A878;
-  --inc:#5BBB78;--inc-bg:#1A2A20;--inc-bd:#2A4A30;
-  --exp:#D97070;--exp-bg:#2A1616;--exp-bd:#4A2828;
-  --green:#5BBB78;--green-dim:#1A2A1E;
-  --radius:10px;--radius-xs:5px;
-}
+      --mono:'DM Mono', monospace;
+      --body:'Noto Sans TC', sans-serif;
+      --rad:8px;
 
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",sans-serif;
-  font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased;letter-spacing:.01em}
-::-webkit-scrollbar{width:2px;height:2px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:1px}
+      /* only when truly urgent */
+      --urgent:#3a3a36;
+    }
 
-header{display:flex;align-items:center;justify-content:space-between;
-  padding:0 32px;height:52px;
-  background:rgba(39,39,41,.94);border-bottom:1px solid var(--border);
-  position:sticky;top:0;z-index:200;
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.hdr-l{display:flex;align-items:center;gap:14px}
-.back-btn{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);
-  text-decoration:none;padding:5px 10px;border:1px solid transparent;
-  transition:border-color .15s,color .15s;letter-spacing:.05em}
-.back-btn:hover{border-color:var(--border);color:var(--dim)}
-.hdr-div{width:1px;height:18px;background:var(--border)}
-.logo{width:26px;height:26px;border-radius:50%;overflow:hidden;border:1px solid var(--border2);
-  flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:11px;position:relative}
-.logo img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:top center}
-.hdr-name{font-size:13px;font-weight:500;color:var(--bright);letter-spacing:.04em}
-.hdr-sub{font-size:9px;color:var(--muted);font-weight:300;margin-top:1px;letter-spacing:.1em;text-transform:uppercase}
-.hdr-clock{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--dim);
-  text-align:right;line-height:1.9;font-weight:300}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--bg);
+      color:var(--ink);
+      font-family:var(--body);
+      font-size:14px;
+      line-height:1.65;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+      padding-bottom:72px;
+    }
+    button{font-family:inherit;cursor:pointer;border:none;background:none}
 
-.sum-bar{background:var(--bg2);border-bottom:1px solid var(--border);
-  padding:0 32px;height:30px;display:flex;align-items:center;gap:10px;
-  position:sticky;top:52px;z-index:190;font-size:10px;color:var(--muted)}
-.sum-bdg{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;
-  border:1px solid var(--border);font-size:9px;font-weight:400;
-  letter-spacing:.06em;color:var(--muted);border-radius:1px}
-.sum-bdg.blocked{border-color:var(--blocked-bd);color:var(--blocked-text)}
-.sum-bdg.pending{border-color:var(--border2);color:var(--dim)}
-.sum-bdg.done{opacity:.5}
-.sum-ts{margin-left:auto;font-size:9px;color:var(--muted);
-  font-family:"JetBrains Mono",monospace;font-weight:300}
+    /* pages */
+    .page{display:none;animation:fu .18s ease}
+    .page.active{display:block}
+    @keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-main{max-width:860px;margin:0 auto;padding:40px 32px;display:flex;flex-direction:column;gap:36px}
-.sec-lbl{font-size:8px;letter-spacing:.2em;font-weight:400;color:var(--muted);
-  text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:14px;
-  font-family:"JetBrains Mono",monospace}
-.sec-lbl::after{content:"";flex:1;height:1px;background:var(--border)}
+    /* hero (no grain) */
+    .hero{
+      background:var(--ink);
+      color:#fff;
+      padding:26px 20px 22px;
+    }
+    .hero-eyebrow{
+      font-size:10px;
+      font-family:var(--mono);
+      opacity:.45;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+    .hero-date{
+      font-size:15px;
+      font-family:var(--mono);
+      opacity:.65;
+      letter-spacing:.08em;
+      line-height:1.3;
+    }
 
-.task-list{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.task-card{background:var(--panel);padding:18px 24px;
-  display:flex;flex-direction:column;gap:9px;
-  border-bottom:1px solid var(--border);
-  position:relative;transition:background .13s}
-.task-card:last-child{border-bottom:none}
-.task-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--border2)}
-.task-card.urgent-card::before{background:var(--urgent-text)}
-.task-card.blocked-card::before{background:var(--blocked-text)}
-.task-card.done-card{opacity:.4}
-.task-card:hover{background:var(--bg3)}
-.tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
-.tc-title{font-size:14px;font-weight:400;color:var(--bright);line-height:1.6;flex:1;letter-spacing:.02em}
-.tc-tags{display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
-.tag{font-size:8px;padding:2px 7px;border:1px solid var(--border);color:var(--muted);
-  white-space:nowrap;font-weight:400;letter-spacing:.08em;text-transform:uppercase;border-radius:1px}
-.tag.urgent{border-color:var(--urgent-bd);color:var(--urgent-text)}
-.tag.important{border-color:var(--border2);color:var(--dim)}
-.tag.blocked-tag{border-color:var(--blocked-bd);color:var(--blocked-text)}
-.tag.remittance{border-color:var(--remit-bd);color:var(--remit-text)}
-.tag.alert-tag{border-color:#2A5030;color:var(--green)}
-.tc-meta{display:flex;gap:18px;font-size:10px;color:var(--muted);
-  font-family:"JetBrains Mono",monospace;font-weight:300}
-.tc-meta-lbl{font-size:8px;opacity:.6;margin-right:3px}
-.tc-next{font-size:11px;color:var(--dim);padding-top:8px;
-  border-top:1px solid var(--border);font-weight:300;letter-spacing:.02em}
-.tc-blocked{font-size:11px;color:var(--blocked-text);padding-top:8px;
-  border-top:1px solid var(--blocked-bd);font-weight:300}
-.loading-wrap{text-align:center;padding:60px;font-size:12px;color:var(--muted);letter-spacing:.06em}
+    /* section */
+    .sec{padding:0 20px;margin:22px 0}
+    .sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .sec-l{
+      font-size:10px;
+      font-family:var(--mono);
+      color:var(--l3);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    .sec-r{font-size:10px;font-family:var(--mono);color:var(--l3);cursor:pointer}
 
-.tab-nav{background:var(--bg2);border-bottom:1px solid var(--border);
-  display:flex;position:sticky;top:82px;z-index:180}
-.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:3px;height:56px;padding:0 8px;color:var(--muted);text-decoration:none;cursor:pointer;
-  user-select:none;border-bottom:2px solid transparent;
-  transition:color .15s,border-color .15s,background .15s;font-size:11px;letter-spacing:.06em}
-.tab-btn:hover{color:var(--dim);background:var(--bg3)}
-.tab-btn.active{color:var(--bright);border-bottom-color:var(--urgent-text);background:var(--bg3)}
-.tab-icon{font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center}
-.tab-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;font-weight:400}
-.tab-badge{font-size:9px;font-weight:400;background:var(--bg4);color:var(--muted);
-  border:1px solid var(--border);border-radius:1px;padding:1px 6px;
-  font-family:"JetBrains Mono",monospace;min-width:20px;text-align:center}
-.tab-badge.hot{background:var(--urgent-bg);color:var(--urgent-text);border-color:var(--urgent-bd)}
-.tab-panel{display:none}.tab-panel.active{display:block}
+    /* card */
+    .card{
+      background:var(--paper);
+      border:1px solid var(--l1);
+      border-radius:var(--rad);
+      padding:13px 15px;
+      display:flex;
+      gap:11px;
+      align-items:flex-start;
+      transition:border-color .12s;
+    }
+    .card:hover{border-color:var(--l2)}
 
-/* property & tenant cards */
-.prop-list,.tenant-list{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.prop-card,.tenant-card{
-  background:var(--panel);padding:18px 24px;
-  display:flex;flex-direction:column;gap:9px;
-  border-bottom:1px solid var(--border);
-  position:relative;transition:background .13s}
-.prop-card:last-child,.tenant-card:last-child{border-bottom:none}
-.prop-card::before,.tenant-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--border)}
-.prop-card.s-招租中::before,.tenant-card.s-欠租::before{background:var(--urgent-text)}
-.prop-card.s-無合約::before,.tenant-card.s-無合約::before{background:var(--blocked-text)}
-.prop-card:hover,.tenant-card:hover{background:var(--bg3)}
-.pc-top,.tc-top2{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
-.pc-addr,.tc-name{font-size:14px;font-weight:400;color:var(--bright);flex:1;letter-spacing:.02em}
-.status-badge{font-size:8px;padding:2px 8px;border:1px solid var(--border);
-  color:var(--muted);border-radius:1px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
-.status-badge.已出租,.status-badge.正常{border-color:#1E3A1E;color:var(--green)}
-.status-badge.招租中,.status-badge.欠租{border-color:var(--urgent-bd);color:var(--urgent-text)}
-.status-badge.無合約{border-color:var(--blocked-bd);color:var(--blocked-text)}
-.status-badge.協商中{border-color:var(--remit-bd);color:var(--remit-text)}
-.pc-meta,.tc-meta2{display:flex;flex-wrap:wrap;gap:16px;font-size:10px;color:var(--muted);
-  font-family:"JetBrains Mono",monospace;font-weight:300}
-.pc-meta-lbl,.tc-meta-lbl2{font-size:8px;opacity:.6;margin-right:3px}
-.pc-note,.tc-note{font-size:11px;color:var(--dim);padding-top:8px;border-top:1px solid var(--border);font-weight:300}
-.tab-nav{top:82px}
-@media(max-width:1024px){
-  main{padding:32px 24px;gap:28px}
-  .hdr-name{font-size:17px}.hdr-clock{font-size:14px}.back-btn{font-size:15px}
-  .sum-bar{height:38px}.tab-btn{height:64px}.tab-label{font-size:12px}
-  .tc-title,.pc-addr,.tc-name{font-size:18px}.tc-meta{font-size:14px}.tag{font-size:12px;padding:3px 9px}
-}
-@media(max-width:640px){
-  header{padding:0 16px}.sum-bar{padding:0 16px;height:38px;font-size:13px}
-  main{padding:20px 16px;gap:20px}
-  .hdr-name{font-size:17px}.hdr-sub{font-size:12px}.back-btn{font-size:15px;padding:4px 8px}
-  .hdr-clock{font-size:11px}.logo{width:30px;height:30px}
-  .tab-btn{height:56px}.tab-label{font-size:10px}
-  .tc-top,.pc-top,.tc-top2{flex-direction:column;gap:8px}.tc-tags{justify-content:flex-start}
-  .tc-title{font-size:18px;line-height:1.5}
-  .tag{font-size:13px;padding:3px 9px}
-  .tc-meta{font-size:13px;gap:14px}
-  .tc-next,.tc-blocked{font-size:15px}
-  .sec-lbl{font-size:11px}
-  .sum-bdg{font-size:12px;padding:3px 10px}
-}
+    .c-bar{width:2px;align-self:stretch;min-height:32px;border-radius:2px;flex-shrink:0;background:var(--l2)}
+    .c-bar.urgent{background:var(--urgent)}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-main>div{animation:fadeUp .4s ease both}
-main>div:nth-child(2){animation-delay:.08s}
-main>div:nth-child(3){animation-delay:.16s}
-main>div:nth-child(4){animation-delay:.24s}
+    .c-body{flex:1;min-width:0}
+    .c-title{font-size:15px;font-weight:600;line-height:1.35}
+    .c-meta{font-size:10px;font-family:var(--mono);color:var(--l3);margin-top:6px}
+    .c-desc{font-size:12px;color:var(--ink2);margin-top:8px;line-height:1.55}
 
-/* ── QUICK NAV ── */
-.qnav{
-  display:flex;flex-wrap:wrap;gap:8px;
-  margin:0 auto;max-width:860px;padding:14px 32px 18px;
-  border-top:1px solid var(--border);
-}
-.qnav-lbl{
-  width:100%;font-size:8px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--muted);font-family:"JetBrains Mono",monospace;margin-bottom:2px;
-}
-.qnav a{
-  display:inline-flex;align-items:center;gap:5px;
-  font-size:11px;text-decoration:none;color:var(--dim);
-  border:1px solid var(--border);background:var(--panel);
-  border-radius:999px;padding:5px 12px;
-  -webkit-tap-highlight-color:transparent;
-  transition:color .15s,border-color .15s;
-}
-.qnav a:hover{color:var(--bright);border-color:var(--border2)}
-.qnav a.data{border-style:dashed;font-size:10px;color:var(--muted)}
-.qnav a.data:hover{color:var(--dim);border-color:var(--border2)}
-@media(max-width:600px){.qnav{padding:12px 16px 16px}}
-</style>
--->
+    /* quote block (minimal) */
+    .quote{
+      background:var(--paper);
+      border:1px solid var(--l1);
+      border-radius:var(--rad);
+      padding:14px 16px;
+      border-left:2px solid var(--ink);
+    }
+    .quote-text{font-size:15px;font-weight:500;line-height:1.55;color:var(--ink)}
+    .quote-src{font-size:10px;font-family:var(--mono);color:var(--l3);margin-top:8px}
+
+    /* small pill (only when urgent) */
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:10px;
+      font-family:var(--mono);
+      padding:3px 8px;
+      border-radius:3px;
+      border:1px solid var(--l1);
+      color:var(--ink3);
+      background:var(--bg);
+      white-space:nowrap;
+    }
+    .pill.urgent{border-color:var(--ink);color:var(--ink);background:var(--paper)}
+    .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.9}
+
+    /* bottom nav */
+    .bnav{
+      position:fixed;
+      bottom:0;left:0;right:0;
+      height:60px;
+      background:var(--paper);
+      border-top:1px solid var(--l1);
+      display:flex;
+      z-index:300;
+    }
+    .bn{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:3px;
+      cursor:pointer;
+      color:var(--l2);
+      font-size:9px;
+      font-family:var(--mono);
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      transition:color .12s;
+      user-select:none;
+      position:relative;
+    }
+    .bn.on{color:var(--ink)}
+    .bn.on::after{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--ink);border-radius:0 0 2px 2px}
+    .bn-ico{width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+    .bn-ico svg{width:18px;height:18px;fill:currentColor}
+
+    /* responsive */
+    @media (max-width:380px){
+      .hero{padding:24px 18px 20px}
+      .sec{padding:0 18px}
+    }
+  </style>
 </head>
-<body class="zj-scope">
+<body>
 
-<header>
-  <div class="hdr-l">
-    <a class="back-btn" href="../">‹ 返回</a>
-    <div class="hdr-div"></div>
-    <div class="logo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="12" height="18"/><path d="M15 7h4l2 14H15"/><line x1="7" y1="8" x2="10" y2="8"/><line x1="7" y1="12" x2="10" y2="12"/><rect x="8" y="17" width="3" height="4"/></svg><img src="../assets/avatar.png" alt="OC" onerror="this.remove()"></div>
-    <div>
-      <div class="hdr-name">兆鯨顧問</div>
-      <div class="hdr-sub">顧問 · 物業 · 電商</div>
+  <!-- PAGE: HOME (minimal) -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <div class="hero-eyebrow">ZHAOJING · BUSINESS NOTES</div>
+      <div class="hero-date" id="heroDate"></div>
     </div>
-    <button class="theme-toggle" id="btn-theme">日光模式</button>
+
+    <div class="sec">
+      <div class="sec-h"><div class="sec-l">每日一句</div><div class="sec-r" id="quoteHint"></div></div>
+      <div class="quote">
+        <div class="quote-text" id="dailyQuote">載入中…</div>
+        <div class="quote-src" id="dailyQuoteSource"></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><div class="sec-l">One Thing</div></div>
+      <div class="card">
+        <div class="c-bar"></div>
+        <div class="c-body">
+          <div class="c-title" id="oneThingTitle">（待填）今天最重要的事</div>
+          <div class="c-meta" id="oneThingMeta">截止 — · 兆鯨</div>
+          <div class="c-desc" id="oneThingDesc">把今天的決定寫成一句話，明天就能直接推進。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h">
+        <div class="sec-l">待決策</div>
+        <div class="sec-r" id="decisionMore"></div>
+      </div>
+      <div id="decisionList" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
   </div>
-  <div id="clk" class="hdr-clock"></div>
-</header>
-<div class="sum-bar">
-  <span id="sum-content">載入中…</span>
-  <span class="sum-ts" id="sum-ts"></span>
-</div>
 
-<nav class="tab-nav">
-  <a class="tab-btn active" onclick="switchTab('tasks')" id="tab-tasks">
-    <span class="tab-badge" id="badge-tasks">—</span>
-    <span class="tab-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
-    <span class="tab-label">工作任務</span>
-  </a>
-  <a class="tab-btn" onclick="switchTab('props')" id="tab-props">
-    <span class="tab-badge" id="badge-props">—</span>
-    <span class="tab-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
-    <span class="tab-label">物件資料</span>
-  </a>
-  <a class="tab-btn" onclick="switchTab('tenants')" id="tab-tenants">
-    <span class="tab-badge" id="badge-tenants">—</span>
-    <span class="tab-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-    <span class="tab-label">房客資料</span>
-  </a>
-</nav>
-
-<div class="tab-panel active" id="panel-tasks"><main id="main-tasks"><div class="loading-wrap">載入中…</div>
-
-</main></div>
-
-<div class="tab-panel" id="panel-props"><main id="main-props"><div class="loading-wrap">載入中…</div>
-
-</main></div>
-<div class="tab-panel" id="panel-tenants"><main id="main-tenants"><div class="loading-wrap">載入中…</div>
-
-</main></div>
-
-<div class="qnav">
-  <div class="qnav-lbl">快速導航</div>
-  <a href="ecom.html">電商推進</a>
-  <a href="tenants.html">租客名單</a>
-  <a href="property_ops.html">物業事件</a>
-  <a href="../data/zhaojing/tenants.json" class="data" target="_blank">JSON: 租客</a>
-  <a href="../data/zhaojing/property_ops.json" class="data" target="_blank">JSON: 物業事件</a>
-</div>
-
-<script>
-
-function tick(){
-  const e=document.getElementById("clk");if(!e)return;
-  const n=new Date();const days=["日","一","二","三","四","五","六"];
-  e.innerHTML=n.toLocaleTimeString("zh-TW",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"})
-    +"<br>"+String(n.getMonth()+1).padStart(2,"0")+"/"+String(n.getDate()).padStart(2,"0")+" 週"+days[n.getDay()];
-}
-tick();setInterval(tick,1000);
-
-// Theme (default light for business)
-(function(){
-  const saved = localStorage.getItem('zj_theme') || 'light';
-  document.body.setAttribute('data-theme', saved);
-  const btn=document.getElementById('btn-theme');
-  function sync(){
-    const cur=document.body.getAttribute('data-theme')||'light';
-    if(btn) btn.textContent = cur==='light' ? '深色模式' : '日光模式';
-  }
-  if(btn){
-    btn.addEventListener('click', ()=>{
-      const cur=document.body.getAttribute('data-theme')||'light';
-      const next=cur==='light'?'dark':'light';
-      localStorage.setItem('zj_theme', next);
-      document.body.setAttribute('data-theme', next);
-      sync();
-    });
-  }
-  sync();
-})();
-
-function fmtTs(iso){
-  if(!iso||iso==="-") return "-";
-  const d=new Date(iso);if(isNaN(d)) return iso;
-  const now=new Date();
-  if(d.toDateString()===now.toDateString()) return d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
-  return d.toLocaleDateString("zh-TW",{month:"2-digit",day:"2-digit"});
-}
-
-const PRI_LBL={urgent:"急件",important:"重要",normal:"一般"};
-const TYPE_LBL={remittance:"匯款",alert:"提醒",task:"任務"};
-
-function renderSummary(tasks,ts,barId="sum-bar"){
-  const c={pending:0,blocked:0,done:0};
-  tasks.forEach(t=>{if(t.status==="已完成")c.done++;else if(t.status==="阻塞")c.blocked++;else c.pending++;});
-  let html="";
-  if(c.blocked) html+=`<span class="sum-bdg blocked">阻塞 ${c.blocked}</span>`;
-  html+=`<span class="sum-bdg pending">待處理 ${c.pending}</span>`;
-  html+=`<span class="sum-bdg done">已完成 ${c.done}</span>`;
-  document.getElementById("sum-content").innerHTML=html;
-  document.getElementById("sum-ts").textContent="更新 "+fmtTs(ts);
-}
-
-function taskCard(t){
-  const isBlk=t.status==="阻塞",isUrg=t.priority==="urgent",isDone=t.status==="已完成";
-  const cardCls=isBlk?"task-card blocked-card":isUrg?"task-card urgent-card":isDone?"task-card done-card":"task-card";
-  const tags=[];
-  if(isUrg) tags.push(`<span class="tag urgent">急件</span>`);
-  else if(t.priority==="important") tags.push(`<span class="tag important">重要</span>`);
-  if(t.type==="remittance") tags.push(`<span class="tag remittance">匯款</span>`);
-  else if(t.type==="alert") tags.push(`<span class="tag alert-tag">提醒</span>`);
-  if(isBlk) tags.push(`<span class="tag blocked-tag">阻塞</span>`);
-  if(isDone) tags.push(`<span class="tag" style="opacity:.4">完成</span>`);
-  const meta=[];
-  if(t.time&&t.time!=="-") meta.push(`<span><span class="tc-meta-lbl">排程 </span>${t.time}</span>`);
-  if(t.due&&t.due!=="-") meta.push(`<span><span class="tc-meta-lbl">截止 </span>${t.due}</span>`);
-  if(t.owner_role&&t.owner_role!=="-") meta.push(`<span><span class="tc-meta-lbl">負責 </span>${t.owner_role}</span>`);
-  return `<div class="${cardCls}">
-    <div class="tc-top">
-      <div class="tc-title">${t.title}</div>
-      ${tags.length?`<div class="tc-tags">${tags.join("")}</div>`:""}
+  <!-- PAGE: LINKS (kept simple; can grow later) -->
+  <div class="page" id="page-links">
+    <div class="hero">
+      <div class="hero-eyebrow">ZHAOJING · LINKS</div>
+      <div class="hero-date">入口 / 常用連結</div>
     </div>
-    ${meta.length?`<div class="tc-meta">${meta.join("")}</div>`:""}
-    ${t.next_step&&t.next_step!=="-"?`<div class="tc-next">→ ${t.next_step}</div>`:""}
-    ${t.blocked_reason&&t.blocked_reason!=="-"?`<div class="tc-blocked">阻塞 — ${t.blocked_reason}</div>`:""}
-  </div>`;
-}
+    <div class="sec" style="display:flex;flex-direction:column;gap:10px">
+      <a class="card" href="./ecom.html" style="text-decoration:none;color:inherit">
+        <div class="c-bar"></div>
+        <div class="c-body"><div class="c-title">電商</div><div class="c-meta">進度 / 清單</div></div>
+      </a>
+      <a class="card" href="./property_ops.html" style="text-decoration:none;color:inherit">
+        <div class="c-bar"></div>
+        <div class="c-body"><div class="c-title">物業管理</div><div class="c-meta">租務 / 代辦</div></div>
+      </a>
+      <a class="card" href="./tenants.html" style="text-decoration:none;color:inherit">
+        <div class="c-bar"></div>
+        <div class="c-body"><div class="c-title">房客 / 名單</div><div class="c-meta">資料索引</div></div>
+      </a>
+    </div>
+  </div>
 
-function renderTaskGroups(tasks,containerId){
-  const el=document.getElementById(containerId||"main");
-  const groups=[
-    {label:"阻塞中",    fn:t=>t.status==="阻塞"},
-    {label:"急件",      fn:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="urgent"},
-    {label:"重要",      fn:t=>t.status!=="阻塞"&&t.status!=="已完成"&&t.priority==="important"},
-    {label:"待處理",    fn:t=>t.status!=="阻塞"&&t.status!=="已完成"&&(!t.priority||t.priority==="normal")},
-    {label:"已完成",    fn:t=>t.status==="已完成"},
-  ];
-  const html=groups.map(g=>{
-    const items=tasks.filter(g.fn);
-    if(!items.length) return "";
-    return `<div><div class="sec-lbl">${g.label}</div><div class="task-list">${items.map(taskCard).join("")}</div></div>`;
-  }).join("");
-  el.innerHTML=html||`<div class="loading-wrap">— 目前無任務 —</div>`;
-}
+  <!-- bottom nav -->
+  <nav class="bnav">
+    <div class="bn on" onclick="nav('home',this)">
+      <div class="bn-ico"><svg viewBox="0 0 20 20"><path d="M3 9.5L10 3l7 6.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg></div>
+      首頁
+    </div>
+    <div class="bn" onclick="nav('links',this)">
+      <div class="bn-ico"><svg viewBox="0 0 20 20"><path d="M4 4h5v5H4zM11 4h5v5h-5zM4 11h5v5H4zM11 11h5v5h-5z"/></svg></div>
+      入口
+    </div>
+  </nav>
 
-function switchTab(tab){
-  ["tasks","props","tenants"].forEach(t=>{
-    document.getElementById("panel-"+t).classList.toggle("active",t===tab);
-    document.getElementById("tab-"+t).classList.toggle("active",t===tab);
-  });
-}
-function propCard(p){
-  const st=p.status||"";const cls="prop-card s-"+st.replace(/\s/g,"");
-  const rent=p.rent?`NT$ ${p.rent.toLocaleString("zh-TW")}/月`:"—";
-  return `<div class="${cls}">
-    <div class="pc-top">
-      <div class="pc-addr">🏠 ${p.address}</div>
-      <span class="status-badge ${st}">${st}</span>
-    </div>
-    <div class="pc-meta">
-      <span><span class="pc-meta-lbl">類型 </span>${p.type||"—"}</span>
-      <span><span class="pc-meta-lbl">租金 </span>${rent}</span>
-      <span><span class="pc-meta-lbl">承租人 </span>${p.tenant||"—"}</span>
-      ${p.contract_end&&p.contract_end!=="-"?`<span><span class="pc-meta-lbl">合約到期 </span>${p.contract_end}</span>`:""}
-    </div>
-    ${p.note&&p.note!=="-"?`<div class="pc-note">→ ${p.note}</div>`:""}
-  </div>`;
-}
-function tenantCard(t){
-  const st=t.status||"";const cls="tenant-card s-"+st.replace(/\s/g,"");
-  return `<div class="${cls}">
-    <div class="tc-top2">
-      <div class="tc-name">👤 ${t.name}</div>
-      <span class="status-badge ${st}">${st}</span>
-    </div>
-    <div class="tc-meta2">
-      <span><span class="tc-meta-lbl2">物件 </span>${t.property||"—"}</span>
-      <span><span class="tc-meta-lbl2">月租 </span>${t.rent?`NT$ ${t.rent.toLocaleString("zh-TW")}`:"—"}</span>
-      ${t.arrears>0?`<span style="color:var(--urgent-text)"><span class="tc-meta-lbl2">欠租 </span>NT$ ${t.arrears.toLocaleString("zh-TW")}</span>`:""}
-      ${t.contract_end&&t.contract_end!=="-"?`<span><span class="tc-meta-lbl2">合約到期 </span>${t.contract_end}</span>`:""}
-      ${t.contact&&t.contact!=="-"?`<span><span class="tc-meta-lbl2">聯絡 </span>${t.contact}</span>`:""}
-    </div>
-    ${t.note&&t.note!=="-"?`<div class="tc-note">→ ${t.note}</div>`:""}
-  </div>`;
-}
-function renderProps(props){
-  const el=document.getElementById("main-props");
-  document.getElementById("badge-props").textContent=props.length;
-  const warn=props.filter(p=>["招租中","無合約"].includes(p.status));
-  const ok=props.filter(p=>p.status==="已出租");
-  let html="";
-  if(warn.length) html+=`<div><div class="sec-lbl">需關注</div><div class="prop-list">${warn.map(propCard).join("")}</div></div>`;
-  if(ok.length) html+=`<div><div class="sec-lbl">已出租</div><div class="prop-list">${ok.map(propCard).join("")}</div></div>`;
-  el.innerHTML=html||`<div class="loading-wrap">— 目前無物件資料 —</div>`;
-}
-function renderTenants(tenants){
-  const el=document.getElementById("main-tenants");
-  document.getElementById("badge-tenants").textContent=tenants.length;
-  const warn=tenants.filter(t=>["欠租","無合約","協商中"].includes(t.status));
-  const ok=tenants.filter(t=>t.status==="正常");
-  let html="";
-  if(warn.length) html+=`<div><div class="sec-lbl">需關注</div><div class="tenant-list">${warn.map(tenantCard).join("")}</div></div>`;
-  if(ok.length) html+=`<div><div class="sec-lbl">正常租戶</div><div class="tenant-list">${ok.map(tenantCard).join("")}</div></div>`;
-  el.innerHTML=html||`<div class="loading-wrap">— 目前無房客資料 —</div>`;
-}
-async function init(){
-  const [taskRes,propRes,tenantRes]=await Promise.all([
-    fetch("../data/zhaojing/tasks.json?_="+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch("../data/zhaojing/properties.json?_="+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch("../data/zhaojing/tenants.json?_="+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null),
-  ]);
-  if(taskRes){renderSummary(taskRes.tasks||[],taskRes.updated_at);renderTaskGroups(taskRes.tasks||[],"main-tasks");}
-  else document.getElementById("main-tasks").innerHTML=`<div class="loading-wrap">無法載入任務</div>`;
-  renderProps(propRes?.properties||[]);
-  renderTenants(tenantRes?.tenants||[]);
-}
-init();
-</script>
-<script src="../assets/js/status-ring.js"></script>
+  <script>
+    // ── date
+    const days=['日','一','二','三','四','五','六'];
+    const n=new Date();
+    document.getElementById('heroDate').textContent = `${n.getFullYear()} / ${String(n.getMonth()+1).padStart(2,'0')} / ${String(n.getDate()).padStart(2,'0')}  週${days[n.getDay()]}`;
+
+    // ── nav
+    function nav(k,el){
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.querySelectorAll('.bn').forEach(b=>b.classList.remove('on'));
+      document.getElementById('page-'+k).classList.add('active');
+      el.classList.add('on');
+      window.scrollTo(0,0);
+    }
+
+    // ── decisions (placeholder; later will be wired to real data)
+    const decisions = [
+      { title: '促銷折扣上限 & 會員分級優惠', due: '03/04', urgent: true },
+      { title: '退貨流程 & 換貨授權未確認', due: '03/06', urgent: false },
+    ];
+
+    function renderDecisions(){
+      const list = document.getElementById('decisionList');
+      const more = document.getElementById('decisionMore');
+      const show = decisions.slice(0,3);
+      const rest = decisions.length - show.length;
+
+      list.innerHTML = show.map(d => {
+        const pill = d.urgent ? `<span class="pill urgent"><span class="dot"></span>緊急</span>` : '';
+        return `
+          <div class="card">
+            <div class="c-bar ${d.urgent ? 'urgent' : ''}"></div>
+            <div class="c-body">
+              <div class="c-title">${d.title}</div>
+              <div class="c-meta">截止 ${d.due}</div>
+            </div>
+            ${pill}
+          </div>
+        `;
+      }).join('');
+
+      more.textContent = rest > 0 ? `+${rest} 更多 ›` : '';
+    }
+    renderDecisions();
+
+    // ── daily quote (Option B)
+    async function loadDailyQuote(){
+      const today = new Date().toISOString().slice(0,10);
+      const cached = (()=>{ try{return JSON.parse(localStorage.getItem('daily_quote')||'{}')}catch{return {}} })();
+
+      if(cached && cached.date === today && cached.text){
+        applyQuote(cached);
+        return;
+      }
+
+      // Strategy: fetch once per day from public quote API (CORS)
+      // Note: This is the display layer only. Archiving to「資訊資料庫」will be done by a separate daily job.
+      try{
+        const res = await fetch('https://api.quotable.io/random?tags=business|wisdom|famous-quotes');
+        const q = await res.json();
+
+        const data = {
+          date: today,
+          text: q.content,
+          source: q.author,
+          category: 'business',
+          fetched_from: 'api.quotable.io',
+          fetched_at: new Date().toISOString()
+        };
+
+        localStorage.setItem('daily_quote', JSON.stringify(data));
+        applyQuote(data);
+        document.getElementById('quoteHint').textContent = '每日更新';
+      }catch(e){
+        document.getElementById('dailyQuote').textContent = '—';
+        document.getElementById('dailyQuoteSource').textContent = '';
+        document.getElementById('quoteHint').textContent = '來源不可用';
+      }
+    }
+
+    function applyQuote(q){
+      document.getElementById('dailyQuote').textContent = `「${q.text}」`;
+      document.getElementById('dailyQuoteSource').textContent = `— ${q.source || '—'} · ${q.fetched_from || ''}`.trim();
+    }
+
+    loadDailyQuote();
+  </script>
 </body>
 </html>
