@@ -27,7 +27,7 @@
 
     .top{padding:24px 18px 64px;position:relative}
     .month{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:.05em}
-    .date{margin-top:10px;font-size:58px;line-height:.95;font-weight:700;letter-spacing:.005em}
+    .date{margin-top:10px;font-size:50px;line-height:.95;font-weight:700;letter-spacing:.005em}
     .motto{margin-top:14px;font-size:16px;line-height:1.5;font-weight:500;max-width:84%;color:#555c67}
 
     .weather{position:absolute;right:18px;top:20px;border:1px solid #cfd5de;background:var(--top);padding:10px 12px;font-size:12px;color:#1b2029;display:flex;align-items:center;gap:6px}
@@ -93,7 +93,7 @@
             <div class="core-bar"></div>
             <div>
               <div class="core-title" id="coreTitle">完成 Q1 提案</div>
-              <div class="meta"><span id="corePriority">Priority: High</span><span id="coreDeadline">Deadline: 03/07</span></div>
+              <div class="meta"><span id="coreDate">日期：03/07</span><span id="coreHint">提醒：先完成關鍵輸出</span></div>
             </div>
           </div>
 
@@ -193,12 +193,28 @@
       let s={};
       try{ const r=await fetch(STATE_URL,{cache:'no-store'}); if(r.ok) s=await r.json(); }catch{}
 
-      const core = s.oneThing || {title:'完成 Q1 提案',meta:'Priority: High · Deadline: 03/07',desc:'本週重點：聚焦可直接交付的成果。'};
-      document.getElementById('coreTitle').textContent = core.title || '完成 Q1 提案';
-      const metaText = core.meta || 'Priority: High · Deadline: 03/07';
-      const [p,d] = metaText.split('·').map(v=>v?.trim());
-      document.getElementById('corePriority').textContent = p || 'Priority: High';
-      document.getElementById('coreDeadline').textContent = d || 'Deadline: 03/07';
+      const truncate = (txt, n) => {
+        const arr = [...String(txt || '')];
+        return arr.length > n ? arr.slice(0, n).join('') : arr.join('');
+      };
+
+      const pickByOrder = () => {
+        const fromFocuses = Array.isArray(s.focuses) ? s.focuses : [];
+        const byTag = (tag) => fromFocuses.find(x => String(x.type||x.tag||'').includes(tag));
+        return byTag('客戶') || byTag('專案') || byTag('待辦') || fromFocuses[0] || s.oneThing || null;
+      };
+
+      const picked = pickByOrder() || {title:'完成 Q1 提案', meta:'03/07', detail:'先完成關鍵輸出'};
+      const core = {
+        title: truncate(picked.title || picked.item || '今日重點', 7),
+        date: truncate((picked.date || picked.due || picked.meta || '03/07').replace(/日期[:：]?/g,''), 12),
+        hint: truncate(picked.hint || picked.detail || picked.desc || '先完成關鍵輸出', 15),
+        desc: picked.desc || picked.detail || '本週重點：聚焦可直接交付的成果。'
+      };
+
+      document.getElementById('coreTitle').textContent = core.title;
+      document.getElementById('coreDate').textContent = `日期：${core.date}`;
+      document.getElementById('coreHint').textContent = `提醒：${core.hint}`;
 
       const schedules = s.schedules || [
         {time:'09:30 – 10:00',title:'Weekly Sync',sub:'Product Team | Google Meet',detail:'先確認今天三件最重要的事，避免分心。'},
