@@ -1,10 +1,10 @@
 {
   "oneThing": {
-    "title": "新南向人力銀行",
-    "meta": "3/3 am12:00",
-    "date": "3/3 am12:00",
-    "hint": "依序執行",
-    "desc": "新南向人力銀行 截止"
+    "title": "全立祥送工",
+    "meta": "08:30",
+    "date": "08:30",
+    "hint": "先確認文件/窗口",
+    "desc": "NOVIANTO 諾維送工（約2H）"
   },
   "focuses": [
     {
@@ -48,27 +48,43 @@
   ],
   "schedules": [
     {
-      "date": "3/3",
-      "time": "3/3 am12:00",
-      "title": "新南向人力銀行",
-      "sub": "專案提醒",
-      "detail": "新南向人力銀行 截止",
-      "type": "專案"
-    },
-    {
-      "date": "3/31",
-      "time": "3/31 am12:00",
-      "title": "內部流程優化 ",
+      "date": "",
+      "time": "08:30",
+      "title": "全立祥送工",
       "sub": "客戶提醒",
-      "detail": "內部流程優化 截止",
+      "detail": "NOVIANTO 諾維送工（約2H）",
       "type": "客戶"
     },
     {
-      "date": "3/31",
-      "time": "3/31 am12:00",
-      "title": "OpenCla",
+      "date": "",
+      "time": "T2",
+      "title": "新南向開發",
+      "sub": "專案提醒",
+      "detail": "新南向人力銀行－上市前開發作業檢視",
+      "type": "專案"
+    },
+    {
+      "date": "",
+      "time": "T3",
+      "title": "兆鯨iCloud",
+      "sub": "顧問提醒",
+      "detail": "兆鯨電商導入－申請公司專用 iCloud 帳號",
+      "type": "顧問"
+    },
+    {
+      "date": "5",
+      "time": "5 am10:00",
+      "title": "康揚電話說明",
       "sub": "客戶提醒",
-      "detail": "OpenClaw 任務池 截止",
+      "detail": "康揚－正職代招/評點制需求電話說明（江先生）",
+      "type": "客戶"
+    },
+    {
+      "date": "3/26",
+      "time": "3/26 am09:00",
+      "title": "全立祥月底追蹤",
+      "sub": "客戶提醒",
+      "detail": "離境補人與5%許可函進度追蹤",
       "type": "客戶"
     }
   ]
