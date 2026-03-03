@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-03-02T11:02:11Z",
+  "updated_at": "2026-03-03T06:53:04Z",
   "net_worth": 1276644,
   "available_cash": 161690,
   "stocks_value": 429514,
@@ -113,6 +113,15 @@
     }
   ],
   "transactions": [
+    {
+      "date": "2026-03-03",
+      "category": "餐飲",
+      "item": "午餐-水餃店",
+      "income": 0,
+      "expense": 340,
+      "payment": "現金",
+      "note": "午餐（個人帳務）"
+    },
     {
       "date": "2026-03-02",
       "category": "公司零用金",
