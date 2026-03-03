@@ -260,11 +260,26 @@
         }));
 
       const allItems = [...schedulePool, ...reminderPool];
-      const todayOnly = allItems.filter(it => findMMDD(it) === mmdd);
-      const futureItems = allItems.filter(it => {
-        const d = findMMDD(it);
-        return d && d !== mmdd;
-      });
+      const toOrdinal = (mmddStr) => {
+        const m = mmddStr.match(/^(\d{2})\/(\d{2})$/);
+        if(!m) return null;
+        return Number(m[1]) * 100 + Number(m[2]);
+      };
+
+      const todayOnly = allItems.filter(it => findMMDD(it) === mmdd); // 今日，不分已過/未過
+      const todayOrd = toOrdinal(mmdd) || 0;
+      const futureItems = allItems
+        .filter(it => {
+          const d = findMMDD(it);
+          const ord = toOrdinal(d || '');
+          return ord && ord > todayOrd;
+        })
+        .sort((a,b) => {
+          const da = toOrdinal(findMMDD(a) || '') || 9999;
+          const db = toOrdinal(findMMDD(b) || '') || 9999;
+          if(da !== db) return da - db;
+          return String(a.time||'').localeCompare(String(b.time||''));
+        });
 
       const schedules = todayOnly;
 
@@ -302,14 +317,16 @@
         sheetEl?.classList.add('compact');
       };
 
-      // 右滑頁：顯示後續（非當天）行程與提醒事項
+      // 右滑第一分頁：顯示明天之後行程/提醒（最多6項）
       const futureMapped = futureItems.map(it => ({
         title: it.title,
         meta: `${findMMDD(it) || ''} ${it.time || ''} · ${it.sub || it.type || ''}`.trim()
       }));
-      renderLines(document.getElementById('tasksPane'), futureMapped.slice(0, 8));
-      renderLines(document.getElementById('controlPane'), futureMapped.slice(8, 16));
-      renderLines(document.getElementById('intelPane'), futureMapped.slice(16, 24));
+      renderLines(document.getElementById('tasksPane'), futureMapped.slice(0, 6));
+
+      // 其餘分頁維持既有資料（若無則空）
+      renderLines(document.getElementById('controlPane'), s.controls);
+      renderLines(document.getElementById('intelPane'), s.intels);
       renderLines(document.getElementById('financePane'), s.finances);
     }
 
