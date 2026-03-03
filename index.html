@@ -191,9 +191,7 @@
         {time:'14:00',title:'賴冠佑來訪',sub:'客戶提醒',detail:'賴冠佑 來訪（BNI後）',type:'客戶',date:'03/06'}
       ];
 
-      // 只保留 客戶 / 專案 / 物業
-      const now = new Date();
-      const mmdd = `${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+      // 只保留 客戶 / 專案 / 物業，並直接採用 SQL 產生的接下來事件
       const wanted = (txt) => {
         const t = String(txt || '');
         return t.includes('客戶') || t.includes('專案') || t.includes('物業');
@@ -204,42 +202,8 @@
         return m ? `${m[1].padStart(2,'0')}/${m[2].padStart(2,'0')}` : '';
       };
 
-      const schedulePool = rawSchedules.filter(it => wanted(it.type||it.sub));
-
-      const reminderPool = (Array.isArray(s.reminders) ? s.reminders : [])
-        .filter(r => wanted(r.type||r.tag||r.category))
-        .map(r => ({
-          time: r.time || (r.date ? `${r.date}` : '提醒'),
-          title: r.title || r.item || '提醒事項',
-          sub: r.type || r.category || '提醒事項',
-          detail: r.detail || r.note || r.title || '請先處理此提醒',
-          type: r.type || r.category || '提醒',
-          date: r.date || ''
-        }));
-
-      const allItems = [...schedulePool, ...reminderPool];
-      const toOrdinal = (mmddStr) => {
-        const m = mmddStr.match(/^(\d{2})\/(\d{2})$/);
-        if(!m) return null;
-        return Number(m[1]) * 100 + Number(m[2]);
-      };
-
-      const todayOnly = allItems.filter(it => findMMDD(it) === mmdd); // 今日，不分已過/未過
-      const todayOrd = toOrdinal(mmdd) || 0;
-      const futureItems = allItems
-        .filter(it => {
-          const d = findMMDD(it);
-          const ord = toOrdinal(d || '');
-          return ord && ord > todayOrd;
-        })
-        .sort((a,b) => {
-          const da = toOrdinal(findMMDD(a) || '') || 9999;
-          const db = toOrdinal(findMMDD(b) || '') || 9999;
-          if(da !== db) return da - db;
-          return String(a.time||'').localeCompare(String(b.time||''));
-        });
-
-      const schedules = todayOnly;
+      const schedules = rawSchedules.filter(it => wanted(it.type||it.sub));
+      const futureItems = schedules.slice(1);
 
       // 固定「全立祥送工」第一位
       schedules.sort((a,b)=>{
