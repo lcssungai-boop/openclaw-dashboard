@@ -25,37 +25,39 @@
     .carousel::-webkit-scrollbar{display:none}
     .page{min-width:100%;min-height:100vh;scroll-snap-align:start;background:var(--top);position:relative}
 
-    .top{padding:22px 16px 56px;position:relative}
-    .month{font-family:var(--mono);font-size:14px;color:var(--muted);letter-spacing:.06em}
-    .date{margin-top:8px;font-size:64px;line-height:1;font-weight:700;letter-spacing:.01em}
-    .motto{margin-top:12px;font-size:16px;line-height:1.45;font-weight:500;max-width:88%;color:#545b66}
+    .top{padding:24px 18px 64px;position:relative}
+    .month{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:.05em}
+    .date{margin-top:10px;font-size:58px;line-height:.95;font-weight:700;letter-spacing:.005em}
+    .motto{margin-top:14px;font-size:16px;line-height:1.5;font-weight:500;max-width:84%;color:#555c67}
 
-    .weather{position:absolute;right:16px;top:18px;border:1px solid #ccd2db;background:var(--top);padding:8px 10px;font-size:13px;color:#1b2029;display:flex;align-items:center;gap:6px}
-    .weather .icon{font-size:14px;opacity:.9}
+    .weather{position:absolute;right:18px;top:20px;border:1px solid #cfd5de;background:var(--top);padding:10px 12px;font-size:12px;color:#1b2029;display:flex;align-items:center;gap:6px}
+    .weather .icon{font-size:13px;opacity:.9}
 
     .sheet{
-      margin-top:-20px;
+      margin-top:-18px;
       background:var(--panel);
-      border-radius:28px 28px 0 0;
+      border-radius:30px 30px 0 0;
       border-top:1px solid #e7ebf2;
-      min-height:calc(100vh - 140px);
-      padding:14px 16px 28px;
+      min-height:calc(100vh - 152px);
+      padding:16px 16px 30px;
     }
 
     .core{
       border-bottom:1px solid var(--line);
-      padding:10px 0 14px 0;
-      display:flex;gap:10px;
+      padding:14px 0 18px 0;
+      display:flex;gap:12px;
       cursor:pointer;
     }
-    .core-bar{width:4px;background:var(--ink);flex-shrink:0}
-    .core-title{font-size:17px;font-weight:700;line-height:1.35}
-    .meta{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+    .core-bar{width:5px;background:#1f2a44;flex-shrink:0}
+    .core-title{font-size:44px;font-weight:700;line-height:1.08;letter-spacing:.01em}
+    .meta{font-family:var(--mono);font-size:14px;color:var(--muted);margin-top:10px;display:block;line-height:1.6}
+    .meta span{display:block}
 
-    .schedule{margin-top:10px}
-    .sch-item{padding:12px 0;cursor:pointer}
-    .sch-time{font-family:var(--mono);font-size:11px;color:var(--muted)}
-    .sch-title{font-size:15px;line-height:1.4;margin-top:3px}
+    .schedule{margin-top:14px}
+    .sch-item{padding:14px 0;cursor:pointer;display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:start}
+    .sch-time{font-family:var(--mono);font-size:14px;color:#222;padding-top:2px}
+    .sch-title{font-size:17px;line-height:1.25;margin-top:0;font-weight:700}
+    .sch-sub{font-size:13px;line-height:1.35;color:var(--muted);margin-top:3px}
 
     .detail{margin-top:14px;padding-top:10px;border-top:1px solid var(--line)}
     .detail-text{font-size:14px;line-height:1.6;color:#2b313b}
@@ -199,9 +201,10 @@
       document.getElementById('coreDeadline').textContent = d || 'Deadline: 03/07';
 
       const schedules = s.schedules || [
-        {time:'09:30',title:'確認本日三個關鍵推進項目',detail:'先確認今天三件最重要的事，避免分心。'},
-        {time:'14:00',title:'追蹤執行進度與阻塞點',detail:'對齊卡點，決定是否需要升級處理。'},
-        {time:'17:30',title:'完成今日核對與回顧',detail:'整理完成項與未完成項，銜接明日。'}
+        {time:'09:30 – 10:00',title:'Weekly Sync',sub:'Product Team | Google Meet',detail:'先確認今天三件最重要的事，避免分心。'},
+        {time:'11:30 – 12:30',title:'Design Review',sub:'Virtual Meeting',detail:'對齊卡點，決定是否需要升級處理。'},
+        {time:'14:00 – 16:00',title:'Contract Review',sub:'Legal Dept.',detail:'整理完成項與未完成項，銜接明日。'},
+        {time:'16:00 – 16:30',title:'Client Call',sub:'Mr. Lin (ABC Corp)',detail:'確認需求變更與時程，會後更新待辦。'}
       ];
 
       const schEl=document.getElementById('scheduleList');
@@ -209,7 +212,7 @@
       schedules.forEach(it=>{
         const row=document.createElement('div');
         row.className='sch-item';
-        row.innerHTML=`<div class="sch-time">${it.time||''}</div><div class="sch-title">${it.title||''}</div>`;
+        row.innerHTML=`<div class="sch-time">${it.time||''}</div><div><div class="sch-title">${it.title||''}</div><div class="sch-sub">${it.sub||it.source||''}</div></div>`;
         row.onclick=()=>setDetail(it.detail || it.title || '');
         schEl.appendChild(row);
       });
