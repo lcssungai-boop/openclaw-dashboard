@@ -18,14 +18,14 @@
       --body:'Noto Sans TC',sans-serif;
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:var(--body);color:var(--ink);background:#fff;overflow-x:hidden}
+    body{font-family:var(--body);color:var(--ink);background:var(--top);overflow-x:hidden}
 
     .phone{max-width:430px;min-height:100vh;margin:0 auto;background:var(--top)}
     .carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
     .carousel::-webkit-scrollbar{display:none}
     .page{min-width:100%;min-height:100vh;scroll-snap-align:start;background:var(--top);position:relative}
 
-    .top{padding:24px 18px 64px;position:relative}
+    .top{padding:calc(24px + env(safe-area-inset-top)) 18px 64px;position:relative}
     .month{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:.05em}
     .date{margin-top:22px;font-size:50px;line-height:.95;font-weight:700;letter-spacing:.005em}
     .motto{margin-top:14px;font-size:16px;line-height:1.5;font-weight:500;max-width:84%;color:#555c67}
