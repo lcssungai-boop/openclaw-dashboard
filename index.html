@@ -24,6 +24,7 @@
     .home-hotspot.show{display:inline-block}
     .hero-eyebrow{font-size:10px;font-family:var(--mono);color:var(--ink3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
     .hero-date{font-size:28px;line-height:1.1;font-weight:700;color:var(--ink);letter-spacing:.01em}
+    .hero-quote{margin-top:10px;font-size:14px;line-height:1.5;color:var(--ink2);max-width:92%}
     .sec{padding:0 16px;margin:16px 0}
     .page .sec:first-of-type{margin-top:-18px}
     .sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -46,20 +47,19 @@
 </head>
 <body>
   <div class="page active" id="page-home">
-    <div class="hero"><div class="hero-eyebrow">OPENCLAW · TODAY FOCUS</div><div class="hero-date" id="heroDate"></div></div>
-
-    <div class="sec">
-      <div class="sec-h"><div class="sec-l">每日一句</div><div class="sec-r" id="quoteHint"></div></div>
-      <div class="quote"><div class="quote-text" id="dailyQuote"></div><div class="quote-src" id="dailyQuoteSource"></div></div>
+    <div class="hero">
+      <div class="hero-eyebrow">OPENCLAW</div>
+      <div class="hero-date" id="heroDate"></div>
+      <div class="hero-quote" id="dailyQuote"></div>
     </div>
 
     <div class="sec">
-      <div class="sec-h"><div class="sec-l">今天要做什麼（Top 3）</div></div>
+      <div class="sec-h"><div class="sec-l">今天重點</div></div>
       <div id="focusList" class="list"></div>
     </div>
 
     <div class="sec">
-      <div class="sec-h"><div class="sec-l">待決策（<=3）</div><div class="sec-r" id="decisionMore"></div></div>
+      <div class="sec-h"><div class="sec-l">待決策</div><div class="sec-r" id="decisionMore"></div></div>
       <div id="decisionList" class="list"></div>
     </div>
   </div>
@@ -135,8 +135,6 @@
     function loadDailyQuote(){
       const idx = dayOfYear(new Date()) % BUSINESS_QUOTES.length;
       document.getElementById('dailyQuote').textContent = `「${BUSINESS_QUOTES[idx]}」`;
-      document.getElementById('dailyQuoteSource').textContent = '— 每日商務打氣';
-      document.getElementById('quoteHint').textContent = '每日換一句';
     }
 
     async function loadState(){
