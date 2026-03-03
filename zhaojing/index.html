@@ -257,26 +257,39 @@
       window.scrollTo(0,0);
     }
 
-    // ── decisions (placeholder; later will be wired to real data)
-    const decisions = [
-      { title: '促銷折扣上限 & 會員分級優惠', due: '03/04', urgent: true },
-      { title: '退貨流程 & 換貨授權未確認', due: '03/06', urgent: false },
-    ];
+    // ── state (editable via data/zhaojing_state.json)
+    const STATE_URL = '../data/zhaojing_state.json';
 
-    function renderDecisions(){
+    function applyState(state){
+      // One Thing
+      if(state?.oneThing){
+        document.getElementById('oneThingTitle').textContent = state.oneThing.title || '（待填）今天最重要的事';
+        document.getElementById('oneThingMeta').textContent = state.oneThing.meta || '截止 — · 兆鯨';
+        document.getElementById('oneThingDesc').textContent = state.oneThing.desc || '';
+      }
+
+      // Decisions
+      const decisions = Array.isArray(state?.decisions) ? state.decisions : [];
+      renderDecisions(decisions);
+    }
+
+    function renderDecisions(decisions){
       const list = document.getElementById('decisionList');
       const more = document.getElementById('decisionMore');
+
       const show = decisions.slice(0,3);
       const rest = decisions.length - show.length;
 
       list.innerHTML = show.map(d => {
-        const pill = d.urgent ? `<span class="pill urgent"><span class="dot"></span>緊急</span>` : '';
+        const urgent = !!d.urgent;
+        const pill = urgent ? `<span class="pill urgent"><span class="dot"></span>緊急</span>` : '';
+        const due = d.due ? `截止 ${d.due}` : '截止 —';
         return `
           <div class="card">
-            <div class="c-bar ${d.urgent ? 'urgent' : ''}"></div>
+            <div class="c-bar ${urgent ? 'urgent' : ''}"></div>
             <div class="c-body">
-              <div class="c-title">${d.title}</div>
-              <div class="c-meta">截止 ${d.due}</div>
+              <div class="c-title">${d.title || '（未命名決策）'}</div>
+              <div class="c-meta">${due}</div>
             </div>
             ${pill}
           </div>
@@ -285,7 +298,23 @@
 
       more.textContent = rest > 0 ? `+${rest} 更多 ›` : '';
     }
-    renderDecisions();
+
+    async function loadState(){
+      try{
+        const res = await fetch(STATE_URL, { cache: 'no-store' });
+        if(!res.ok) throw new Error('state fetch failed');
+        const state = await res.json();
+        applyState(state);
+      }catch(e){
+        // fallback: render empty but stable UI
+        applyState({
+          oneThing: { title: '（待填）今天最重要的事', meta: '截止 — · 兆鯨', desc: '' },
+          decisions: []
+        });
+      }
+    }
+
+    loadState();
 
     // ── daily quote (Option B)
     async function loadDailyQuote(){
