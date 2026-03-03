@@ -16,7 +16,9 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.65;padding-bottom:72px}
     .page{display:none;animation:fu .18s ease}.page.active{display:block}@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-    .hero{background:var(--ink);color:#fff;padding:26px 20px 22px}
+    .hero{background:var(--ink);color:#fff;padding:26px 20px 22px;position:relative}
+    .home-hotspot{position:absolute;left:8px;top:8px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:4px 10px;font-size:11px;font-family:var(--mono);display:none;cursor:pointer}
+    .home-hotspot.show{display:inline-block}
     .hero-eyebrow{font-size:10px;font-family:var(--mono);opacity:.45;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
     .hero-date{font-size:15px;font-family:var(--mono);opacity:.65;letter-spacing:.08em}
     .sec{padding:0 20px;margin:22px 0}.sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -58,7 +60,7 @@
   </div>
 
   <div class="page" id="page-exec">
-    <div class="hero"><div class="hero-eyebrow">EXECUTION</div><div class="hero-date">工作重點分頁</div></div>
+    <div class="hero"><button class="home-hotspot" onclick="goHome()">← 首頁</button><div class="hero-eyebrow">EXECUTION</div><div class="hero-date">工作重點分頁</div></div>
     <div class="sec"><div class="sec-l">本頁用途</div><div class="c-desc">每個重點任務的詳細說明、下一步、截止、狀態。</div></div>
     <div class="sec linklist">
       <a href="./zhaojing/ecom.html">電商執行頁（示例）</a>
@@ -68,7 +70,7 @@
   </div>
 
   <div class="page" id="page-knowledge">
-    <div class="hero"><div class="hero-eyebrow">KNOWLEDGE</div><div class="hero-date">資訊資料庫分頁</div></div>
+    <div class="hero"><button class="home-hotspot" onclick="goHome()">← 首頁</button><div class="hero-eyebrow">KNOWLEDGE</div><div class="hero-date">資訊資料庫分頁</div></div>
     <div class="sec"><div class="sec-l">本頁用途</div><div class="c-desc">文件索引、SOP、決策脈絡與資料連結。</div></div>
     <div class="sec linklist">
       <a href="#">資訊資料庫（iCloud）連結（待填）</a>
@@ -78,7 +80,7 @@
   </div>
 
   <div class="page" id="page-review">
-    <div class="hero"><div class="hero-eyebrow">REVIEW</div><div class="hero-date">核對分頁</div></div>
+    <div class="hero"><button class="home-hotspot" onclick="goHome()">← 首頁</button><div class="hero-eyebrow">REVIEW</div><div class="hero-date">核對分頁</div></div>
     <div class="sec"><div class="sec-l">本頁用途</div><div class="c-desc">今日完成、待核對、待補資料與思考備註。</div></div>
     <div class="sec linklist">
       <a href="#">今日完成（待填）</a>
@@ -99,12 +101,26 @@
     const n=new Date();
     document.getElementById('heroDate').textContent = `${n.getFullYear()} / ${String(n.getMonth()+1).padStart(2,'0')} / ${String(n.getDate()).padStart(2,'0')}  週${days[n.getDay()]}`;
 
+    const PAGE_ORDER=['home','exec','knowledge','review'];
+
     function nav(k,el){
       document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
       document.querySelectorAll('.bn').forEach(b=>b.classList.remove('on'));
       document.getElementById('page-'+k).classList.add('active');
-      el.classList.add('on');
+      if(el){ el.classList.add('on'); }
+      updateHomeHotspots(k);
       window.scrollTo(0,0);
+    }
+
+    function goHome(){
+      const homeTab=[...document.querySelectorAll('.bn')].find(b=>b.textContent.trim()==='首頁');
+      nav('home', homeTab || null);
+    }
+
+    function updateHomeHotspots(current){
+      document.querySelectorAll('.home-hotspot').forEach(btn=>{
+        btn.classList.toggle('show', current!=='home');
+      });
     }
 
     const BUSINESS_QUOTES = [
@@ -135,8 +151,31 @@
       document.getElementById('decisionMore').textContent = (Array.isArray(state.decisions) && state.decisions.length>3) ? `+${state.decisions.length-3} 更多` : '';
     }
 
+    // swipe left/right to switch pages (mobile)
+    let touchStartX=0, touchEndX=0;
+    document.addEventListener('touchstart', (e)=>{ touchStartX=e.changedTouches[0].screenX; }, {passive:true});
+    document.addEventListener('touchend', (e)=>{
+      touchEndX=e.changedTouches[0].screenX;
+      const delta=touchEndX-touchStartX;
+      if(Math.abs(delta)<50) return;
+
+      const activePage=document.querySelector('.page.active')?.id?.replace('page-','') || 'home';
+      const idx=PAGE_ORDER.indexOf(activePage);
+      if(idx<0) return;
+
+      let nextIdx=idx;
+      if(delta<0 && idx<PAGE_ORDER.length-1) nextIdx=idx+1;     // swipe left => next page
+      if(delta>0 && idx>0) nextIdx=idx-1;                        // swipe right => prev page
+      if(nextIdx===idx) return;
+
+      const nextKey=PAGE_ORDER[nextIdx];
+      const nextTab=[...document.querySelectorAll('.bn')][nextIdx] || null;
+      nav(nextKey, nextTab);
+    }, {passive:true});
+
     loadDailyQuote();
     loadState();
+    updateHomeHotspots('home');
   </script>
 </body>
 </html>
