@@ -228,29 +228,43 @@
       document.getElementById('coreHint').textContent = `提醒：${core.hint}`;
 
       const rawSchedules = s.schedules || [
-        {time:'09:00',title:'全立祥送工',sub:'客戶提醒',detail:'全立祥送工: NOVIANTO 諾維 (F260-102)',type:'客戶'},
-        {time:'10:00',title:'需求電話說明',sub:'專案提醒',detail:'康揚－正職代招/評點制 需求電話說明（江先生）',type:'專案'},
-        {time:'14:00',title:'賴冠佑來訪',sub:'客戶提醒',detail:'賴冠佑 來訪（BNI後）',type:'客戶'}
+        {time:'09:00',title:'全立祥送工',sub:'客戶提醒',detail:'全立祥送工: NOVIANTO 諾維 (F260-102)',type:'客戶',date:'03/04'},
+        {time:'10:00',title:'需求電話說明',sub:'專案提醒',detail:'康揚－正職代招/評點制 需求電話說明（江先生）',type:'專案',date:'03/05'},
+        {time:'14:00',title:'賴冠佑來訪',sub:'客戶提醒',detail:'賴冠佑 來訪（BNI後）',type:'客戶',date:'03/06'}
       ];
 
-      // 只保留客戶 / 專案相關，且以「當日」事件優先
+      // 只保留 客戶 / 專案 / 物業
       const now = new Date();
       const mmdd = `${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
-      const pool = rawSchedules.filter(it => String(it.type||it.sub||'').includes('客戶') || String(it.type||it.sub||'').includes('專案'));
+      const wanted = (txt) => {
+        const t = String(txt || '');
+        return t.includes('客戶') || t.includes('專案') || t.includes('物業');
+      };
+      const findMMDD = (obj) => {
+        const src = `${obj.date||''} ${obj.meta||''} ${obj.time||''} ${obj.title||''}`;
+        const m = src.match(/(\d{1,2})\/(\d{1,2})/);
+        return m ? `${m[1].padStart(2,'0')}/${m[2].padStart(2,'0')}` : '';
+      };
 
-      const todayOnly = pool.filter(it => String(it.date||it.meta||'').includes(mmdd));
+      const schedulePool = rawSchedules.filter(it => wanted(it.type||it.sub));
 
-      // 若當天無行程，改抓提醒事項（客戶/專案優先，且標註重要）
       const reminderPool = (Array.isArray(s.reminders) ? s.reminders : [])
-        .filter(r => String(r.type||r.tag||r.category||'').includes('客戶') || String(r.type||r.tag||r.category||'').includes('專案'))
-        .filter(r => r.important === true || String(r.priority||'').toLowerCase() === 'high' || String(r.level||'').includes('重要'))
+        .filter(r => wanted(r.type||r.tag||r.category))
         .map(r => ({
-          time: r.time || '提醒',
-          title: r.title || r.item || '重要提醒',
+          time: r.time || (r.date ? `${r.date}` : '提醒'),
+          title: r.title || r.item || '提醒事項',
           sub: r.type || r.category || '提醒事項',
           detail: r.detail || r.note || r.title || '請先處理此提醒',
-          type: r.type || r.category || '提醒'
+          type: r.type || r.category || '提醒',
+          date: r.date || ''
         }));
+
+      const allItems = [...schedulePool, ...reminderPool];
+      const todayOnly = allItems.filter(it => findMMDD(it) === mmdd);
+      const futureItems = allItems.filter(it => {
+        const d = findMMDD(it);
+        return d && d !== mmdd;
+      });
 
       const schedules = todayOnly;
 
@@ -276,6 +290,9 @@
         };
         schEl.appendChild(row);
       });
+      if(!schedules.length){
+        schEl.innerHTML = '<div class="sch-item"><div class="sch-time">今天</div><div class="sch-main"><div class="sch-title" style="font-size:14px">今日無客戶/專案/物業行程</div><div class="sch-sub">可右滑查看後續行程與提醒事項</div></div></div>';
+      }
 
       const weekly = s.weeklyFocus || core.desc || '本週重點：聚焦可直接交付的成果。';
       setDetail(weekly);
@@ -285,9 +302,14 @@
         sheetEl?.classList.add('compact');
       };
 
-      renderLines(document.getElementById('tasksPane'), s.tasks);
-      renderLines(document.getElementById('controlPane'), s.controls);
-      renderLines(document.getElementById('intelPane'), s.intels);
+      // 右滑頁：顯示後續（非當天）行程與提醒事項
+      const futureMapped = futureItems.map(it => ({
+        title: it.title,
+        meta: `${findMMDD(it) || ''} ${it.time || ''} · ${it.sub || it.type || ''}`.trim()
+      }));
+      renderLines(document.getElementById('tasksPane'), futureMapped.slice(0, 8));
+      renderLines(document.getElementById('controlPane'), futureMapped.slice(8, 16));
+      renderLines(document.getElementById('intelPane'), futureMapped.slice(16, 24));
       renderLines(document.getElementById('financePane'), s.finances);
     }
 
