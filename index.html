@@ -27,11 +27,9 @@
 
     .top{padding:24px 18px 64px;position:relative}
     .month{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:.05em}
-    .date{margin-top:10px;font-size:50px;line-height:.95;font-weight:700;letter-spacing:.005em}
+    .date{margin-top:22px;font-size:50px;line-height:.95;font-weight:700;letter-spacing:.005em}
     .motto{margin-top:14px;font-size:16px;line-height:1.5;font-weight:500;max-width:84%;color:#555c67}
 
-    .weather{position:absolute;right:18px;top:20px;border:1px solid #cfd5de;background:var(--top);padding:10px 12px;font-size:12px;color:#1b2029;display:flex;align-items:center;gap:6px}
-    .weather .icon{font-size:13px;opacity:.9}
 
     .sheet{
       margin-top:-18px;
@@ -88,7 +86,6 @@
           <div class="month" id="monthText"></div>
           <div class="date" id="dateText"></div>
           <div class="motto" id="mottoText"></div>
-          <div class="weather"><span class="icon" id="wIcon">◌</span><span id="wTemp">--°C</span></div>
         </div>
 
         <div class="sheet">
@@ -156,48 +153,6 @@
       document.getElementById('mottoText').textContent=`${MOTTO_POOL[dayOfYear(d)%MOTTO_POOL.length]}`;
     }
 
-    function weatherIcon(code){
-      if([0].includes(code)) return '☀';
-      if([1,2,3].includes(code)) return '⛅';
-      if([45,48].includes(code)) return '🌫';
-      if([51,53,55,61,63,65,80,81,82].includes(code)) return '🌧';
-      if([71,73,75,85,86].includes(code)) return '❄';
-      if([95,96,99].includes(code)) return '⛈';
-      return '◌';
-    }
-
-    async function setWeather(){
-      const getByCoords = async(lat,lon)=>{
-        const u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=Asia%2FTaipei`;
-        const r=await fetch(u);
-        if(!r.ok) throw new Error('weather-fetch-failed');
-        const j=await r.json();
-        return {temp:Math.round(j.current.temperature_2m),code:j.current.weather_code};
-      };
-
-      try{
-        let w = null;
-        if(navigator.geolocation){
-          try{
-            w = await new Promise((resolve,reject)=>{
-              navigator.geolocation.getCurrentPosition(async p=>{
-                try{resolve(await getByCoords(p.coords.latitude,p.coords.longitude));}
-                catch(e){reject(e)}
-              },reject,{timeout:3500,maximumAge:600000});
-            });
-          }catch{}
-        }
-
-        // geolocation 失敗時，回退固定座標（台南）
-        if(!w) w = await getByCoords(23.0,120.2);
-
-        document.getElementById('wTemp').textContent=`${w.temp}°C`;
-        document.getElementById('wIcon').textContent=weatherIcon(w.code);
-      }catch{
-        document.getElementById('wTemp').textContent='30°C';
-        document.getElementById('wIcon').textContent='◌';
-      }
-    }
 
     function renderLines(el, list){
       el.innerHTML = (list||[]).map(x=>`<div class="list-card"><div class="sch-time">${x.meta||''}</div><div class="sch-title">${x.title||''}</div></div>`).join('') || '<div class="list-card"><div class="sch-time">—</div><div class="sch-title">目前無資料</div></div>';
@@ -368,7 +323,6 @@
     },{passive:true});
 
     setDateAndMotto();
-    setWeather();
     loadState();
     updatePageState();
   </script>
