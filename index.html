@@ -291,7 +291,12 @@
       renderLines(document.getElementById('financePane'), s.finances);
     }
 
-    function setDetail(text){ document.getElementById('detailText').textContent = text || ''; }
+    function setDetail(text){
+      const el = document.getElementById('detailText');
+      const s = String(text || '');
+      const esc = s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      el.innerHTML = esc.replace(/\n/g,'<br>');
+    }
 
     function updateCoreCard(item){
       const truncate = (txt, n) => {
