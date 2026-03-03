@@ -53,14 +53,16 @@
     .meta{font-family:var(--mono);font-size:14px;color:var(--muted);margin-top:10px;display:block;line-height:1.6}
     .meta span{display:block}
 
-    .schedule{margin-top:14px}
+    .schedule{margin-top:14px;transition:max-height .25s ease, opacity .2s ease;max-height:460px;overflow:hidden;opacity:1}
     .sch-item{padding:14px 0;cursor:pointer;display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:start}
     .sch-time{font-family:var(--mono);font-size:14px;color:#222;padding-top:2px}
     .sch-title{font-size:17px;line-height:1.25;margin-top:0;font-weight:700}
     .sch-sub{font-size:13px;line-height:1.35;color:var(--muted);margin-top:3px}
 
-    .detail{margin-top:14px;padding-top:10px;border-top:1px solid var(--line)}
+    .detail{margin-top:14px;padding-top:10px;border-top:1px solid var(--line);transition:margin-top .25s ease}
     .detail-text{font-size:14px;line-height:1.6;color:#2b313b}
+    .sheet.compact .schedule{max-height:0;opacity:0;margin-top:0}
+    .sheet.compact .detail{margin-top:4px}
 
     .home-btn{
       position:absolute;left:10px;top:10px;
@@ -216,26 +218,42 @@
       document.getElementById('coreDate').textContent = `日期：${core.date}`;
       document.getElementById('coreHint').textContent = `提醒：${core.hint}`;
 
-      const schedules = s.schedules || [
-        {time:'09:30 – 10:00',title:'Weekly Sync',sub:'Product Team | Google Meet',detail:'先確認今天三件最重要的事，避免分心。'},
-        {time:'11:30 – 12:30',title:'Design Review',sub:'Virtual Meeting',detail:'對齊卡點，決定是否需要升級處理。'},
-        {time:'14:00 – 16:00',title:'Contract Review',sub:'Legal Dept.',detail:'整理完成項與未完成項，銜接明日。'},
-        {time:'16:00 – 16:30',title:'Client Call',sub:'Mr. Lin (ABC Corp)',detail:'確認需求變更與時程，會後更新待辦。'}
+      const rawSchedules = s.schedules || [
+        {time:'09:00',title:'全立祥送工',sub:'客戶提醒',detail:'全立祥送工: NOVIANTO 諾維 (F260-102)',type:'客戶'},
+        {time:'10:00',title:'需求電話說明',sub:'專案提醒',detail:'康揚－正職代招/評點制 需求電話說明（江先生）',type:'專案'},
+        {time:'14:00',title:'賴冠佑來訪',sub:'客戶提醒',detail:'賴冠佑 來訪（BNI後）',type:'客戶'}
       ];
 
+      // 只保留客戶 / 專案相關，並固定「全立祥送工」第一位
+      const schedules = rawSchedules
+        .filter(it => String(it.type||it.sub||'').includes('客戶') || String(it.type||it.sub||'').includes('專案'));
+      schedules.sort((a,b)=>{
+        if(String(a.title||'').includes('全立祥')) return -1;
+        if(String(b.title||'').includes('全立祥')) return 1;
+        return 0;
+      });
+
+      const sheetEl=document.querySelector('#page-today .sheet');
       const schEl=document.getElementById('scheduleList');
       schEl.innerHTML='';
       schedules.forEach(it=>{
         const row=document.createElement('div');
         row.className='sch-item';
         row.innerHTML=`<div class="sch-time">${it.time||''}</div><div><div class="sch-title">${it.title||''}</div><div class="sch-sub">${it.sub||it.source||''}</div></div>`;
-        row.onclick=()=>setDetail(it.detail || it.title || '');
+        row.onclick=()=>{
+          setDetail(it.detail || it.title || '');
+          sheetEl?.classList.add('compact');
+        };
         schEl.appendChild(row);
       });
 
       const weekly = s.weeklyFocus || core.desc || '本週重點：聚焦可直接交付的成果。';
       setDetail(weekly);
-      document.getElementById('coreCard').onclick=()=>setDetail(core.desc || weekly);
+      sheetEl?.classList.remove('compact');
+      document.getElementById('coreCard').onclick=()=>{
+        setDetail(core.desc || weekly);
+        sheetEl?.classList.add('compact');
+      };
 
       renderLines(document.getElementById('tasksPane'), s.tasks);
       renderLines(document.getElementById('controlPane'), s.controls);
@@ -244,6 +262,9 @@
     }
 
     function setDetail(text){ document.getElementById('detailText').textContent = text || ''; }
+    document.getElementById('detailText')?.addEventListener('click',()=>{
+      document.querySelector('#page-today .sheet')?.classList.remove('compact');
+    });
 
     const carousel=document.getElementById('carousel');
     function goHome(){ carousel.scrollTo({left:0,behavior:'smooth'}); }
