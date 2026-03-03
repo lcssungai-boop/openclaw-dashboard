@@ -2,183 +2,247 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpenClaw · 工作指揮台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>OpenClaw · Mobile Home</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root{
-      --bg-top:#eef0f2;--bg-bottom:#f8f8f8;
-      --paper:#FDFCFA;--l1:#E4E2DC;--l2:#C8C5BC;--l3:#9B9890;
-      --ink:#3a3a36;--ink2:#4A4840;--ink3:#88857D;
-      --mono:'DM Mono', monospace;--body:'Noto Sans TC', sans-serif;--rad:8px;
+      --top:#eceef1;
+      --panel:#ffffff;
+      --line:#d9dde4;
+      --ink:#17191d;
+      --muted:#626975;
+      --mono:'DM Mono',monospace;
+      --body:'Noto Sans TC',sans-serif;
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{background:var(--bg-bottom);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.65;padding-bottom:72px}
-    .page{display:none;animation:fu .18s ease;max-width:430px;min-height:100vh;margin:0 auto;background:linear-gradient(180deg,var(--bg-top) 0 32%, var(--bg-bottom) 32% 100%)}
-    .page.active{display:block}
-    @keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-    .hero{color:#fff;padding:22px 16px 52px;position:relative;background:transparent}
-    .home-hotspot{position:absolute;left:8px;top:8px;border:1px solid #cfd5de;background:#f2f4f7;color:var(--ink);border-radius:999px;padding:4px 10px;font-size:11px;font-family:var(--mono);display:none;cursor:pointer}
-    .home-hotspot.show{display:inline-block}
-    .hero-eyebrow{font-size:10px;font-family:var(--mono);color:var(--ink3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
-    .hero-date{font-size:28px;line-height:1.1;font-weight:700;color:var(--ink);letter-spacing:.01em}
-    .hero-quote{margin-top:10px;font-size:14px;line-height:1.5;color:var(--ink2);max-width:92%}
-    .sec{padding:0 16px;margin:16px 0}
-    .page .sec:first-of-type{margin-top:-18px}
-    .sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-    .sec-l{font-size:10px;font-family:var(--mono);color:var(--l3);letter-spacing:.12em;text-transform:uppercase}
-    .sec-r{font-size:10px;font-family:var(--mono);color:var(--l3)}
-    .card{background:var(--paper);border:1px solid var(--l1);border-radius:var(--rad);padding:13px 15px;display:flex;gap:11px;align-items:flex-start;transition:border-color .12s}
-    .card:hover{border-color:var(--l2)}
-    .c-bar{width:2px;align-self:stretch;min-height:32px;border-radius:2px;flex-shrink:0;background:var(--l2)}
-    .c-bar.urgent{background:var(--ink)}
-    .c-body{flex:1;min-width:0}.c-title{font-size:15px;font-weight:600;line-height:1.35}.c-meta{font-size:10px;font-family:var(--mono);color:var(--l3);margin-top:6px}
-    .c-desc{font-size:12px;color:var(--ink2);margin-top:8px;line-height:1.55}
-    .quote{background:var(--paper);border:1px solid var(--l1);border-left:2px solid var(--ink);border-radius:var(--rad);padding:14px 16px}
-    .quote-text{font-size:15px;font-weight:500}.quote-src{font-size:10px;font-family:var(--mono);color:var(--l3);margin-top:8px}
-    .list{display:flex;flex-direction:column;gap:8px}.pill{font-size:10px;font-family:var(--mono);color:var(--ink3)}
-    .linklist a{display:block;padding:12px 14px;border:1px solid var(--l1);border-radius:var(--rad);background:var(--paper);color:var(--ink);text-decoration:none;margin-bottom:8px}
-    .bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);height:60px;background:var(--paper);border-top:1px solid var(--l1);display:flex;z-index:30}
-    .bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--l2);font-size:9px;font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;position:relative;cursor:pointer}
-    .bn.on{color:var(--ink)}.bn.on::after{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--ink)}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--body);color:var(--ink);background:#fff;overflow-x:hidden}
+
+    .phone{max-width:430px;min-height:100vh;margin:0 auto;background:var(--top)}
+    .carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .carousel::-webkit-scrollbar{display:none}
+    .page{min-width:100%;min-height:100vh;scroll-snap-align:start;background:var(--top);position:relative}
+
+    .top{padding:22px 16px 56px;position:relative}
+    .date{font-family:var(--mono);font-size:14px;color:var(--muted);letter-spacing:.06em}
+    .motto{margin-top:10px;font-size:16px;line-height:1.45;font-weight:500;max-width:78%}
+
+    .weather{position:absolute;right:16px;top:18px;border:1px solid #ccd2db;background:#f3f5f8;padding:8px 10px;font-size:13px;color:#1b2029;display:flex;align-items:center;gap:6px}
+    .weather .icon{font-size:15px}
+
+    .sheet{
+      margin-top:-20px;
+      background:var(--panel);
+      border-radius:28px 28px 0 0;
+      border-top:1px solid #e7ebf2;
+      min-height:calc(100vh - 140px);
+      padding:14px 16px 28px;
+    }
+
+    .core{
+      border-bottom:1px solid var(--line);
+      padding:10px 0 14px 0;
+      display:flex;gap:10px;
+      cursor:pointer;
+    }
+    .core-bar{width:4px;background:var(--ink);flex-shrink:0}
+    .core-title{font-size:17px;font-weight:700;line-height:1.35}
+    .meta{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+
+    .schedule{margin-top:10px}
+    .sch-item{padding:12px 0;cursor:pointer}
+    .sch-time{font-family:var(--mono);font-size:11px;color:var(--muted)}
+    .sch-title{font-size:15px;line-height:1.4;margin-top:3px}
+
+    .detail{margin-top:14px;padding-top:10px;border-top:1px solid var(--line)}
+    .detail-text{font-size:14px;line-height:1.6;color:#2b313b}
+
+    .home-btn{
+      position:absolute;left:10px;top:10px;
+      border:1px solid #ccd2db;background:#f3f5f8;color:#2a3039;
+      border-radius:999px;padding:4px 10px;font-size:11px;font-family:var(--mono);
+      display:none;
+    }
+
+    .sub-title{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:18px;margin-bottom:10px;letter-spacing:.06em}
+    .list-card{border-bottom:1px solid var(--line);padding:11px 0}
+    .list-card:last-child{border-bottom:none}
+
+    .hint{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;font-family:var(--mono);font-size:11px;color:#6c7481;background:rgba(255,255,255,.9);border:1px solid var(--line);padding:4px 10px;border-radius:999px}
   </style>
 </head>
 <body>
-  <div class="page active" id="page-home">
-    <div class="hero">
-      <div class="hero-eyebrow">OPENCLAW</div>
-      <div class="hero-date" id="heroDate"></div>
-      <div class="hero-quote" id="dailyQuote"></div>
-    </div>
+  <div class="phone">
+    <div class="carousel" id="carousel">
+      <!-- Today -->
+      <section class="page" id="page-today">
+        <div class="top">
+          <div class="date" id="dateText"></div>
+          <div class="motto" id="mottoText"></div>
+          <div class="weather"><span class="icon" id="wIcon">◌</span><span id="wTemp">--°C</span></div>
+        </div>
 
-    <div class="sec">
-      <div class="sec-h"><div class="sec-l">今天重點</div></div>
-      <div id="focusList" class="list"></div>
-    </div>
+        <div class="sheet">
+          <div class="core" id="coreCard">
+            <div class="core-bar"></div>
+            <div>
+              <div class="core-title" id="coreTitle">完成 Q1 提案</div>
+              <div class="meta"><span id="corePriority">Priority: High</span><span id="coreDeadline">Deadline: 03/07</span></div>
+            </div>
+          </div>
 
-    <div class="sec">
-      <div class="sec-h"><div class="sec-l">待決策</div><div class="sec-r" id="decisionMore"></div></div>
-      <div id="decisionList" class="list"></div>
+          <div class="schedule" id="scheduleList"></div>
+
+          <div class="detail">
+            <div class="detail-text" id="detailText">本週重點：聚焦可直接交付的成果，優先完成 Q1 提案與關鍵決策，確保週內可核對與可回顧。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tasks -->
+      <section class="page" id="page-tasks">
+        <div class="top"><button class="home-btn" onclick="goHome()">← Home</button><div class="date">TASKS</div><div class="motto">任務分頁（左右滑切換）</div></div>
+        <div class="sheet" id="tasksPane"></div>
+      </section>
+
+      <!-- Control -->
+      <section class="page" id="page-control">
+        <div class="top"><button class="home-btn" onclick="goHome()">← Home</button><div class="date">CONTROL</div><div class="motto">流程控制與核對</div></div>
+        <div class="sheet" id="controlPane"></div>
+      </section>
+
+      <!-- Intel -->
+      <section class="page" id="page-intel">
+        <div class="top"><button class="home-btn" onclick="goHome()">← Home</button><div class="date">INTEL</div><div class="motto">資訊資料庫與脈絡</div></div>
+        <div class="sheet" id="intelPane"></div>
+      </section>
+
+      <!-- Finance -->
+      <section class="page" id="page-finance">
+        <div class="top"><button class="home-btn" onclick="goHome()">← Home</button><div class="date">FINANCE</div><div class="motto">財務核對與更新</div></div>
+        <div class="sheet" id="financePane"></div>
+      </section>
     </div>
   </div>
-
-  <div class="page" id="page-exec">
-    <div class="hero"><button class="home-hotspot" onclick="goHome()">← 首頁</button><div class="hero-eyebrow">EXECUTION</div><div class="hero-date">工作重點分頁</div></div>
-    <div class="sec"><div class="sec-l">本頁用途</div><div class="c-desc">每個重點任務的詳細說明、下一步、截止、狀態。</div></div>
-    <div class="sec linklist">
-      <a href="./zhaojing/ecom.html">電商執行頁（示例）</a>
-      <a href="./zhaojing/property_ops.html">物業執行頁（示例）</a>
-      <a href="./zhaojing/tenants.html">名單頁（示例）</a>
-    </div>
-  </div>
-
-  <div class="page" id="page-knowledge">
-    <div class="hero"><button class="home-hotspot" onclick="goHome()">← 首頁</button><div class="hero-eyebrow">KNOWLEDGE</div><div class="hero-date">資訊資料庫分頁</div></div>
-    <div class="sec"><div class="sec-l">本頁用途</div><div class="c-desc">文件索引、SOP、決策脈絡與資料連結。</div></div>
-    <div class="sec linklist">
-      <a href="#">資訊資料庫（iCloud）連結（待填）</a>
-      <a href="#">SOP 索引（待填）</a>
-      <a href="#">決策記錄（待填）</a>
-    </div>
-  </div>
-
-  <div class="page" id="page-review">
-    <div class="hero"><button class="home-hotspot" onclick="goHome()">← 首頁</button><div class="hero-eyebrow">REVIEW</div><div class="hero-date">核對分頁</div></div>
-    <div class="sec"><div class="sec-l">本頁用途</div><div class="c-desc">今日完成、待核對、待補資料與思考備註。</div></div>
-    <div class="sec linklist">
-      <a href="#">今日完成（待填）</a>
-      <a href="#">待核對清單（待填）</a>
-      <a href="#">待補資料（待填）</a>
-    </div>
-  </div>
-
-  <nav class="bnav">
-    <div class="bn on" onclick="nav('home',this)">首頁</div>
-    <div class="bn" onclick="nav('exec',this)">執行</div>
-    <div class="bn" onclick="nav('knowledge',this)">資料庫</div>
-    <div class="bn" onclick="nav('review',this)">核對</div>
-  </nav>
+  <div class="hint" id="hint">Today · 左右滑動切頁</div>
 
   <script>
-    const days=['日','一','二','三','四','五','六'];
-    const n=new Date();
-    document.getElementById('heroDate').textContent = `${n.getFullYear()} / ${String(n.getMonth()+1).padStart(2,'0')} / ${String(n.getDate()).padStart(2,'0')}  週${days[n.getDay()]}`;
+    const STATE_URL='./data/openclaw_public_state.json';
+    const PAGE_KEYS=['today','tasks','control','intel','finance'];
 
-    const PAGE_ORDER=['home','exec','knowledge','review'];
-
-    function nav(k,el){
-      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-      document.querySelectorAll('.bn').forEach(b=>b.classList.remove('on'));
-      document.getElementById('page-'+k).classList.add('active');
-      if(el){ el.classList.add('on'); }
-      updateHomeHotspots(k);
-      window.scrollTo(0,0);
-    }
-
-    function goHome(){
-      const homeTab=[...document.querySelectorAll('.bn')].find(b=>b.textContent.trim()==='首頁');
-      nav('home', homeTab || null);
-    }
-
-    function updateHomeHotspots(current){
-      document.querySelectorAll('.home-hotspot').forEach(btn=>{
-        btn.classList.toggle('show', current!=='home');
-      });
-    }
-
-    const BUSINESS_QUOTES = [
+    const MOTTO_POOL=[
       '專業決定高度，細節決定成敗。','成交只是服務的開始，信賴才是企業的複利。','解決問題的能力，決定你在市場的身價。','格局是被委屈撐大的，成功是熬過孤獨留下的。','昨天的成績是底氣，今天的努力是底牌。','一個人可以走很快，一群人才能走很遠。','最好的行銷，是讓客戶感受到你的不可或缺。','不要等機會完美，要讓機會在執行中變得完美。','專注於目標，而非障礙。','領導力不是職位，而是你對他人產生的正向影響。','變革雖然痛苦，但不變革會很危險。','用專業贏得尊重，用真誠贏得信任。','所有的好運，都是努力積攢的實力。','業績是治癒焦慮的良藥，行動是解決問題的鑰匙。','品牌是時間的沉澱，口碑是細節的累積。','與其擔心競爭，不如專注於如何創造價值。','商業的本質是交換，交換的前提是信任。','高手都是在枯燥的基礎上，做到極致的精準。','成功的路上並不擁擠，因為堅持的人不多。','所有的驚艷，都來自於長久的深耕與專業。','只有創造價值的人，才擁有議價的權利。','溝通的目的是達成共識，而非贏得爭論。','把簡單的事做到卓越，就是不簡單。','市場不相信眼淚，只承認結果。','機會從不消失，只是轉移到準備好的人身上。','誠信是商場的通行證，專業是談判的壓艙石。','凡事有交代，件件有落實，事事有回音。','思考決定出路，心態決定勝負。','行為決定習慣，習慣決定性格，性格決定命運。','真正的富有，是褪去光環後依然能溫暖他人。'
     ];
-    function dayOfYear(d){ const start=new Date(d.getFullYear(),0,0); return Math.floor((d-start)/86400000); }
-    function loadDailyQuote(){
-      const idx = dayOfYear(new Date()) % BUSINESS_QUOTES.length;
-      document.getElementById('dailyQuote').textContent = `「${BUSINESS_QUOTES[idx]}」`;
+
+    function dayOfYear(d){const s=new Date(d.getFullYear(),0,0);return Math.floor((d-s)/86400000)}
+    function setDateAndMotto(){
+      const d=new Date();
+      const days=['日','一','二','三','四','五','六'];
+      document.getElementById('dateText').textContent=`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} 週${days[d.getDay()]}`;
+      document.getElementById('mottoText').textContent=`「${MOTTO_POOL[dayOfYear(d)%MOTTO_POOL.length]}」`;
+    }
+
+    function weatherIcon(code){
+      if([0].includes(code)) return '☀';
+      if([1,2,3].includes(code)) return '⛅';
+      if([45,48].includes(code)) return '🌫';
+      if([51,53,55,61,63,65,80,81,82].includes(code)) return '🌧';
+      if([71,73,75,85,86].includes(code)) return '❄';
+      if([95,96,99].includes(code)) return '⛈';
+      return '◌';
+    }
+
+    async function setWeather(){
+      try{
+        const getByCoords = async(lat,lon)=>{
+          const u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=Asia%2FTaipei`;
+          const r=await fetch(u);const j=await r.json();
+          return {temp:Math.round(j.current.temperature_2m),code:j.current.weather_code};
+        };
+
+        let w;
+        if(navigator.geolocation){
+          w = await new Promise((resolve,reject)=>{
+            navigator.geolocation.getCurrentPosition(async p=>{
+              try{resolve(await getByCoords(p.coords.latitude,p.coords.longitude));}
+              catch(e){reject(e)}
+            },reject,{timeout:3500,maximumAge:600000});
+          });
+        }
+        if(!w) w=await getByCoords(23.0,120.2);
+        document.getElementById('wTemp').textContent=`${w.temp}°C`;
+        document.getElementById('wIcon').textContent=weatherIcon(w.code);
+      }catch{
+        document.getElementById('wTemp').textContent='--°C';
+      }
+    }
+
+    function renderLines(el, list){
+      el.innerHTML = (list||[]).map(x=>`<div class="list-card"><div class="sch-time">${x.meta||''}</div><div class="sch-title">${x.title||''}</div></div>`).join('') || '<div class="list-card"><div class="sch-time">—</div><div class="sch-title">目前無資料</div></div>';
     }
 
     async function loadState(){
-      let state={};
-      try{ const r=await fetch('./data/openclaw_public_state.json',{cache:'no-store'}); if(r.ok) state=await r.json(); }catch{}
+      let s={};
+      try{ const r=await fetch(STATE_URL,{cache:'no-store'}); if(r.ok) s=await r.json(); }catch{}
 
-      const focus = Array.isArray(state.focuses) && state.focuses.length
-        ? state.focuses.slice(0,3)
-        : [{title: state.oneThing?.title || '（待填）今日重點 1', meta: state.oneThing?.meta || '截止 —', detail: state.oneThing?.desc || ''}];
+      const core = s.oneThing || {title:'完成 Q1 提案',meta:'Priority: High · Deadline: 03/07',desc:'本週重點：聚焦可直接交付的成果。'};
+      document.getElementById('coreTitle').textContent = core.title || '完成 Q1 提案';
+      const metaText = core.meta || 'Priority: High · Deadline: 03/07';
+      const [p,d] = metaText.split('·').map(v=>v?.trim());
+      document.getElementById('corePriority').textContent = p || 'Priority: High';
+      document.getElementById('coreDeadline').textContent = d || 'Deadline: 03/07';
 
-      const focusEl=document.getElementById('focusList');
-      focusEl.innerHTML = focus.map((f,i)=>`<a class="card" href="#" style="text-decoration:none;color:inherit"><div class="c-bar"></div><div class="c-body"><div class="c-title">${i+1}. ${f.title||'（待填）'}</div><div class="c-meta">${f.meta||''}</div><div class="c-desc">${f.detail||'點進執行分頁查看詳細'}</div></div></a>`).join('');
+      const schedules = s.schedules || [
+        {time:'09:30',title:'確認本日三個關鍵推進項目',detail:'先確認今天三件最重要的事，避免分心。'},
+        {time:'14:00',title:'追蹤執行進度與阻塞點',detail:'對齊卡點，決定是否需要升級處理。'},
+        {time:'17:30',title:'完成今日核對與回顧',detail:'整理完成項與未完成項，銜接明日。'}
+      ];
 
-      const decisions = Array.isArray(state.decisions) ? state.decisions.slice(0,3) : [];
-      const decEl=document.getElementById('decisionList');
-      decEl.innerHTML = decisions.map(d=>`<div class="card"><div class="c-bar ${d.urgent?'urgent':''}"></div><div class="c-body"><div class="c-title">${d.title||'（未命名）'}</div><div class="c-meta">截止 ${d.due||'—'}</div></div><div class="pill">${d.urgent?'緊急':'待確認'}</div></div>`).join('') || '<div class="card"><div class="c-body"><div class="c-meta">目前無待決策</div></div></div>';
-      document.getElementById('decisionMore').textContent = (Array.isArray(state.decisions) && state.decisions.length>3) ? `+${state.decisions.length-3} 更多` : '';
+      const schEl=document.getElementById('scheduleList');
+      schEl.innerHTML='';
+      schedules.forEach(it=>{
+        const row=document.createElement('div');
+        row.className='sch-item';
+        row.innerHTML=`<div class="sch-time">${it.time||''}</div><div class="sch-title">${it.title||''}</div>`;
+        row.onclick=()=>setDetail(it.detail || it.title || '');
+        schEl.appendChild(row);
+      });
+
+      const weekly = s.weeklyFocus || core.desc || '本週重點：聚焦可直接交付的成果。';
+      setDetail(weekly);
+      document.getElementById('coreCard').onclick=()=>setDetail(core.desc || weekly);
+
+      renderLines(document.getElementById('tasksPane'), s.tasks);
+      renderLines(document.getElementById('controlPane'), s.controls);
+      renderLines(document.getElementById('intelPane'), s.intels);
+      renderLines(document.getElementById('financePane'), s.finances);
     }
 
-    // swipe left/right to switch pages (mobile)
-    let touchStartX=0, touchEndX=0;
-    document.addEventListener('touchstart', (e)=>{ touchStartX=e.changedTouches[0].screenX; }, {passive:true});
-    document.addEventListener('touchend', (e)=>{
-      touchEndX=e.changedTouches[0].screenX;
-      const delta=touchEndX-touchStartX;
-      if(Math.abs(delta)<50) return;
+    function setDetail(text){ document.getElementById('detailText').textContent = text || ''; }
 
-      const activePage=document.querySelector('.page.active')?.id?.replace('page-','') || 'home';
-      const idx=PAGE_ORDER.indexOf(activePage);
-      if(idx<0) return;
+    const carousel=document.getElementById('carousel');
+    function goHome(){ carousel.scrollTo({left:0,behavior:'smooth'}); }
 
-      let nextIdx=idx;
-      if(delta<0 && idx<PAGE_ORDER.length-1) nextIdx=idx+1;     // swipe left => next page
-      if(delta>0 && idx>0) nextIdx=idx-1;                        // swipe right => prev page
-      if(nextIdx===idx) return;
+    function updatePageState(){
+      const idx=Math.round(carousel.scrollLeft / carousel.clientWidth);
+      const key=PAGE_KEYS[idx] || 'today';
+      document.querySelectorAll('.home-btn').forEach(b=>b.style.display = key==='today' ? 'none' : 'inline-block');
+      document.getElementById('hint').textContent = `${key.charAt(0).toUpperCase()+key.slice(1)} · 左右滑動切頁`;
+    }
 
-      const nextKey=PAGE_ORDER[nextIdx];
-      const nextTab=[...document.querySelectorAll('.bn')][nextIdx] || null;
-      nav(nextKey, nextTab);
-    }, {passive:true});
+    let ticking=false;
+    carousel.addEventListener('scroll',()=>{
+      if(ticking) return;
+      requestAnimationFrame(()=>{ updatePageState(); ticking=false; });
+      ticking=true;
+    },{passive:true});
 
-    loadDailyQuote();
+    setDateAndMotto();
+    setWeather();
     loadState();
-    updateHomeHotspots('home');
+    updatePageState();
   </script>
 </body>
 </html>
