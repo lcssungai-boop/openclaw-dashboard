@@ -203,14 +203,52 @@
       };
 
       const schedules = rawSchedules.filter(it => wanted(it.type||it.sub));
-      const futureItems = schedules.slice(1);
 
-      // 固定「全立祥送工」第一位
+      // 依時間軸排序：
+      // 1) 無日期但有具體時間（如 08:30）
+      // 2) 無日期序位（如 T2 / T3）
+      // 3) 有日期時間（如 5 am10:00 / 3/26 am09:00）
+      const parseTimelineKey = (it) => {
+        const text = `${it.time||''} ${it.date||''} ${it.meta||''}`.trim();
+        const md = text.match(/(\d{1,2})\/(\d{1,2})/);
+        const dOnly = !md && text.match(/(^|\s)(\d{1,2})(?=\s|$)/); // e.g. "5 am10:00"
+        const ap = text.match(/\b(am|pm)\s*(\d{1,2})(?::(\d{2}))?/i);
+        const hm = text.match(/\b(\d{1,2}):(\d{2})\b/);
+        const tn = text.match(/^\s*T(\d+)\s*$/i);
+
+        let minutes = 9999;
+        if (ap) {
+          let h = parseInt(ap[2],10) % 12;
+          if ((ap[1]||'').toLowerCase() === 'pm') h += 12;
+          const m = parseInt(ap[3]||'0',10);
+          minutes = h*60 + m;
+        } else if (hm) {
+          minutes = parseInt(hm[1],10)*60 + parseInt(hm[2],10);
+        }
+
+        if (!md && !dOnly && hm) return [0, minutes, 0];      // 08:30
+        if (!md && !dOnly && tn) return [1, parseInt(tn[1],10), 0]; // T2
+
+        // dated
+        let mon = 99, day = 99;
+        if (md) {
+          mon = parseInt(md[1],10); day = parseInt(md[2],10);
+        } else if (dOnly) {
+          mon = new Date().getMonth() + 1;
+          day = parseInt(dOnly[2],10);
+        }
+        return [2, mon*100+day, minutes];
+      };
+
       schedules.sort((a,b)=>{
-        if(String(a.title||'').includes('全立祥')) return -1;
-        if(String(b.title||'').includes('全立祥')) return 1;
-        return 0;
+        const ka = parseTimelineKey(a);
+        const kb = parseTimelineKey(b);
+        if (ka[0] !== kb[0]) return ka[0]-kb[0];
+        if (ka[1] !== kb[1]) return ka[1]-kb[1];
+        return ka[2]-kb[2];
       });
+
+      const futureItems = schedules.slice(1);
 
       const sheetEl=document.querySelector('#page-today .sheet');
       const schEl=document.getElementById('scheduleList');
