@@ -54,10 +54,10 @@
     .meta span{display:block}
 
     .schedule{margin-top:14px;transition:max-height .25s ease, opacity .2s ease;max-height:460px;overflow:hidden;opacity:1}
-    .sch-item{padding:14px 0;cursor:pointer;display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:start}
-    .sch-time{font-family:var(--mono);font-size:14px;color:#222;padding-top:2px;text-align:right;padding-right:10px}
-    .sch-main{border-left:3px solid #e1e5ec;padding-left:10px}
-    .sch-title{font-size:15px;line-height:1.25;margin-top:0;font-weight:700}
+    .sch-item{padding:14px 0;cursor:pointer;display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start}
+    .sch-time{font-family:var(--mono);font-size:14px;color:#222;padding-top:2px;text-align:right;padding-right:14px}
+    .sch-main{border-left:3px solid #e1e5ec;padding-left:14px}
+    .sch-title{font-size:13px;line-height:1.25;margin-top:0;font-weight:700}
     .sch-sub{font-size:13px;line-height:1.35;color:var(--muted);margin-top:3px}
 
     .detail{margin-top:14px;padding-top:10px;border-top:1px solid var(--line);transition:margin-top .25s ease}
@@ -225,9 +225,15 @@
         {time:'14:00',title:'賴冠佑來訪',sub:'客戶提醒',detail:'賴冠佑 來訪（BNI後）',type:'客戶'}
       ];
 
-      // 只保留客戶 / 專案相關，並固定「全立祥送工」第一位
-      const schedules = rawSchedules
-        .filter(it => String(it.type||it.sub||'').includes('客戶') || String(it.type||it.sub||'').includes('專案'));
+      // 只保留客戶 / 專案相關，且以「當日」事件優先
+      const now = new Date();
+      const mmdd = `${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+      const pool = rawSchedules.filter(it => String(it.type||it.sub||'').includes('客戶') || String(it.type||it.sub||'').includes('專案'));
+
+      const todayOnly = pool.filter(it => String(it.date||it.meta||'').includes(mmdd));
+      const schedules = (todayOnly.length ? todayOnly : pool);
+
+      // 固定「全立祥送工」第一位
       schedules.sort((a,b)=>{
         if(String(a.title||'').includes('全立祥')) return -1;
         if(String(b.title||'').includes('全立祥')) return 1;
