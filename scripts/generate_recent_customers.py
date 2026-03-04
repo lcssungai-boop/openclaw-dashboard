@@ -191,6 +191,7 @@ def main():
                 'last_activity': c.get('last_activity',''),
                 'priority': c.get('priority',''),
                 'projects': c.get('projects', []),
+                'recent_event': c.get('notes','') if c.get('notes','') not in (None,'','-') else '',
                 'brief_md': f"briefs/{c['customer_name']}.md",
             }
             for c in final

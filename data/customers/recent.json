@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-03-04T03:51:27Z",
+  "updated_at": "2026-03-04T04:18:53Z",
   "count": 14,
   "items": [
     {
@@ -10,6 +10,7 @@
       "last_activity": "2026-02-14",
       "priority": "A",
       "projects": [],
+      "recent_event": "來自資料夾名",
       "brief_md": "briefs/中將.md"
     },
     {
@@ -20,6 +21,7 @@
       "last_activity": "2026-02-14",
       "priority": "B",
       "projects": [],
+      "recent_event": "暫無直接專案映射",
       "brief_md": "briefs/凱塘.md"
     },
     {
@@ -30,6 +32,7 @@
       "last_activity": "2026-02-14",
       "priority": "A",
       "projects": [],
+      "recent_event": "原 C-0007/C-0008 合併為單一主檔",
       "brief_md": "briefs/可成科技.md"
     },
     {
@@ -40,6 +43,7 @@
       "last_activity": "2026-02-14",
       "priority": "B",
       "projects": [],
+      "recent_event": "暫無直接專案映射",
       "brief_md": "briefs/景騰.md"
     },
     {
@@ -50,6 +54,7 @@
       "last_activity": "2026-02-14",
       "priority": "C",
       "projects": [],
+      "recent_event": "標記為非客戶條目（流程）",
       "brief_md": "briefs/流程.md"
     },
     {
@@ -69,6 +74,7 @@
           "source_path": "資訊資料庫/📁 專案項目/利源不銹鋼"
         }
       ],
+      "recent_event": "專案名稱為「利源不銹鋼」",
       "brief_md": "briefs/利源.md"
     },
     {
@@ -79,6 +85,7 @@
       "last_activity": "2026-02-15",
       "priority": "B",
       "projects": [],
+      "recent_event": "暫無直接專案映射",
       "brief_md": "briefs/千葉.md"
     },
     {
@@ -98,6 +105,7 @@
           "source_path": "資訊資料庫/📁 專案項目/空間特工"
         }
       ],
+      "recent_event": "專案名稱為「空間特工」",
       "brief_md": "briefs/特工.md"
     },
     {
@@ -108,6 +116,7 @@
       "last_activity": "2026-02-15",
       "priority": "A",
       "projects": [],
+      "recent_event": "暫無直接專案映射",
       "brief_md": "briefs/聖發.md"
     },
     {
@@ -118,6 +127,7 @@
       "last_activity": "2026-02-19",
       "priority": "A",
       "projects": [],
+      "recent_event": "已與法人全名版本統一",
       "brief_md": "briefs/華旭科技股份有限公司.md"
     },
     {
@@ -145,6 +155,7 @@
           "source_path": "資訊資料庫/📁 專案項目/兆鯨組織"
         }
       ],
+      "recent_event": "已與「兆鯨物業」名稱族群合併",
       "brief_md": "briefs/兆鯨物業有限公司.md"
     },
     {
@@ -155,6 +166,7 @@
       "last_activity": "2026-02-27",
       "priority": "A",
       "projects": [],
+      "recent_event": "已報價，等待後續，需固定追蹤",
       "brief_md": "briefs/正新鋁業.md"
     },
     {
@@ -165,6 +177,7 @@
       "last_activity": "2026-03-05",
       "priority": "A",
       "projects": [],
+      "recent_event": "代招洽談中，已建立電話訪談表",
       "brief_md": "briefs/康揚.md"
     },
     {
@@ -184,6 +197,7 @@
           "source_path": "資訊資料庫/📁 專案項目/全立祥"
         }
       ],
+      "recent_event": "2026-03-04：原定到廠但老闆不在，改週五BNI說明；送工報到工人迷路遲到，翻譯協助；待確認勞保投保人數/增額2000/5%許可函。",
       "brief_md": "briefs/全立祥.md"
     }
   ]

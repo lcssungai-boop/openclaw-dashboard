@@ -23,8 +23,8 @@
 <body>
   <div class="phone">
     <div class="top">
-      <button class="back" onclick="history.length>1?history.back():location.href='./index.html'">← Home</button>
-      <div class="name" id="name">客戶</div>
+      <button class="back" onclick="history.length>1?history.back():location.href='./index.html'">← 客戶清單</button>
+      <div class="name" id="name" style="cursor:pointer" title="回客戶清單">客戶</div>
       <div class="sub" id="meta"></div>
     </div>
     <div class="sheet">
@@ -35,7 +35,9 @@
 <script>
   const q = new URLSearchParams(location.search);
   const name = q.get('name') || '';
-  document.getElementById('name').textContent = name || '客戶';
+  const nameEl = document.getElementById('name');
+  nameEl.textContent = name || '客戶';
+  nameEl.addEventListener('click', ()=> location.href = './index.html#customers');
   document.getElementById('meta').textContent = `更新：${new Date().toLocaleString()}`;
 
   async function load(){
