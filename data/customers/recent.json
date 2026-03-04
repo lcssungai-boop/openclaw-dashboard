@@ -1,0 +1,190 @@
+{
+  "updated_at": "2026-03-04T03:51:27Z",
+  "count": 14,
+  "items": [
+    {
+      "customer_id": "C-0001",
+      "customer_name": "中將",
+      "status": "active",
+      "followup_next": "每週一關心",
+      "last_activity": "2026-02-14",
+      "priority": "A",
+      "projects": [],
+      "brief_md": "briefs/中將.md"
+    },
+    {
+      "customer_id": "C-0004",
+      "customer_name": "凱塘",
+      "status": "active",
+      "followup_next": "雙週關心",
+      "last_activity": "2026-02-14",
+      "priority": "B",
+      "projects": [],
+      "brief_md": "briefs/凱塘.md"
+    },
+    {
+      "customer_id": "C-0007",
+      "customer_name": "可成科技",
+      "status": "active",
+      "followup_next": "每週追進度",
+      "last_activity": "2026-02-14",
+      "priority": "A",
+      "projects": [],
+      "brief_md": "briefs/可成科技.md"
+    },
+    {
+      "customer_id": "C-0009",
+      "customer_name": "景騰",
+      "status": "active",
+      "followup_next": "雙週關心",
+      "last_activity": "2026-02-14",
+      "priority": "B",
+      "projects": [],
+      "brief_md": "briefs/景騰.md"
+    },
+    {
+      "customer_id": "C-0010",
+      "customer_name": "流程",
+      "status": "inactive",
+      "followup_next": "不追蹤（非客戶）",
+      "last_activity": "2026-02-14",
+      "priority": "C",
+      "projects": [],
+      "brief_md": "briefs/流程.md"
+    },
+    {
+      "customer_id": "C-0005",
+      "customer_name": "利源",
+      "status": "active",
+      "followup_next": "每週關心",
+      "last_activity": "2026-02-15",
+      "priority": "B",
+      "projects": [
+        {
+          "project_id": "P-0004",
+          "project_name": "利源不銹鋼",
+          "stage": "active",
+          "priority": "medium",
+          "due_date": "TBD",
+          "source_path": "資訊資料庫/📁 專案項目/利源不銹鋼"
+        }
+      ],
+      "brief_md": "briefs/利源.md"
+    },
+    {
+      "customer_id": "C-0006",
+      "customer_name": "千葉",
+      "status": "active",
+      "followup_next": "雙週關心",
+      "last_activity": "2026-02-15",
+      "priority": "B",
+      "projects": [],
+      "brief_md": "briefs/千葉.md"
+    },
+    {
+      "customer_id": "C-0011",
+      "customer_name": "特工",
+      "status": "active",
+      "followup_next": "每週關心",
+      "last_activity": "2026-02-15",
+      "priority": "B",
+      "projects": [
+        {
+          "project_id": "P-0010",
+          "project_name": "空間特工",
+          "stage": "active",
+          "priority": "medium",
+          "due_date": "TBD",
+          "source_path": "資訊資料庫/📁 專案項目/空間特工"
+        }
+      ],
+      "brief_md": "briefs/特工.md"
+    },
+    {
+      "customer_id": "C-0012",
+      "customer_name": "聖發",
+      "status": "active",
+      "followup_next": "每週關心（含請款）",
+      "last_activity": "2026-02-15",
+      "priority": "A",
+      "projects": [],
+      "brief_md": "briefs/聖發.md"
+    },
+    {
+      "customer_id": "C-0013",
+      "customer_name": "華旭科技股份有限公司",
+      "status": "active",
+      "followup_next": "下週Email關心報價",
+      "last_activity": "2026-02-19",
+      "priority": "A",
+      "projects": [],
+      "brief_md": "briefs/華旭科技股份有限公司.md"
+    },
+    {
+      "customer_id": "C-0002",
+      "customer_name": "兆鯨物業有限公司",
+      "status": "active",
+      "followup_next": "每週三關心（物業/導入）",
+      "last_activity": "2026-02-27",
+      "priority": "A",
+      "projects": [
+        {
+          "project_id": "P-0001",
+          "project_name": "兆鯨物业",
+          "stage": "active",
+          "priority": "medium",
+          "due_date": "TBD",
+          "source_path": "資訊資料庫/📁 專案項目/兆鯨物业"
+        },
+        {
+          "project_id": "P-0002",
+          "project_name": "兆鯨組織",
+          "stage": "active",
+          "priority": "medium",
+          "due_date": "TBD",
+          "source_path": "資訊資料庫/📁 專案項目/兆鯨組織"
+        }
+      ],
+      "brief_md": "briefs/兆鯨物業有限公司.md"
+    },
+    {
+      "customer_id": "C-0015",
+      "customer_name": "正新鋁業",
+      "status": "active",
+      "followup_next": "每週追報價進度",
+      "last_activity": "2026-02-27",
+      "priority": "A",
+      "projects": [],
+      "brief_md": "briefs/正新鋁業.md"
+    },
+    {
+      "customer_id": "C-0014",
+      "customer_name": "康揚",
+      "status": "active",
+      "followup_next": "下週追代招需求",
+      "last_activity": "2026-03-05",
+      "priority": "A",
+      "projects": [],
+      "brief_md": "briefs/康揚.md"
+    },
+    {
+      "customer_id": "C-0003",
+      "customer_name": "全立祥",
+      "status": "active",
+      "followup_next": "2026-03-06（週五BNI例會：阿勤事件/勞保人數）",
+      "last_activity": "2026-03-04",
+      "priority": "B",
+      "projects": [
+        {
+          "project_id": "P-0003",
+          "project_name": "全立祥",
+          "stage": "active",
+          "priority": "medium",
+          "due_date": "TBD",
+          "source_path": "資訊資料庫/📁 專案項目/全立祥"
+        }
+      ],
+      "brief_md": "briefs/全立祥.md"
+    }
+  ]
+}
