@@ -16,8 +16,13 @@
     .name{margin-top:10px;font-size:28px;font-weight:700}
     .sub{margin-top:6px;font-family:var(--mono);font-size:12px;color:var(--muted)}
     .sheet{background:var(--panel);border-radius:22px 22px 0 0;border-top:1px solid #e7ebf2;min-height:calc(100vh - 120px);padding:16px 16px 30px}
-    pre{white-space:pre-wrap;word-break:break-word;font-size:14px;line-height:1.65;margin:0}
     .err{color:#b42318;font-size:14px;line-height:1.6}
+    h1{font-size:22px;margin:6px 0 10px}
+    h2{font-size:16px;margin:16px 0 8px}
+    ul{margin:8px 0 12px 18px;padding:0}
+    li{margin:6px 0}
+    .meta{font-family:var(--mono);font-size:12px;color:var(--muted)}
+    .pill{display:inline-block;margin-left:6px;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-family:var(--mono);font-size:11px;color:var(--muted)}
   </style>
 </head>
 <body>
@@ -28,7 +33,7 @@
       <div class="sub" id="meta"></div>
     </div>
     <div class="sheet">
-      <pre id="content">載入中…</pre>
+      <div id="content" style="font-size:15px;line-height:1.75;">載入中…</div>
     </div>
   </div>
 
@@ -45,12 +50,49 @@
       document.getElementById('content').innerHTML = '<div class="err">缺少客戶名稱</div>';
       return;
     }
-    const url = `./data/customers/briefs/${encodeURIComponent(name)}.md?_=${Date.now()}`;
+
+    const mdUrl = `./data/customers/briefs/${encodeURIComponent(name)}.md?_=${Date.now()}`;
+
+    const esc = (s)=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+    function renderLiteMarkdown(md){
+      const lines = String(md||'').split(/\r?\n/);
+      let html = '';
+      let inList = false;
+      const closeList = ()=>{ if(inList){ html += '</ul>'; inList=false; } };
+
+      for(const raw of lines){
+        const line = raw.trimEnd();
+        if(!line.trim()) { closeList(); continue; }
+
+        if(line.startsWith('# ')){
+          closeList();
+          html += `<h1>${esc(line.slice(2).trim())}</h1>`;
+          continue;
+        }
+        if(line.startsWith('## ')){
+          closeList();
+          html += `<h2>${esc(line.slice(3).trim())}</h2>`;
+          continue;
+        }
+        if(line.startsWith('- ')){
+          if(!inList){ html += '<ul>'; inList=true; }
+          html += `<li>${esc(line.slice(2).trim())}</li>`;
+          continue;
+        }
+
+        closeList();
+        html += `<div>${esc(line)}</div>`;
+      }
+      closeList();
+      return html || '<div class="meta">（無內容）</div>';
+    }
+
     try{
-      const r = await fetch(url, {cache:'no-store'});
+      const r = await fetch(mdUrl, {cache:'no-store'});
       if(!r.ok) throw 0;
       const t = await r.text();
-      document.getElementById('content').textContent = t;
+      document.getElementById('content').innerHTML = renderLiteMarkdown(t);
     }catch(e){
       document.getElementById('content').innerHTML = '<div class="err">找不到該客戶的一頁總覽（尚未產生或名稱不一致）</div>';
     }

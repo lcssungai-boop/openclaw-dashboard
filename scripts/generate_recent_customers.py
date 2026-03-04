@@ -105,10 +105,10 @@ def build_brief(customer, projects):
     md = []
     md.append(f"# {name}｜手機一頁總覽")
     md.append("")
-    md.append(f"- customer_id：{cid}")
-    md.append(f"- status：{status}")
-    md.append(f"- last_activity：{last}")
-    md.append(f"- followup_next：{follow}")
+    # Hide internal ids on mobile brief; keep human-readable fields
+    md.append(f"- 狀態：{status}")
+    md.append(f"- 最近互動：{last}")
+    md.append(f"- 下次追蹤：{follow}")
     md.append("")
 
     if notes and notes != '-':

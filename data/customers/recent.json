@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-03-04T04:18:53Z",
+  "updated_at": "2026-03-04T08:11:23Z",
   "count": 14,
   "items": [
     {
@@ -16,12 +16,12 @@
     {
       "customer_id": "C-0004",
       "customer_name": "凱塘",
-      "status": "active",
-      "followup_next": "雙週關心",
+      "status": "inactive",
+      "followup_next": "不追蹤（非客戶）",
       "last_activity": "2026-02-14",
-      "priority": "B",
+      "priority": "C",
       "projects": [],
-      "recent_event": "暫無直接專案映射",
+      "recent_event": "使用者確認：凱塘不是客戶（保留作為轉介來源/關係人，不做客戶追蹤）",
       "brief_md": "briefs/凱塘.md"
     },
     {
