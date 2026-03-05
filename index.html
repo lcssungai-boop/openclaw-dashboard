@@ -137,6 +137,19 @@
         </div>
       </section>
 
+      <!-- Exchange -->
+      <section class="page" id="page-exchange">
+        <div class="top"><button class="home-btn" onclick="goHome()">← Home</button><div class="date">EXCHANGE</div><div class="motto">管理部・資訊部・財務部交流</div></div>
+        <div class="sheet">
+          <div class="sub-title">管理部（客戶/專案）</div>
+          <div id="mgmtPane"></div>
+          <div class="sub-title">資訊部（系統/排程）</div>
+          <div id="itPane"></div>
+          <div class="sub-title">財務部（帳務/提醒）</div>
+          <div id="finDeptPane"></div>
+        </div>
+      </section>
+
       <!-- Control -->
       <section class="page" id="page-control">
         <div class="top"><button class="home-btn" onclick="goHome()">← Home</button><div class="date">CONTROL</div><div class="motto">流程控制與核對</div></div>
@@ -160,7 +173,7 @@
 
   <script>
     const STATE_URL=`./data/openclaw_public_state.json?v=${Date.now()}`;
-    const PAGE_KEYS=['today','customers','tasks','control','intel','finance'];
+    const PAGE_KEYS=['today','customers','tasks','exchange','control','intel','finance'];
 
     const MOTTO_POOL=[
       '專業決定高度，細節決定成敗。','成交只是服務的開始，信賴才是企業的複利。','解決問題的能力，決定你在市場的身價。','格局是被委屈撐大的，成功是熬過孤獨留下的。','昨天的成績是底氣，今天的努力是底牌。','一個人可以走很快，一群人才能走很遠。','最好的行銷，是讓客戶感受到你的不可或缺。','不要等機會完美，要讓機會在執行中變得完美。','專注於目標，而非障礙。','領導力不是職位，而是你對他人產生的正向影響。','變革雖然痛苦，但不變革會很危險。','用專業贏得尊重，用真誠贏得信任。','所有的好運，都是努力積攢的實力。','業績是治癒焦慮的良藥，行動是解決問題的鑰匙。','品牌是時間的沉澱，口碑是細節的累積。','與其擔心競爭，不如專注於如何創造價值。','商業的本質是交換，交換的前提是信任。','高手都是在枯燥的基礎上，做到極致的精準。','成功的路上並不擁擠，因為堅持的人不多。','所有的驚艷，都來自於長久的深耕與專業。','只有創造價值的人，才擁有議價的權利。','溝通的目的是達成共識，而非贏得爭論。','把簡單的事做到卓越，就是不簡單。','市場不相信眼淚，只承認結果。','機會從不消失，只是轉移到準備好的人身上。','誠信是商場的通行證，專業是談判的壓艙石。','凡事有交代，件件有落實，事事有回音。','思考決定出路，心態決定勝負。','行為決定習慣，習慣決定性格，性格決定命運。','真正的富有，是褪去光環後依然能溫暖他人。'
@@ -220,6 +233,45 @@
       }catch(e){
         el.innerHTML = '<div class="list-card"><div class="sch-time">!</div><div class="sch-title">無法載入客戶清單</div></div>';
       }
+    }
+
+    async function fetchTasks(path){
+      try{
+        const r = await fetch(`${path}?_=${Date.now()}`, {cache:'no-store'});
+        if(!r.ok) return [];
+        const d = await r.json();
+        return Array.isArray(d.tasks) ? d.tasks : [];
+      }catch(_){ return []; }
+    }
+
+    function mapLine(t){
+      const title = t.title || '未命名任務';
+      const due = t.due && t.due !== '-' ? t.due : '';
+      const st = t.status || '';
+      return { meta: `${due} ${st}`.trim(), title };
+    }
+
+    async function loadExchangeBoard(){
+      const mgmtEl = document.getElementById('mgmtPane');
+      const itEl = document.getElementById('itPane');
+      const finEl = document.getElementById('finDeptPane');
+      if(!mgmtEl || !itEl || !finEl) return;
+
+      const [cai,zj,oc,fin,personal] = await Promise.all([
+        fetchTasks('./data/caitodo/tasks.json'),
+        fetchTasks('./data/zhaojing/tasks.json'),
+        fetchTasks('./data/openclaw/tasks.json'),
+        fetchTasks('./data/finance/tasks.json'),
+        fetchTasks('./data/personal/tasks.json')
+      ]);
+
+      const mgmt = [...cai, ...zj].slice(0,5).map(mapLine);
+      const it = oc.slice(0,5).map(mapLine);
+      const finDept = [...fin, ...personal].slice(0,5).map(mapLine);
+
+      renderLines(mgmtEl, mgmt);
+      renderLines(itEl, it);
+      renderLines(finEl, finDept);
     }
 
     async function loadState(){
@@ -426,6 +478,7 @@
     setDateAndMotto();
     loadState();
     loadCustomers();
+    loadExchangeBoard();
     updatePageState();
   </script>
 </body>
