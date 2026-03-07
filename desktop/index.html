@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpenClaw · Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --top:    #eceef1;
+      --panel:  #ffffff;
+      --line:   #d9dde4;
+      --ink:    #17191d;
+      --muted:  #626975;
+      --accent: #1f2a44;
+      --green:  #1a7a3e;
+      --red:    #c0392b;
+      --mono:   'DM Mono', monospace;
+      --body:   'Noto Sans TC', sans-serif;
+    }
+    body.dark {
+      --top:   #121418;
+      --panel: #171a20;
+      --line:  #2a313c;
+      --ink:   #e9edf5;
+      --muted: #9aa5b5;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--body);
+      color: var(--ink);
+      background: var(--top);
+      min-height: 100vh;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: color-mix(in srgb, var(--top) 85%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 24px; }
+    .brand { font-family: var(--mono); font-size: 16px; font-weight: 500; letter-spacing: 0.15em; color: var(--accent); }
+
+    /* ── Tab Nav ── */
+    .tab-nav { display: flex; gap: 4px; }
+    .tab-btn {
+      padding: 7px 16px;
+      font-size: 12px;
+      font-family: var(--mono);
+      color: var(--muted);
+      background: none;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: 0.15s;
+      letter-spacing: 0.04em;
+    }
+    .tab-btn:hover { color: var(--ink); background: var(--panel); border-color: var(--line); }
+    .tab-btn.active { color: var(--ink); background: var(--panel); border-color: var(--accent); }
+
+    .topbar-right { display: flex; gap: 8px; align-items: center; }
+    .icon-btn {
+      padding: 7px 14px;
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .icon-btn:hover { color: var(--ink); border-color: var(--accent); }
+    .mobile-link { text-decoration: none; }
+
+    /* ── Layout ── */
+    .container { max-width: 1440px; margin: 0 auto; padding: 0 40px 80px; }
+
+    /* ── Tab Panels ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Hero ── */
+    .hero { padding: 28px 0 32px; display: flex; justify-content: space-between; align-items: flex-end; }
+    .hero-left {}
+    .hero-month { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+    .hero-date  { font-size: 52px; line-height: 0.95; font-weight: 700; letter-spacing: 0.005em; margin-top: 14px; }
+    .hero-motto { font-size: 15px; color: var(--muted); font-weight: 400; margin-top: 10px; }
+    .hero-meta  { text-align: right; font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; }
+
+    /* ── KPI Grid ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .kpi-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px 24px;
+    }
+    .kpi-val   { font-family: var(--mono); font-size: 34px; font-weight: 700; color: var(--accent); line-height: 1; }
+    .kpi-label { font-size: 11px; color: var(--muted); margin-top: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .kpi-sub   { font-size: 11px; color: var(--muted); margin-top: 4px; font-family: var(--mono); }
+
+    /* ── 3-col workspace ── */
+    .workspace {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 1100px) { .workspace { grid-template-columns: 1fr 1fr; } }
+
+    /* ── Widget ── */
+    .widget {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .widget-head {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .widget-title { font-size: 15px; font-weight: 700; }
+    .widget-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      background: var(--top);
+      color: var(--muted);
+      padding: 3px 10px;
+      border-radius: 99px;
+      border: 1px solid var(--line);
+    }
+    .widget-scroll { overflow-y: auto; max-height: 480px; flex: 1; }
+
+    /* ── Table ── */
+    .dt { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .dt th {
+      padding: 12px 20px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      border-bottom: 2px solid var(--line);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      position: sticky;
+      top: 0;
+      background: var(--panel);
+    }
+    .dt td { padding: 13px 20px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    .dt tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
+    .dt tr:last-child td { border-bottom: none; }
+    .dt .name-cell { font-weight: 600; line-height: 1.3; }
+    .dt .sub-cell  { font-size: 11px; color: var(--muted); font-weight: 400; margin-top: 2px; }
+    .dt .mono      { font-family: var(--mono); }
+
+    /* ── Tags ── */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+    .tag-green  { background: #e2f5e9; color: #1a7a3e; }
+    .tag-yellow { background: #fff8e6; color: #9a6800; }
+    .tag-red    { background: #fdeaea; color: #c0392b; }
+    .tag-blue   { background: #eef2ff; color: #1f2a44; }
+    .tag-gray   { background: var(--top); color: var(--muted); }
+
+    /* ── System rows ── */
+    .sys-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 13px 24px;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+      align-items: center;
+    }
+    .sys-row:last-child { border-bottom: none; }
+    .sys-key { color: var(--muted); font-size: 12px; }
+    .sys-val { font-family: var(--mono); font-weight: 600; font-size: 12px; }
+    .sys-ok  { color: var(--green); }
+    .sys-err { color: var(--red); }
+
+    /* ── Footer ── */
+    .widget-foot {
+      padding: 12px 24px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      text-align: right;
+      border-top: 1px solid var(--line);
+    }
+
+    /* ── Full-page panel (Projects / CRM / System tabs) ── */
+    .page-head {
+      padding: 28px 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .page-title { font-size: 24px; font-weight: 700; }
+    .page-sub   { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .page-actions { display: flex; gap: 8px; }
+
+    /* ── Filter bar ── */
+    .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filter-chip {
+      padding: 6px 14px;
+      font-size: 11px;
+      font-family: var(--mono);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      cursor: pointer;
+      background: none;
+      color: var(--muted);
+      transition: 0.15s;
+    }
+    .filter-chip.active, .filter-chip:hover {
+      background: var(--panel);
+      color: var(--ink);
+      border-color: var(--accent);
+    }
+
+    /* ── Big table card ── */
+    .table-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    /* ── CRM cards grid ── */
+    .crm-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .crm-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .crm-name     { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .crm-category { font-size: 11px; color: var(--muted); margin-bottom: 12px; font-family: var(--mono); }
+    .crm-row      { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid var(--line); }
+    .crm-row:last-child { border-bottom: none; }
+    .crm-k { color: var(--muted); }
+    .crm-v { font-family: var(--mono); font-weight: 500; }
+    .crm-v.date { color: var(--accent); }
+
+    /* ── Empty state ── */
+    .empty { padding: 40px; text-align: center; color: var(--muted); font-size: 13px; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ TOPBAR ═══════════════════════════════ -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="brand">OPENCLAW</div>
+    <nav class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+      <button class="tab-btn" onclick="switchTab('projects')">專案</button>
+      <button class="tab-btn" onclick="switchTab('crm')">客戶 CRM</button>
+      <button class="tab-btn" onclick="switchTab('system')">系統</button>
+    </nav>
+  </div>
+  <div class="topbar-right">
+    <a href="../" class="mobile-link"><button class="icon-btn">📱 手機版</button></a>
+    <button class="icon-btn" id="themeToggle">☾ DARK</button>
+    <button class="icon-btn" id="refreshBtn" onclick="loadAll()">↻ 更新</button>
+    <span class="icon-btn" id="lastSync" style="cursor:default; border-color:transparent">—</span>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ═══════════════════ TAB: OVERVIEW ═══════════════════ -->
+  <section class="tab-panel active" id="panel-overview">
+    <div class="hero">
+      <div class="hero-left">
+        <div class="hero-month" id="heroMonth"></div>
+        <div class="hero-date"  id="heroDate"></div>
+        <div class="hero-motto">專業決定高度，細節決定成敗。</div>
+      </div>
+      <div class="hero-meta" id="heroMeta"></div>
+    </div>
+
+    <!-- KPI -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-val" id="kpi-active">—</div>
+        <div class="kpi-label">Active Projects</div>
+        <div class="kpi-sub" id="kpi-plan">— 規劃中</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" id="kpi-clients">—</div>
+        <div class="kpi-label">Clients</div>
+        <div class="kpi-sub" id="kpi-contact">最近接觸 —</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" id="kpi-health">—</div>
+        <div class="kpi-label">System Health</div>
+        <div class="kpi-sub" id="kpi-health-sub">服務狀態</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" id="kpi-fin">—</div>
+        <div class="kpi-label">案件追蹤</div>
+        <div class="kpi-sub">含規劃中</div>
+      </div>
+    </div>
+
+    <!-- 3-col -->
+    <div class="workspace">
+
+      <!-- 管理部 -->
+      <section class="widget">
+        <div class="widget-head">
+          <h2 class="widget-title">管理部 · 進行專案</h2>
+          <span class="widget-badge" id="mgmt-badge">0 PROJECTS</span>
+        </div>
+        <div class="widget-scroll">
+          <table class="dt">
+            <thead><tr>
+              <th>專案</th><th>優先</th><th>狀態</th><th>截止</th>
+            </tr></thead>
+            <tbody id="mgmt-body"></tbody>
+          </table>
+        </div>
+        <div class="widget-foot" id="mgmt-updated">—</div>
+      </section>
+
+      <!-- 資訊部 -->
+      <section class="widget">
+        <div class="widget-head">
+          <h2 class="widget-title">資訊部 · 系統狀態</h2>
+          <span class="widget-badge" id="it-badge">0 NODES</span>
+        </div>
+        <div class="widget-scroll" id="it-body"></div>
+        <div style="padding:12px 24px; font-family:var(--mono); font-size:11px; color:var(--muted); line-height:1.7; border-top:1px solid var(--line)" id="it-notes"></div>
+        <div class="widget-foot" id="it-updated">—</div>
+      </section>
+
+      <!-- 財務部 -->
+      <section class="widget">
+        <div class="widget-head">
+          <h2 class="widget-title">財務部 · 收支核實</h2>
+          <span class="widget-badge" id="fin-badge">0 ITEMS</span>
+        </div>
+        <div class="widget-scroll">
+          <table class="dt">
+            <thead><tr><th>專案</th><th>金額</th><th>狀態</th></tr></thead>
+            <tbody id="fin-body"></tbody>
+          </table>
+        </div>
+        <div style="padding:16px 20px; border-top:1px solid var(--line)" id="fin-summary"></div>
+        <div class="widget-foot" id="fin-updated">—</div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ TAB: PROJECTS ═══════════════════ -->
+  <section class="tab-panel" id="panel-projects">
+    <div class="page-head">
+      <div>
+        <div class="page-title">專案管理</div>
+        <div class="page-sub" id="proj-subtitle">從 KnowledgeVault 同步</div>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-chip active" onclick="filterProjects('all', this)">全部</button>
+      <button class="filter-chip" onclick="filterProjects('active', this)">進行中</button>
+      <button class="filter-chip" onclick="filterProjects('planning', this)">規劃中</button>
+      <button class="filter-chip" onclick="filterProjects('done', this)">完成</button>
+    </div>
+    <div class="table-card">
+      <table class="dt" style="table-layout:fixed">
+        <colgroup>
+          <col style="width:30%"><col style="width:18%"><col style="width:10%">
+          <col style="width:10%"><col style="width:12%"><col style="width:20%">
+        </colgroup>
+        <thead><tr>
+          <th>專案名稱</th><th>客戶</th><th>優先</th><th>狀態</th><th>截止日</th><th>更新時間</th>
+        </tr></thead>
+        <tbody id="proj-body"></tbody>
+      </table>
+      <div class="empty" id="proj-empty" style="display:none">無符合資料</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ TAB: CRM ═══════════════════ -->
+  <section class="tab-panel" id="panel-crm">
+    <div class="page-head">
+      <div>
+        <div class="page-title">客戶 CRM</div>
+        <div class="page-sub" id="crm-subtitle">從 KnowledgeVault 同步</div>
+      </div>
+    </div>
+    <div class="crm-grid" id="crm-grid"></div>
+    <div class="empty" id="crm-empty" style="display:none">無客戶資料</div>
+  </section>
+
+  <!-- ═══════════════════ TAB: SYSTEM ═══════════════════ -->
+  <section class="tab-panel" id="panel-system">
+    <div class="page-head">
+      <div>
+        <div class="page-title">系統狀態</div>
+        <div class="page-sub">OpenClaw Infrastructure</div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px">
+      <div class="widget">
+        <div class="widget-head">
+          <h2 class="widget-title">服務節點</h2>
+          <span class="widget-badge" id="sys-badge">0 NODES</span>
+        </div>
+        <div id="sys-body"></div>
+        <div class="widget-foot" id="sys-updated">—</div>
+      </div>
+      <div class="widget">
+        <div class="widget-head">
+          <h2 class="widget-title">系統備註</h2>
+        </div>
+        <div style="padding:16px 24px; font-family:var(--mono); font-size:12px; color:var(--muted); line-height:1.8" id="sys-notes"></div>
+        <div class="widget-foot" id="sys-notes-updated">KnowledgeVault 資料源</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const DEPT = '../data/dept/';
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const ACTIVE_SET = new Set(['active', '進行中', '待處理', '進行中/追蹤中']);
+const DONE_SET = new Set(['done', '已完成', 'completed', 'cancelled', '已取消']);
+
+// ── State ──────────────────────────────────────────────────────────────────
+let _data = {
+  mgmt: {}, it: {}, fin: {},
+  customers: [], projects: [], cases: [], publicState: {}, sourceStamp: '—'
+};
+
+// ── Tab Navigation ─────────────────────────────────────────────────────────
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.textContent.toLowerCase().includes(id) ||
+        (id === 'overview' && b.textContent === 'Overview') ||
+        (id === 'projects' && b.textContent === '專案') ||
+        (id === 'crm'      && b.textContent.includes('CRM')) ||
+        (id === 'system'   && b.textContent === '系統')) {
+      b.classList.add('active');
+    }
+  });
+}
+
+function parseMarkdownTable(md) {
+  const lines = String(md || '').split('\n').map(s => s.trim());
+  const table = lines.filter(line => /^\|.*\|$/.test(line));
+  if (table.length < 3) return [];
+  const headers = table[0].split('|').slice(1, -1).map(s => s.trim());
+  return table.slice(2).map(line => {
+    const cols = line.split('|').slice(1, -1).map(s => s.trim());
+    return headers.reduce((acc, key, idx) => {
+      acc[key] = cols[idx] || '';
+      return acc;
+    }, {});
+  }).filter(row => Object.values(row).some(Boolean));
+}
+
+function priorityZh(raw) {
+  const v = String(raw || '').toLowerCase();
+  if (['high', 'important', 'a', '高'].includes(v)) return '高';
+  if (['medium', 'normal', 'b', '中'].includes(v)) return '中';
+  return '低';
+}
+function normalizeProjectStatus(raw) {
+  const v = String(raw || '').toLowerCase();
+  if (['active', '進行中', '待處理', 'doing', 'in-progress'].includes(v)) return { status: 'active', status_zh: '進行中' };
+  if (['planning', '規劃中', 'pending'].includes(v)) return { status: 'planning', status_zh: '規劃中' };
+  if (['done', '已完成', 'completed'].includes(v)) return { status: 'done', status_zh: '完成' };
+  return { status: 'planning', status_zh: raw || '規劃中' };
+}
+function normalizeTaskStatus(raw) {
+  const v = String(raw || '');
+  if (DONE_SET.has(v) || DONE_SET.has(v.toLowerCase())) return { status: 'done', status_zh: '完成' };
+  return { status: 'active', status_zh: '追蹤中' };
+}
+function uniqueBy(list, keyFn) {
+  const seen = new Map();
+  list.forEach(item => {
+    const key = keyFn(item);
+    if (!key) return;
+    if (!seen.has(key)) seen.set(key, item);
+  });
+  return Array.from(seen.values());
+}
+function safeDate(v) {
+  return /^\d{4}-\d{2}-\d{2}/.test(String(v || '')) ? String(v).slice(0, 10) : '';
+}
+function isOperationalCaseTask(task = {}) {
+  const text = `${task.title || ''} ${(task.tags || []).join(' ')}`;
+  return /看護工|成大人力|送工|申請作業|返越/.test(text);
+}
+
+// ── Date / Hero ────────────────────────────────────────────────────────────
+function setHero(sourceLabel = '營運資料彙整') {
+  const d = new Date();
+  const months = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+  const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  document.getElementById('heroMonth').textContent = `${months[d.getMonth()]} ${d.getFullYear()}`;
+  document.getElementById('heroDate').textContent  = `${days[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}`;
+  document.getElementById('heroMeta').innerHTML =
+    `Data: ${esc(sourceLabel)}<br>Sync: ${d.toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})}`;
+}
+
+async function fetchJson(url, fallback = {}) {
+  try {
+    const r = await fetch(url, { cache: 'no-store' });
+    return r.ok ? await r.json() : fallback;
+  } catch (_) {
+    return fallback;
+  }
+}
+async function fetchText(url, fallback = '') {
+  try {
+    const r = await fetch(url, { cache: 'no-store' });
+    return r.ok ? await r.text() : fallback;
+  } catch (_) {
+    return fallback;
+  }
+}
+
+function deriveCustomers(customerRecent, customerIndexRows, tasks, publicState) {
+  const recentItems = (customerRecent.items || []).map(c => ({
+    name: c.customer_name,
+    category: c.status === 'inactive' ? 'inactive' : `Priority ${c.priority || '-'}`,
+    role: c.followup_next || c.recent_event || '—',
+    last_contact: c.last_activity || '',
+    source: 'customers/recent.json'
+  }));
+  const indexItems = customerIndexRows
+    .filter(row => String(row.status || '').toLowerCase() !== 'inactive')
+    .map(row => ({
+      name: row.customer_name,
+      category: row.lead_source || 'customer_index',
+      role: row.notes || row.followup_next || '—',
+      last_contact: safeDate(row.last_activity),
+      source: 'customer_index.md'
+    }));
+  const caseItems = tasks
+    .filter(t => !(DONE_SET.has(t.status) || DONE_SET.has(String(t.status).toLowerCase())))
+    .filter(isOperationalCaseTask)
+    .map(t => {
+      const m = String(t.title || '').match(/聯絡(.+?)（/);
+      return {
+        name: m ? m[1] : (t.tags || []).includes('客戶') ? t.title : '',
+        category: '看護工案件',
+        role: t.next_step || t.note || '—',
+        last_contact: safeDate(t.updated_at) || safeDate(t.due),
+        source: 'caitodo/tasks.json'
+      };
+    })
+    .filter(c => c.name);
+  const focusItems = (publicState.focuses || [])
+    .filter(f => (f.type || '').includes('客戶'))
+    .map(f => ({
+      name: f.title,
+      category: f.type,
+      role: f.hint || f.detail || '—',
+      last_contact: '',
+      source: 'openclaw_public_state.json'
+    }));
+
+  return uniqueBy([...recentItems, ...indexItems, ...caseItems, ...focusItems], c => c.name)
+    .sort((a, b) => (b.last_contact || '').localeCompare(a.last_contact || '') || a.name.localeCompare(b.name, 'zh-Hant'));
+}
+
+function deriveProjects(mgmt, customerRecent, projectIndexRows, tasks, publicState) {
+  const deptProjects = (mgmt.projects || []).map(p => ({
+    name: p.name,
+    client: p.client || '—',
+    priority_zh: p.priority_zh || priorityZh(p.priority),
+    ...normalizeProjectStatus(p.status),
+    deadline: safeDate(p.deadline),
+    updated_at: mgmt.updated_at || '',
+    source: '管理部.json'
+  }));
+  const recentProjects = (customerRecent.items || []).flatMap(c => (c.projects || []).map(p => ({
+    name: p.project_name,
+    client: c.customer_name,
+    priority_zh: priorityZh(p.priority),
+    ...normalizeProjectStatus(p.stage),
+    deadline: safeDate(p.due_date),
+    updated_at: customerRecent.updated_at || '',
+    source: 'customers/recent.json'
+  })));
+  const indexProjects = projectIndexRows.map(row => ({
+    name: row.project_name,
+    client: row.customer_id || 'C-TBD',
+    priority_zh: priorityZh(row.priority),
+    ...normalizeProjectStatus(row.stage),
+    deadline: safeDate(row.due_date),
+    updated_at: '',
+    source: 'project_index.md'
+  }));
+  const caseProjects = tasks
+    .filter(t => !(DONE_SET.has(t.status) || DONE_SET.has(String(t.status).toLowerCase())))
+    .filter(isOperationalCaseTask)
+    .map(t => {
+      const caseTag = (t.tags || []).find(tag => /看護工|申請作業|送工/.test(tag));
+      const clientMatch = String(t.title || '').match(/聯絡(.+?)（/);
+      return {
+        name: `${clientMatch ? clientMatch[1] : '案件'}看護工案`,
+        client: clientMatch ? clientMatch[1] : '成大人力',
+        priority_zh: priorityZh(t.priority),
+        ...normalizeTaskStatus(t.status),
+        deadline: safeDate(t.due),
+        updated_at: safeDate(t.updated_at),
+        source: caseTag ? `caitodo/${caseTag}` : 'caitodo/tasks.json'
+      };
+    });
+  const stateProjects = (publicState.focuses || [])
+    .filter(f => (f.type || '').includes('專案') || (f.title || '').includes('新南向'))
+    .map(f => ({
+      name: f.title,
+      client: f.type || 'public_state',
+      priority_zh: '高',
+      ...normalizeProjectStatus('active'),
+      deadline: '',
+      updated_at: '',
+      source: 'openclaw_public_state.json'
+    }));
+
+  return uniqueBy([...deptProjects, ...recentProjects, ...indexProjects, ...caseProjects, ...stateProjects], p => p.name)
+    .sort((a, b) => {
+      const order = { '高': 0, '中': 1, '低': 2 };
+      return (order[a.priority_zh] ?? 9) - (order[b.priority_zh] ?? 9)
+        || (a.deadline || '9999-99-99').localeCompare(b.deadline || '9999-99-99')
+        || a.name.localeCompare(b.name, 'zh-Hant');
+    });
+}
+
+function deriveCases(tasks, publicState) {
+  const taskCases = tasks
+    .filter(t => !(DONE_SET.has(t.status) || DONE_SET.has(String(t.status).toLowerCase())))
+    .filter(isOperationalCaseTask);
+  const stateCases = (publicState.schedules || []).filter(s => /客戶|專案/.test(`${s.type || ''} ${s.sub || ''}`));
+  return { open: taskCases.length, timeline: stateCases.length, tasks: taskCases };
+}
+
+// ── Load ───────────────────────────────────────────────────────────────────
+async function loadAll() {
+  const ts = Date.now();
+  try {
+    const [m, it, fin, customerRecent, customerIndexMd, projectIndexMd, caitodo, publicState] = await Promise.all([
+      fetchJson(`${DEPT}管理部.json?_=${ts}`),
+      fetchJson(`${DEPT}資訊部.json?_=${ts}`),
+      fetchJson(`${DEPT}財務部.json?_=${ts}`),
+      fetchJson(`../data/customers/recent.json?_=${ts}`, { items: [] }),
+      fetchText(`../data/index/customer_index.md?_=${ts}`),
+      fetchText(`../data/index/project_index.md?_=${ts}`),
+      fetchJson(`../data/caitodo/tasks.json?_=${ts}`, { tasks: [] }),
+      fetchJson(`../data/openclaw_public_state.json?_=${ts}`, {})
+    ]);
+
+    const customerIndexRows = parseMarkdownTable(customerIndexMd);
+    const projectIndexRows = parseMarkdownTable(projectIndexMd);
+    const tasks = Array.isArray(caitodo.tasks) ? caitodo.tasks : [];
+    const customers = deriveCustomers(customerRecent, customerIndexRows, tasks, publicState);
+    const projects = deriveProjects(m, customerRecent, projectIndexRows, tasks, publicState);
+    const cases = deriveCases(tasks, publicState);
+    const sourceStamp = [m.updated_at, customerRecent.updated_at, caitodo.updated_at].filter(Boolean).sort().slice(-1)[0] || '—';
+
+    _data = { mgmt: m, it, fin, customers, projects, cases, publicState, sourceStamp };
+    setHero('customer_index + caitodo + dept + public_state');
+    renderOverview(_data);
+    renderProjects(projects, document.querySelector('.filter-chip.active')?.textContent === '進行中' ? 'active' : 'all');
+    renderCRM(customers);
+    renderSystem(it, cases, publicState);
+    document.getElementById('lastSync').textContent = new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
+  } catch(e) {
+    console.error('Load failed', e);
+  }
+}
+
+// ── Priority / Status helpers ─────────────────────────────────────────────
+function priTag(zh) {
+  const cls = zh === '高' ? 'tag-red' : zh === '中' ? 'tag-yellow' : 'tag-gray';
+  return `<span class="tag ${cls}">${esc(zh || '低')}</span>`;
+}
+function statusTag(zh, status) {
+  const cls = status === 'active' ? 'tag-green' : status === 'done' ? 'tag-blue' : 'tag-yellow';
+  return `<span class="tag ${cls}">${esc(zh || status || '—')}</span>`;
+}
+function deadlineStr(d) {
+  if (!d || d === 'TBD' || d === '-') return '<span style="color:var(--muted)">—</span>';
+  const today = new Date().toISOString().slice(0,10);
+  const soon = new Date(Date.now()+7*864e5).toISOString().slice(0,10);
+  const color = d < today ? 'var(--red)' : d <= soon ? '#9a6800' : 'inherit';
+  return `<span class="mono" style="color:${color}">${esc(d)}</span>`;
+}
+
+// ── Overview ───────────────────────────────────────────────────────────────
+function renderOverview(state) {
+  const { projects, customers, cases, it, fin, publicState, sourceStamp } = state;
+  const active = projects.filter(p => p.status === 'active').length;
+  const plan = projects.filter(p => p.status === 'planning').length;
+  const st = it.system_status || {};
+  const ok = Object.values(st).filter(v => /Online|Running|Active|Configured/.test(v)).length;
+  const total = Object.keys(st).length || 1;
+  const nextTouch = customers.find(c => c.last_contact)?.last_contact || '—';
+  const focusHint = publicState.oneThing?.title || publicState.focuses?.[0]?.title || '營運資料已對齊';
+
+  document.getElementById('kpi-active').textContent = active;
+  document.getElementById('kpi-plan').textContent = `${plan} 規劃中`;
+  document.getElementById('kpi-clients').textContent = customers.length;
+  document.getElementById('kpi-contact').textContent = `最近接觸 ${nextTouch}`;
+  document.getElementById('kpi-health').textContent = Math.round(ok/total*100) + '%';
+  document.getElementById('kpi-health-sub').textContent = `${ok}/${total} 服務正常`;
+  document.getElementById('kpi-fin').textContent = cases.open;
+  document.querySelector('#panel-overview .hero-motto').textContent = focusHint;
+
+  document.getElementById('mgmt-badge').textContent = `${active} ACTIVE`;
+  document.getElementById('mgmt-body').innerHTML = projects.filter(p => p.status === 'active').slice(0, 8).map(p => `
+    <tr>
+      <td><div class="name-cell">${esc(p.name)}</div><div class="sub-cell">${esc(p.client)}</div></td>
+      <td>${priTag(p.priority_zh)}</td>
+      <td>${statusTag(p.status_zh, p.status)}</td>
+      <td>${deadlineStr(p.deadline)}</td>
+    </tr>`).join('') || '<tr><td colspan="4" class="empty">無進行中專案</td></tr>';
+  document.getElementById('mgmt-updated').textContent = `OPS SYNC: ${sourceStamp}`;
+
+  document.getElementById('it-badge').textContent = `${Object.keys(st).length} NODES`;
+  document.getElementById('it-body').innerHTML = Object.entries(st).map(([k,v]) => {
+    const isOk = /Online|Running|Active|Configured/.test(v);
+    return `<div class="sys-row"><span class="sys-key">${esc(k)}</span><span class="sys-val ${isOk?'sys-ok':'sys-err'}">${esc(v)}</span></div>`;
+  }).join('');
+  document.getElementById('it-notes').innerHTML = [
+    ...(it.notes || []),
+    `案件待追蹤：${cases.open} 筆`,
+    `時間軸事件：${cases.timeline} 筆`
+  ].map(n => `<div>▸ ${esc(n)}</div>`).join('');
+  document.getElementById('it-updated').textContent = `OPS SYNC: ${it.updated_at || sourceStamp}`;
+
+  const inv = fin.pending_invoices || [];
+  document.getElementById('fin-badge').textContent = `${Math.max(inv.length, cases.open)} ITEMS`;
+  document.getElementById('fin-body').innerHTML = inv.slice(0,8).map(i => `
+    <tr>
+      <td><div class="name-cell">${esc(i.project)}</div><div class="sub-cell">${esc(i.client)}</div></td>
+      <td class="mono">${esc(i.amount)}</td>
+      <td>${statusTag(i.status,'')}</td>
+    </tr>`).join('') || cases.tasks.slice(0, 8).map(t => `
+    <tr>
+      <td><div class="name-cell">${esc(t.title)}</div><div class="sub-cell">${esc((t.tags || []).join(' / '))}</div></td>
+      <td class="mono">${esc(t.due && t.due !== '-' ? t.due : '—')}</td>
+      <td>${statusTag(t.status, 'active')}</td>
+    </tr>`).join('') || '<tr><td colspan="3" class="empty">無資料</td></tr>';
+  const ms = fin.monthly_summary || {};
+  document.getElementById('fin-summary').innerHTML = `
+    <div class="sys-row"><span class="sys-key">收入</span><span class="sys-val sys-ok">NT$ ${(ms.income||0).toLocaleString()}</span></div>
+    <div class="sys-row"><span class="sys-key">支出</span><span class="sys-val sys-err">NT$ ${(ms.expense||0).toLocaleString()}</span></div>
+    <div class="sys-row"><span class="sys-key">案件待追</span><span class="sys-val">${cases.open}</span></div>`;
+  document.getElementById('fin-updated').textContent = `OPS SYNC: ${fin.updated_at || sourceStamp}`;
+}
+
+// ── Projects Tab ───────────────────────────────────────────────────────────
+let _allProjects = [];
+function renderProjects(projects, filter) {
+  _allProjects = projects;
+  const list = filter === 'all' ? projects : projects.filter(p => p.status === filter);
+  document.getElementById('proj-subtitle').textContent = `${list.length} 筆 · 資料來源：customer_index / caitodo / dept / public_state`;
+  document.getElementById('proj-body').innerHTML = list.map(p => `
+    <tr>
+      <td><div class="name-cell">${esc(p.name)}</div><div class="sub-cell">${esc(p.source)}</div></td>
+      <td><div class="sub-cell" style="font-size:12px">${esc(p.client)}</div></td>
+      <td>${priTag(p.priority_zh)}</td>
+      <td>${statusTag(p.status_zh, p.status)}</td>
+      <td>${deadlineStr(p.deadline)}</td>
+      <td class="mono" style="font-size:11px;color:var(--muted)">${esc(p.updated_at || '—')}</td>
+    </tr>`).join('');
+  document.getElementById('proj-empty').style.display = list.length ? 'none' : 'block';
+}
+function filterProjects(filter, el) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderProjects(_allProjects, filter);
+}
+
+// ── CRM Tab ────────────────────────────────────────────────────────────────
+function renderCRM(clients) {
+  document.getElementById('crm-subtitle').textContent = `${clients.length} 筆 · 資料來源：customer_index + caitodo + recent customers`;
+  const grid = document.getElementById('crm-grid');
+  if (!clients.length) {
+    document.getElementById('crm-empty').style.display = 'block';
+    grid.innerHTML = '';
+    return;
+  }
+  document.getElementById('crm-empty').style.display = 'none';
+  grid.innerHTML = clients.map(c => {
+    const lastC = c.last_contact || '—';
+    const daysSince = c.last_contact ? Math.floor((Date.now() - new Date(c.last_contact)) / 864e5) : null;
+    const dayStr = daysSince !== null && Number.isFinite(daysSince) ? `(${daysSince}天前)` : '';
+    return `<div class="crm-card">
+      <div class="crm-name">${esc(c.name)}</div>
+      <div class="crm-category">${esc(c.category || '客戶')}</div>
+      <div class="crm-row"><span class="crm-k">最後聯繫</span><span class="crm-v date">${esc(lastC)} <span style="color:var(--muted);font-weight:400">${dayStr}</span></span></div>
+      <div class="crm-row"><span class="crm-k">下一步</span><span class="crm-v">${esc(c.role || '—')}</span></div>
+      <div class="crm-row"><span class="crm-k">來源</span><span class="crm-v">${esc(c.source || '—')}</span></div>
+    </div>`;
+  }).join('');
+}
+
+// ── System Tab ─────────────────────────────────────────────────────────────
+function renderSystem(it, cases, publicState) {
+  const st = it.system_status || {};
+  document.getElementById('sys-badge').textContent = `${Object.keys(st).length} NODES`;
+  document.getElementById('sys-body').innerHTML = Object.entries(st).map(([k,v]) => {
+    const isOk = /Online|Running|Active|Configured/.test(v);
+    return `<div class="sys-row">
+      <span class="sys-key">${esc(k)}</span>
+      <span class="sys-val ${isOk?'sys-ok':'sys-err'}">${esc(v)}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('sys-updated').textContent = `SYNC: ${it.updated_at || '—'}`;
+  document.getElementById('sys-notes').innerHTML = [
+    ...(it.notes || []),
+    `公開狀態主卡：${publicState.oneThing?.title || '—'}`,
+    `待追案件：${cases.open}`
+  ].map(n => `<div>▸ ${esc(n)}</div>`).join('') || '<div style="color:var(--muted)">無備註</div>';
+  document.getElementById('sys-notes-updated').textContent = '資料來源：dept + public_state + caitodo';
+}
+
+// ── Theme ──────────────────────────────────────────────────────────────────
+function initTheme() {
+  const btn = document.getElementById('themeToggle');
+  btn.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    const isDark = document.body.classList.contains('dark');
+    btn.textContent = isDark ? '☀ LIGHT' : '☾ DARK';
+    localStorage.setItem('oc_theme', isDark ? 'dark' : 'light');
+  });
+  if (localStorage.getItem('oc_theme') === 'dark') {
+    document.body.classList.add('dark');
+    btn.textContent = '☀ LIGHT';
+  }
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+setHero();
+initTheme();
+loadAll();
+setInterval(loadAll, 60000);
+</script>
+</body>
+</html>
