@@ -533,6 +533,18 @@ function uniqueBy(list, keyFn) {
 function safeDate(v) {
   return /^\d{4}-\d{2}-\d{2}/.test(String(v || '')) ? String(v).slice(0, 10) : '';
 }
+function normalizeCustomerName(v) {
+  return String(v || '').replace(/（.*?）/g, '').replace(/—.*$/g, '').trim();
+}
+function isInvalidCustomerName(name) {
+  return /^(內部|流程|OpenClaw|NotebookLM|BNI簡報與key單準備提醒|才多多財務分析月報更新)$/i.test(String(name || '').trim());
+}
+function isRealCustomerRecord(record = {}) {
+  const text = `${record.name || record.customer_name || ''} ${record.category || ''} ${record.role || ''} ${record.detail || ''} ${record.source || ''}`;
+  if (!normalizeCustomerName(record.name || record.customer_name)) return false;
+  if (isInvalidCustomerName(record.name || record.customer_name)) return false;
+  return !/非客戶|不追蹤（非客戶）|內部|OpenClaw 任務池/i.test(text);
+}
 function isOperationalCaseTask(task = {}) {
   const text = `${task.title || ''} ${(task.tags || []).join(' ')}`;
   return /看護工|成大人力|送工|申請作業|返越/.test(text);
@@ -567,45 +579,50 @@ async function fetchText(url, fallback = '') {
 }
 
 function deriveCustomers(customerRecent, customerIndexRows, tasks, publicState) {
-  const recentItems = (customerRecent.items || []).map(c => ({
-    name: c.customer_name,
-    category: c.status === 'inactive' ? 'inactive' : `Priority ${c.priority || '-'}`,
-    role: c.followup_next || c.recent_event || '—',
-    last_contact: c.last_activity || '',
-    source: 'customers/recent.json'
-  }));
+  const recentItems = (customerRecent.items || [])
+    .filter(c => String(c.status || '').toLowerCase() !== 'inactive')
+    .map(c => ({
+      name: normalizeCustomerName(c.customer_name),
+      category: `Priority ${c.priority || '-'}`,
+      role: c.followup_next || c.recent_event || '—',
+      last_contact: safeDate(c.last_activity),
+      source: 'customers/recent.json'
+    }))
+    .filter(isRealCustomerRecord);
   const indexItems = customerIndexRows
     .filter(row => String(row.status || '').toLowerCase() !== 'inactive')
     .map(row => ({
-      name: row.customer_name,
+      name: normalizeCustomerName(row.customer_name),
       category: row.lead_source || 'customer_index',
       role: row.notes || row.followup_next || '—',
       last_contact: safeDate(row.last_activity),
       source: 'customer_index.md'
-    }));
+    }))
+    .filter(isRealCustomerRecord);
   const caseItems = tasks
     .filter(t => !(DONE_SET.has(t.status) || DONE_SET.has(String(t.status).toLowerCase())))
     .filter(isOperationalCaseTask)
     .map(t => {
       const m = String(t.title || '').match(/聯絡(.+?)（/);
       return {
-        name: m ? m[1] : (t.tags || []).includes('客戶') ? t.title : '',
+        name: normalizeCustomerName(m ? m[1] : (t.tags || []).includes('客戶') ? t.title : ''),
         category: '看護工案件',
         role: t.next_step || t.note || '—',
         last_contact: safeDate(t.updated_at) || safeDate(t.due),
         source: 'caitodo/tasks.json'
       };
     })
-    .filter(c => c.name);
+    .filter(isRealCustomerRecord);
   const focusItems = (publicState.focuses || [])
     .filter(f => (f.type || '').includes('客戶'))
     .map(f => ({
-      name: f.title,
+      name: normalizeCustomerName(f.title),
       category: f.type,
       role: f.hint || f.detail || '—',
       last_contact: '',
       source: 'openclaw_public_state.json'
-    }));
+    }))
+    .filter(isRealCustomerRecord);
 
   return uniqueBy([...recentItems, ...indexItems, ...caseItems, ...focusItems], c => c.name)
     .sort((a, b) => (b.last_contact || '').localeCompare(a.last_contact || '') || a.name.localeCompare(b.name, 'zh-Hant'));

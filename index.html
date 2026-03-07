@@ -66,6 +66,7 @@
 
     .schedule{margin-top:14px;transition:max-height .25s ease, opacity .2s ease;max-height:460px;overflow:hidden;opacity:1}
     .sch-item{padding:14px 0;cursor:pointer;display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start}
+    .sch-item.sep-top{border-top:2px dashed var(--line); margin-top:6px; padding-top:16px;}
     .sch-time{font-family:var(--mono);font-size:14px;color:var(--ink);padding-top:2px;text-align:right;padding-right:14px}
     .sch-main{border-left:3px solid #e1e5ec;padding-left:14px}
     .sch-title{font-size:13px;line-height:1.25;margin-top:0;font-weight:700}
@@ -87,7 +88,34 @@
     .list-card{border-bottom:1px solid var(--line);padding:11px 0}
     .list-card:last-child{border-bottom:none}
 
+    /* Exchange tabs */
+    .dept-tabs{display:flex;gap:0;border-bottom:2px solid var(--line);margin-bottom:14px}
+    .dept-tab{flex:1;text-align:center;padding:10px 4px;font-family:var(--mono);font-size:13px;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+    .dept-tab.active{color:var(--ink);border-bottom-color:#1f2a44;font-weight:700}
+    .dept-panel{display:none}.dept-panel.active{display:block}
+    .dept-row{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line);gap:10px}
+    .dept-row:last-child{border-bottom:none}
+    .dept-name{font-size:14px;font-weight:700;flex:1;min-width:0}
+    .dept-meta{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap;padding-top:2px}
+    .dept-sub{font-size:12px;color:var(--muted);margin-top:3px}
+    .dept-badge{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:999px;border:1px solid var(--line);margin-top:5px;margin-right:4px}
+    .dept-badge.active{border-color:#1f7a3a;color:#1f7a3a}
+    .dept-badge.planning{border-color:#b07a00;color:#b07a00}
+    .dept-badge.warn{border-color:#c0392b;color:#c0392b}
+    .dept-status-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+    .dept-status-row:last-child{border-bottom:none}
+    .dept-updated{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:12px;text-align:right}
+
     .hint{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;font-family:var(--mono);font-size:11px;color:#6c7481;background:rgba(255,255,255,.9);border:1px solid var(--line);padding:4px 10px;border-radius:999px}
+
+    /* 手機版：除首頁外，其它頁面字體放大一級 */
+    .page:not(#page-today) .date{font-size:56px}
+    .page:not(#page-today) .motto{font-size:18px;max-width:90%}
+    .page:not(#page-today) .sub-title{font-size:15px}
+    .page:not(#page-today) .sch-title{font-size:16px}
+    .page:not(#page-today) .sch-sub{font-size:14px}
+    .page:not(#page-today) .sch-time{font-size:15px}
+    .page:not(#page-today) .list-card{padding:13px 0}
   </style>
 </head>
 <body>
@@ -139,14 +167,16 @@
 
       <!-- Exchange -->
       <section class="page" id="page-exchange">
-        <div class="top"><button class="home-btn" onclick="goHome()">← Home</button><div class="date">EXCHANGE</div><div class="motto">管理部・資訊部・財務部交流</div></div>
+        <div class="top"><button class="home-btn" onclick="goHome()">← Home</button><div class="date">EXCHANGE</div><div class="motto">三部交流・即時彙報</div></div>
         <div class="sheet">
-          <div class="sub-title">管理部（客戶/專案）</div>
-          <div id="mgmtPane"></div>
-          <div class="sub-title">資訊部（系統/排程）</div>
-          <div id="itPane"></div>
-          <div class="sub-title">財務部（帳務/提醒）</div>
-          <div id="finDeptPane"></div>
+          <div class="dept-tabs">
+            <div class="dept-tab active" onclick="switchDept('mgmt',this)">管理部</div>
+            <div class="dept-tab" onclick="switchDept('it',this)">資訊部</div>
+            <div class="dept-tab" onclick="switchDept('fin',this)">財務部</div>
+          </div>
+          <div id="deptPanel-mgmt" class="dept-panel active"></div>
+          <div id="deptPanel-it"   class="dept-panel"></div>
+          <div id="deptPanel-fin"  class="dept-panel"></div>
         </div>
       </section>
 
@@ -251,27 +281,121 @@
       return { meta: `${due} ${st}`.trim(), title };
     }
 
+    function switchDept(key, tabEl){
+      document.querySelectorAll('.dept-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.dept-panel').forEach(p=>p.classList.remove('active'));
+      tabEl.classList.add('active');
+      document.getElementById('deptPanel-'+key)?.classList.add('active');
+    }
+
+    function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function renderMgmt(el, d){
+      const projs = (d.projects||[]).slice(0,8);
+      const clients = (d.recent_clients||[]).slice(0,5);
+      let html = '';
+      if(projs.length){
+        html += `<div class="sub-title">進行中專案</div>`;
+        projs.forEach(p=>{
+          const badgeCls = p.status==='進行中'?'active':p.status==='規劃中'?'planning':'';
+          html += `<div class="dept-row">
+            <div><div class="dept-name">${esc(p.name)}</div>
+              <div class="dept-sub">${esc(p.client)}</div>
+              <span class="dept-badge ${badgeCls}">${esc(p.status)}</span>
+              <span class="dept-badge">${esc(p.priority)}</span>
+            </div>
+            <div class="dept-meta">${esc(p.deadline)}</div>
+          </div>`;
+        });
+      }
+      if(clients.length){
+        html += `<div class="sub-title" style="margin-top:18px">近期客戶</div>`;
+        clients.forEach(c=>{
+          html += `<div class="dept-row">
+            <div><div class="dept-name">${esc(c.name)}</div>
+              <div class="dept-sub">${esc(c.category)}</div>
+            </div>
+            <div class="dept-meta">${esc(c.last_contact)}</div>
+          </div>`;
+        });
+      }
+      if(d.announcements?.length){
+        html += `<div class="sub-title" style="margin-top:18px">公告</div>`;
+        d.announcements.forEach(a=>{
+          html += `<div class="dept-row"><div class="dept-name">${esc(a.text)}</div><div class="dept-meta">${esc(a.time)}</div></div>`;
+        });
+      }
+      html += `<div class="dept-updated">更新：${esc(d.updated_at||'—')}</div>`;
+      el.innerHTML = html || '<div class="dept-row"><div class="dept-name">暫無資料</div></div>';
+    }
+
+    function renderIT(el, d){
+      let html = `<div class="sub-title">系統狀態</div>`;
+      const st = d.system_status || {};
+      Object.entries(st).forEach(([k,v])=>{
+        html += `<div class="dept-status-row"><div style="flex:1;font-weight:600">${esc(k)}</div><div style="font-family:var(--mono);font-size:12px">${esc(v)}</div></div>`;
+      });
+      if(d.notes?.length){
+        html += `<div class="sub-title" style="margin-top:18px">近期紀錄</div>`;
+        d.notes.forEach(n=>{
+          html += `<div class="dept-row"><div class="dept-name" style="font-size:13px">${esc(n)}</div></div>`;
+        });
+      }
+      if(d.announcements?.length){
+        html += `<div class="sub-title" style="margin-top:18px">公告</div>`;
+        d.announcements.forEach(a=>{
+          html += `<div class="dept-row"><div class="dept-name">${esc(a.text)}</div><div class="dept-meta">${esc(a.time)}</div></div>`;
+        });
+      }
+      html += `<div class="dept-updated">更新：${esc(d.updated_at||'—')}</div>`;
+      el.innerHTML = html;
+    }
+
+    function renderFin(el, d){
+      let html = '';
+      const inv = (d.pending_invoices||[]).slice(0,8);
+      if(inv.length){
+        html += `<div class="sub-title">專案金額追蹤</div>`;
+        inv.forEach(i=>{
+          html += `<div class="dept-row">
+            <div><div class="dept-name">${esc(i.project)}</div>
+              <div class="dept-sub">${esc(i.client)}</div>
+              <span class="dept-badge ${i.status==='進行中'?'active':''}">${esc(i.status)}</span>
+            </div>
+            <div style="text-align:right">
+              <div class="dept-meta" style="color:var(--ink);font-weight:600">${esc(i.amount)}</div>
+              <div class="dept-meta">${esc(i.deadline)}</div>
+            </div>
+          </div>`;
+        });
+      }
+      const ms = d.monthly_summary;
+      if(ms){
+        html += `<div class="sub-title" style="margin-top:18px">月度摘要</div>`;
+        html += `<div class="dept-status-row"><div style="flex:1">收入</div><div style="font-family:var(--mono)">NT$ ${(ms.income||0).toLocaleString()}</div></div>`;
+        html += `<div class="dept-status-row"><div style="flex:1">支出</div><div style="font-family:var(--mono)">NT$ ${(ms.expense||0).toLocaleString()}</div></div>`;
+        if(ms.note) html += `<div class="dept-row"><div class="dept-sub">${esc(ms.note)}</div></div>`;
+      }
+      if(d.announcements?.length){
+        html += `<div class="sub-title" style="margin-top:18px">公告</div>`;
+        d.announcements.forEach(a=>{
+          html += `<div class="dept-row"><div class="dept-name">${esc(a.text)}</div><div class="dept-meta">${esc(a.time)}</div></div>`;
+        });
+      }
+      html += `<div class="dept-updated">更新：${esc(d.updated_at||'—')}</div>`;
+      el.innerHTML = html || '<div class="dept-row"><div class="dept-name">暫無資料</div></div>';
+    }
+
     async function loadExchangeBoard(){
-      const mgmtEl = document.getElementById('mgmtPane');
-      const itEl = document.getElementById('itPane');
-      const finEl = document.getElementById('finDeptPane');
-      if(!mgmtEl || !itEl || !finEl) return;
-
-      const [cai,zj,oc,fin,personal] = await Promise.all([
-        fetchTasks('./data/caitodo/tasks.json'),
-        fetchTasks('./data/zhaojing/tasks.json'),
-        fetchTasks('./data/openclaw/tasks.json'),
-        fetchTasks('./data/finance/tasks.json'),
-        fetchTasks('./data/personal/tasks.json')
+      const DEPT_BASE = './data/dept/';
+      const [mgmtData, itData, finData] = await Promise.all([
+        fetch(`${DEPT_BASE}管理部.json?_=${Date.now()}`,{cache:'no-store'}).then(r=>r.ok?r.json():{}).catch(()=>({})),
+        fetch(`${DEPT_BASE}資訊部.json?_=${Date.now()}`,{cache:'no-store'}).then(r=>r.ok?r.json():{}).catch(()=>({})),
+        fetch(`${DEPT_BASE}財務部.json?_=${Date.now()}`,{cache:'no-store'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
       ]);
-
-      const mgmt = [...cai, ...zj].slice(0,5).map(mapLine);
-      const it = oc.slice(0,5).map(mapLine);
-      const finDept = [...fin, ...personal].slice(0,5).map(mapLine);
-
-      renderLines(mgmtEl, mgmt);
-      renderLines(itEl, it);
-      renderLines(finEl, finDept);
+      renderMgmt(document.getElementById('deptPanel-mgmt'), mgmtData);
+      renderIT(document.getElementById('deptPanel-it'), itData);
+      renderFin(document.getElementById('deptPanel-fin'), finData);
     }
 
     async function loadState(){
@@ -307,10 +431,13 @@
         {time:'14:00',title:'賴冠佑來訪',sub:'客戶提醒',detail:'賴冠佑 來訪（BNI後）',type:'客戶',date:'03/06'}
       ];
 
-      // 只保留 客戶 / 專案 / 物業，並直接採用 SQL 產生的接下來事件
-      const wanted = (txt) => {
-        const t = String(txt || '');
-        return t.includes('客戶') || t.includes('專案') || t.includes('物業') || t.includes('顧問');
+      // 只保留真正可行動的客戶 / 專案 / 物業提醒，排除內部與誤判條目
+      const wanted = (item) => {
+        const text = `${item.type||''} ${item.sub||''} ${item.title||''} ${item.detail||''}`;
+        const inScope = /客戶|專案|物業|顧問/.test(text);
+        const internal = /內部|OpenClaw 任務池|NotebookLM|BNI簡報與key單準備提醒|才多多財務分析月報更新/.test(text);
+        const notCustomer = /非客戶/.test(text);
+        return inScope && !internal && !notCustomer;
       };
       const findMMDD = (obj) => {
         const src = `${obj.date||''} ${obj.meta||''} ${obj.time||''} ${obj.title||''}`;
@@ -318,7 +445,7 @@
         return m ? `${m[1].padStart(2,'0')}/${m[2].padStart(2,'0')}` : '';
       };
 
-      const schedules = rawSchedules.filter(it => wanted(it.type||it.sub));
+      const schedules = rawSchedules.filter(wanted);
 
       // 依時間軸排序：
       // 1) 無日期但有具體時間（如 08:30）
@@ -364,14 +491,23 @@
         return ka[2]-kb[2];
       });
 
-      const futureItems = schedules.slice(1);
+      const isReviewItem = (it) => {
+        const txt = `${it.sub||''} ${it.title||''} ${it.detail||''} ${it.type||''}`;
+        return /復盤|過期/.test(txt);
+      };
+      const immediateItems = schedules.filter(it => !isReviewItem(it));
+      const reviewItems = schedules.filter(it => isReviewItem(it));
+      const orderedSchedules = [...immediateItems.slice(0,5), ...reviewItems.slice(0,2)];
+      const dividerIndex = Math.min(immediateItems.length, 5);
+
+      const futureItems = immediateItems.slice(1);
 
       const sheetEl=document.querySelector('#page-today .sheet');
       const schEl=document.getElementById('scheduleList');
       schEl.innerHTML='';
-      schedules.forEach(it=>{
+      orderedSchedules.forEach((it, idx)=>{
         const row=document.createElement('div');
-        row.className='sch-item';
+        row.className='sch-item' + ((reviewItems.length>0 && idx===dividerIndex && dividerIndex>0) ? ' sep-top' : '');
         const isQuan = String(it.title||'').includes('全立祥');
         row.innerHTML=`<div class="sch-time">${to24hLabel(it.time||'')}</div><div class="sch-main"><div class="sch-title" style="font-size:${isQuan ? '13px' : '15px'}">${it.title||''}</div><div class="sch-sub">${it.sub||it.source||''}</div></div>`;
         row.onclick=()=>{
@@ -381,7 +517,7 @@
         };
         schEl.appendChild(row);
       });
-      if(!schedules.length){
+      if(!orderedSchedules.length){
         schEl.innerHTML = '<div class="sch-item"><div class="sch-time">今天</div><div class="sch-main"><div class="sch-title" style="font-size:14px">今日無客戶/專案/物業行程</div><div class="sch-sub">可右滑查看後續行程與提醒事項</div></div></div>';
       }
 
