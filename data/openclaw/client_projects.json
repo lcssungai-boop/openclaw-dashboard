@@ -1,13 +1,259 @@
 {
-  "updated_at": "2026-03-02T13:09:50Z",
+  "updated_at": "2026-03-10T23:57:27Z",
   "source_sqlite": "/Users/sung/.openclaw/workspace/biz.db",
   "summary": {
-    "total_items": 46,
-    "total_customers": 1,
-    "total_projects": 3,
+    "total_items": 66,
+    "total_customers": 8,
+    "total_projects": 14,
     "overdue_items": 0
   },
   "customers": [
+    {
+      "customer": "-",
+      "task_count": 3,
+      "overdue_count": 0,
+      "projects": [
+        {
+          "project": "成大人力",
+          "task_count": 0,
+          "overdue_count": 0,
+          "items": []
+        },
+        {
+          "project": "新南向人力銀行",
+          "task_count": 3,
+          "overdue_count": 0,
+          "items": [
+            {
+              "row_no": 47,
+              "date": "2026-03-04",
+              "customer": "-",
+              "project": "新南向人力銀行",
+              "subproject": "-",
+              "type": "task",
+              "status": "進行中",
+              "owner": "-",
+              "due": "2026-03-04",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "依 3/3 14:00 會議安排，明天下午空檔 13:30 開始檢視",
+              "overdue": false
+            },
+            {
+              "row_no": 48,
+              "date": "2026-03-04",
+              "customer": "-",
+              "project": "新南向人力銀行",
+              "subproject": "-",
+              "type": "task",
+              "status": "進行中",
+              "owner": "-",
+              "due": "2026-03-04",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "依 3/3 14:00 會議安排，明天下午空檔 13:30 開始檢視",
+              "overdue": false
+            },
+            {
+              "row_no": 49,
+              "date": "2026-03-04",
+              "customer": "-",
+              "project": "新南向人力銀行",
+              "subproject": "-",
+              "type": "task",
+              "status": "進行中",
+              "owner": "-",
+              "due": "2026-03-04",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "依 3/3 14:00 會議安排，明天下午空檔 13:30 開始檢視",
+              "overdue": false
+            }
+          ]
+        },
+        {
+          "project": "新南向人力銀行平台系統",
+          "task_count": 0,
+          "overdue_count": 0,
+          "items": []
+        },
+        {
+          "project": "新南向白領派遣",
+          "task_count": 0,
+          "overdue_count": 0,
+          "items": []
+        }
+      ]
+    },
+    {
+      "customer": "兆鯨物業",
+      "task_count": 7,
+      "overdue_count": 0,
+      "projects": [
+        {
+          "project": "兆鯨電商導入",
+          "task_count": 7,
+          "overdue_count": 0,
+          "items": [
+            {
+              "row_no": 50,
+              "date": "2026-03-04",
+              "customer": "兆鯨物業",
+              "project": "兆鯨電商導入",
+              "subproject": "-",
+              "type": "task",
+              "status": "進行中",
+              "owner": "昌松",
+              "due": "2026-03-04",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "原紀錄誤寫為 iCloud 帳號申請；來源：2026-03-03 兆鯨電商導入會議復盤",
+              "overdue": false
+            },
+            {
+              "row_no": 51,
+              "date": "2026-03-04",
+              "customer": "兆鯨物業",
+              "project": "兆鯨電商導入",
+              "subproject": "-",
+              "type": "task",
+              "status": "進行中",
+              "owner": "昌松",
+              "due": "2026-03-04",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "來源：2026-03-03 兆鯨電商導入會議復盤",
+              "overdue": false
+            },
+            {
+              "row_no": 52,
+              "date": "2026-03-04",
+              "customer": "兆鯨物業",
+              "project": "兆鯨電商導入",
+              "subproject": "-",
+              "type": "task",
+              "status": "進行中",
+              "owner": "昌松",
+              "due": "2026-03-04",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "來源：2026-03-03 兆鯨電商導入會議復盤",
+              "overdue": false
+            },
+            {
+              "row_no": 53,
+              "date": "2026-03-04",
+              "customer": "兆鯨物業",
+              "project": "兆鯨電商導入",
+              "subproject": "-",
+              "type": "task",
+              "status": "進行中",
+              "owner": "昌松",
+              "due": "2026-03-04",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "來源：2026-03-03 兆鯨電商導入會議復盤",
+              "overdue": false
+            },
+            {
+              "row_no": 54,
+              "date": "2026-03-04",
+              "customer": "兆鯨物業",
+              "project": "兆鯨電商導入",
+              "subproject": "-",
+              "type": "task",
+              "status": "進行中",
+              "owner": "昌松",
+              "due": "2026-03-04",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "來源：2026-03-03 兆鯨電商導入會議復盤",
+              "overdue": false
+            },
+            {
+              "row_no": 55,
+              "date": "2026-03-04",
+              "customer": "兆鯨物業",
+              "project": "兆鯨電商導入",
+              "subproject": "-",
+              "type": "task",
+              "status": "進行中",
+              "owner": "昌松",
+              "due": "2026-03-04",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "來源：2026-03-03 兆鯨電商導入會議復盤",
+              "overdue": false
+            },
+            {
+              "row_no": 56,
+              "date": "2026-03-04",
+              "customer": "兆鯨物業",
+              "project": "兆鯨電商導入",
+              "subproject": "-",
+              "type": "task",
+              "status": "進行中",
+              "owner": "昌松",
+              "due": "2026-03-04",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "來源：2026-03-03 兆鯨電商導入會議復盤",
+              "overdue": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "customer": "兆鯨物業有限公司",
+      "task_count": 2,
+      "overdue_count": 0,
+      "projects": [
+        {
+          "project": "兆鯨物业",
+          "task_count": 2,
+          "overdue_count": 0,
+          "items": [
+            {
+              "row_no": 61,
+              "date": "-",
+              "customer": "兆鯨物業有限公司",
+              "project": "兆鯨物业",
+              "subproject": "-",
+              "type": "task",
+              "status": "進行中",
+              "owner": "行政同仁",
+              "due": "-",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "固定規則：每月5日前一日做收租準備；若5日為國定假日則提前安排。",
+              "overdue": false
+            },
+            {
+              "row_no": 62,
+              "date": "2026-04-02",
+              "customer": "兆鯨物業有限公司",
+              "project": "兆鯨物业",
+              "subproject": "-",
+              "type": "task",
+              "status": "待處理",
+              "owner": "行政同仁",
+              "due": "2026-04-02",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "因4/5為假日/週末，提前安排收租準備與提醒。",
+              "overdue": false
+            }
+          ]
+        },
+        {
+          "project": "兆鯨組織",
+          "task_count": 0,
+          "overdue_count": 0,
+          "items": []
+        }
+      ]
+    },
     {
       "customer": "內部專案",
       "task_count": 46,
@@ -719,6 +965,181 @@
         },
         {
           "project": "才多多CRM建立",
+          "task_count": 0,
+          "overdue_count": 0,
+          "items": []
+        }
+      ]
+    },
+    {
+      "customer": "全立祥",
+      "task_count": 5,
+      "overdue_count": 0,
+      "projects": [
+        {
+          "project": "全立祥",
+          "task_count": 5,
+          "overdue_count": 0,
+          "items": [
+            {
+              "row_no": 57,
+              "date": "2026-03-04",
+              "customer": "全立祥",
+              "project": "全立祥",
+              "subproject": "-",
+              "type": "task",
+              "status": "待處理",
+              "owner": "-",
+              "due": "2026-03-04",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "明早送工前完成核對；工人NOVIANTO 諾維；今日入境；三年許可函；住陳老闆處；自行購買腳踏車",
+              "overdue": false
+            },
+            {
+              "row_no": 58,
+              "date": "2026-03-04",
+              "customer": "全立祥",
+              "project": "全立祥",
+              "subproject": "-",
+              "type": "task",
+              "status": "待處理",
+              "owner": "-",
+              "due": "2026-03-04",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "送工完成後即回報；工人NOVIANTO 諾維；今日入境；三年許可函；住陳老闆處；自行購買腳踏車；【新增核對】5%許可函未核准；今年目標5名員工（影響投保人數）；確認投保人數是否增加；確認增額2000方案是否以最低工資加給；確認企業可否配合。",
+              "overdue": false
+            },
+            {
+              "row_no": 59,
+              "date": "2026-03-04",
+              "customer": "全立祥",
+              "project": "全立祥",
+              "subproject": "-",
+              "type": "task",
+              "status": "待處理",
+              "owner": "-",
+              "due": "2026-03-04",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "工人目前居住於陳老闆處；自行購買腳踏車；工人NOVIANTO 諾維；今日入境；三年許可函；住陳老闆處；自行購買腳踏車",
+              "overdue": false
+            },
+            {
+              "row_no": 67,
+              "date": "2026-03-06",
+              "customer": "全立祥",
+              "project": "全立祥",
+              "subproject": "-",
+              "type": "task",
+              "status": "todo",
+              "owner": "昌松",
+              "due": "2026-03-06",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "指定工費用：美金 2800 元全包；需與企業端確認是否接受/付款方式/包含項目明細。",
+              "overdue": false
+            },
+            {
+              "row_no": 60,
+              "date": "2026-03-26",
+              "customer": "全立祥",
+              "project": "全立祥",
+              "subproject": "-",
+              "type": "task",
+              "status": "待處理",
+              "owner": "行政同仁",
+              "due": "2026-03-26",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "追蹤離境補人名額、5%許可函申請進度、勞保人數與文件完整性",
+              "overdue": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "customer": "利源",
+      "task_count": 2,
+      "overdue_count": 0,
+      "projects": [
+        {
+          "project": "利源不銹鋼",
+          "task_count": 2,
+          "overdue_count": 0,
+          "items": [
+            {
+              "row_no": 64,
+              "date": "2026-03-31",
+              "customer": "利源",
+              "project": "利源不銹鋼",
+              "subproject": "-",
+              "type": "task",
+              "status": "todo",
+              "owner": "昌松",
+              "due": "2026-03-31",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "4/7 利源入境2新印 → 新樓接機 → 體檢後 → 成大公司簽文件 → 下午送工 → 預計 15:00 到工廠。前一週確認：接機/體檢/簽文件/送工時間、交通與窗口。",
+              "overdue": false
+            },
+            {
+              "row_no": 65,
+              "date": "2026-04-07",
+              "customer": "利源",
+              "project": "利源不銹鋼",
+              "subproject": "-",
+              "type": "task",
+              "status": "todo",
+              "owner": "昌松",
+              "due": "2026-04-07",
+              "priority": "urgent",
+              "next_step": "-",
+              "note": "行程：新樓接機 → 體檢 → 成大公司簽文件 → 下午送工 → 預計 15:00 到工廠。請確認集合點/聯絡窗口/車輛路線/到場交接。",
+              "overdue": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "customer": "康揚",
+      "task_count": 1,
+      "overdue_count": 0,
+      "projects": [
+        {
+          "project": "康揚客戶跟進",
+          "task_count": 1,
+          "overdue_count": 0,
+          "items": [
+            {
+              "row_no": 63,
+              "date": "2026-03-05",
+              "customer": "康揚",
+              "project": "康揚客戶跟進",
+              "subproject": "-",
+              "type": "task",
+              "status": "待處理",
+              "owner": "-",
+              "due": "2026-03-05",
+              "priority": "important",
+              "next_step": "-",
+              "note": "窗口：江先生（HR）｜jon.chiang@karma.com.tw｜05-2066688#335；需求：正職代招＋評點制代辦、僑外生RD/國外業務；必問5題已於行程備註。",
+              "overdue": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "customer": "特工",
+      "task_count": 0,
+      "overdue_count": 0,
+      "projects": [
+        {
+          "project": "空間特工",
           "task_count": 0,
           "overdue_count": 0,
           "items": []
